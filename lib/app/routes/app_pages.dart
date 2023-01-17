@@ -6,6 +6,10 @@ import 'package:wonder_app/app/modules/gst_details/bindings/gst_details_binding.
 import 'package:wonder_app/app/modules/gst_details/views/gst_details_view.dart';
 import 'package:wonder_app/app/modules/home/bindings/home_binding.dart';
 import 'package:wonder_app/app/modules/home/views/home_view.dart';
+import 'package:wonder_app/app/modules/invoice/bindings/invoice_binding.dart';
+import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
+import 'package:wonder_app/app/modules/invoice_details/bindings/invoice_details_binding.dart';
+import 'package:wonder_app/app/modules/invoice_details/views/invoice_details_view.dart';
 import 'package:wonder_app/app/modules/login/bindings/login_binding.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
 import 'package:wonder_app/app/modules/otp_verification/bindings/otp_verification_binding.dart';
@@ -64,6 +68,16 @@ class AppPages {
       name: _Paths.SUCCESS,
       page: () => SuccessView(),
       binding: SuccessBinding(),
+    ),
+    GetPage(
+      name: _Paths.INVOICE,
+      page: () => InvoiceView(),
+      binding: InvoiceBinding(),
+    ),
+    GetPage(
+      name: _Paths.INVOICE_DETAILS,
+      page: () => InvoiceDetailsView(),
+      binding: InvoiceDetailsBinding(),
     ),
   ];
 }
