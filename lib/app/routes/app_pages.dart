@@ -12,8 +12,12 @@ import 'package:wonder_app/app/modules/invoice_details/bindings/invoice_details_
 import 'package:wonder_app/app/modules/invoice_details/views/invoice_details_view.dart';
 import 'package:wonder_app/app/modules/login/bindings/login_binding.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
+import 'package:wonder_app/app/modules/notifications/bindings/notifications_binding.dart';
+import 'package:wonder_app/app/modules/notifications/views/notifications_view.dart';
 import 'package:wonder_app/app/modules/otp_verification/bindings/otp_verification_binding.dart';
 import 'package:wonder_app/app/modules/otp_verification/views/otp_verification_view.dart';
+import 'package:wonder_app/app/modules/profile_view/bindings/profile_view_binding.dart';
+import 'package:wonder_app/app/modules/profile_view/views/profile_view_view.dart';
 import 'package:wonder_app/app/modules/registration_details/bindings/registration_details_binding.dart';
 import 'package:wonder_app/app/modules/registration_details/views/registration_details_view.dart';
 import 'package:wonder_app/app/modules/seller_regist/bindings/seller_regist_binding.dart';
@@ -78,6 +82,16 @@ class AppPages {
       name: _Paths.INVOICE_DETAILS,
       page: () => InvoiceDetailsView(),
       binding: InvoiceDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.NOTIFICATIONS,
+      page: () => NotificationsView(),
+      binding: NotificationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE_VIEW,
+      page: () => ProfileViewView(),
+      binding: ProfileViewBinding(),
     ),
   ];
 }

@@ -72,7 +72,7 @@ class InvoiceTab extends StatelessWidget {
                 width: 100.w,
                 height: 80,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white, width: 2),
+                  border: Border.all(color: Colors.white, width: 1),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(14),
                     topRight: Radius.circular(14),

@@ -14,6 +14,8 @@ abstract class Routes {
   static const SUCCESS = _Paths.SUCCESS;
   static const INVOICE = _Paths.INVOICE;
   static const INVOICE_DETAILS = _Paths.INVOICE_DETAILS;
+  static const NOTIFICATIONS = _Paths.NOTIFICATIONS;
+  static const PROFILE_VIEW = _Paths.PROFILE_VIEW;
 }
 
 abstract class _Paths {
@@ -27,4 +29,6 @@ abstract class _Paths {
   static const SUCCESS = '/success';
   static const INVOICE = '/invoice';
   static const INVOICE_DETAILS = '/invoice-details';
+  static const NOTIFICATIONS = '/notifications';
+  static const PROFILE_VIEW = '/profile-view';
 }
