@@ -82,7 +82,7 @@ class SuccessView extends GetView<SuccessController> {
                                               MainAxisAlignment.center,
                                           children: [
                                             SizedBox(
-                                              height: 20,
+                                              height: 7.h,
                                             ),
                                             Text(
                                               "Request Submitted Successfully",
@@ -96,7 +96,7 @@ class SuccessView extends GetView<SuccessController> {
                                                   height: 0.95),
                                             ),
                                             SizedBox(
-                                              height: 10,
+                                              height: 2.h,
                                             ),
                                             Padding(
                                               padding: EdgeInsets.only(

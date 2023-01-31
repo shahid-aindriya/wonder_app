@@ -204,7 +204,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
                           height: 1.1725,
                           color: Color.fromARGB(93, 0, 0, 0),
                         ),
-                        hintText: "Confirm Account Number",
+                        hintText: "Re-Enter Account Number",
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 18.0, horizontal: 18),
                         enabled: true,
@@ -359,7 +359,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
                     child: Row(
                       children: [
                         Text(
-                          'Upload Document',
+                          'Upload Cancelled Check image',
                           style: GoogleFonts.roboto(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -387,7 +387,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
                                 height: 1.1725,
                                 color: Color.fromARGB(93, 0, 0, 0),
                               ),
-                              hintText: "Browse Document",
+                              hintText: "Browse Files",
                               contentPadding: const EdgeInsets.symmetric(
                                   vertical: 18.0, horizontal: 18),
                               enabled: true,

@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class InvoiceController extends GetxController {
-  //TODO: Implement InvoiceController
+class StoreDetailsController extends GetxController {
+  //TODO: Implement StoreDetailsController
 
   final count = 0.obs;
   @override
@@ -17,8 +17,4 @@ class InvoiceController extends GetxController {
   @override
   void onClose() {}
   void increment() => count.value++;
-
-
-  
-  
 }

@@ -37,7 +37,7 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
               elevation: 0,
               backgroundColor: Colors.transparent,
               title: Text(
-                'Registration Details',
+                'License Details',
                 style: GoogleFonts.jost(
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
@@ -59,7 +59,7 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
                         child: Row(
                           children: [
                             Text(
-                              'Registration Number',
+                              'License Number',
                               style: GoogleFonts.roboto(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -84,7 +84,7 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
                               height: 1.1725,
                               color: Color.fromARGB(93, 0, 0, 0),
                             ),
-                            hintText: "Registration Number",
+                            hintText: "License Number",
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 18.0, horizontal: 18),
                             enabled: true,

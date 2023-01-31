@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:wonder_app/app/modules/otp_verification/views/otp_verification_view.dart';
 
+import '../../seller_regist/views/seller_regist_view.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -14,6 +14,11 @@ class LoginView extends GetView<LoginController> {
       Color.fromARGB(255, 65, 125, 232)
     ],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+  final TextEditingController emailEditingController = TextEditingController();
+  final TextEditingController passwordEditingController =
+      TextEditingController();
+  final LoginController loginController = Get.put(LoginController());
+  final formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,7 +31,7 @@ class LoginView extends GetView<LoginController> {
         body: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 17.h, bottom: 5.h),
+              padding: EdgeInsets.only(top: 10.h, bottom: 5.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -72,61 +77,110 @@ class LoginView extends GetView<LoginController> {
                 ),
               ],
             ),
-            SizedBox(height: 1.5.h),
-            Padding(
-              padding: EdgeInsets.only(left: 5.w, right: 5.w),
-              child: TextFormField(
-                enabled: true,
-                style: GoogleFonts.roboto(
-                    fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
-                decoration: InputDecoration(
-                    prefixText: "+91 ",
-                    prefixStyle: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w400, fontSize: 18),
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(top: 6.0, left: 2),
-                      child: Image.asset('assets/images/flag.png'),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 17.0, horizontal: 10),
-                    enabled: true,
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                            width: 0,
-                            color: Color.fromARGB(255, 199, 199, 179))),
-                    filled: true,
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width: 0,
-                            color: Color.fromARGB(255, 255, 255, 255)),
-                        borderRadius: BorderRadius.circular(16)),
-                    fillColor: Color.fromARGB(153, 255, 255, 255),
-                    focusColor: Color.fromARGB(255, 231, 231, 231)),
-                validator: (value) {
-                  if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                          .hasMatch(value!) ||
-                      value.length < 3) {
-                    return 'please enter valid email';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-            ),
             SizedBox(
               height: 3.h,
             ),
             Container(
-              height: 25.h,
+              height: 23.h,
               child: Image.asset(
                 "assets/images/login_image.png",
                 fit: BoxFit.contain,
               ),
             ),
-            SizedBox(
-              height: 3.h,
+            SizedBox(height: 1.5.h),
+            Form(
+              key: formkey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                    child: TextFormField(
+                      controller: emailEditingController,
+                      keyboardType: TextInputType.emailAddress,
+                      enabled: true,
+                      style: GoogleFonts.roboto(
+                          fontSize: 16.sp, color: Color.fromRGBO(0, 0, 0, 1)),
+                      decoration: InputDecoration(
+                          hintText: "Enter your email",
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 17.0, horizontal: 10),
+                          enabled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: Color.fromARGB(255, 199, 199, 179))),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: Color.fromARGB(255, 199, 199, 179))),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: Color.fromARGB(255, 255, 255, 255)),
+                              borderRadius: BorderRadius.circular(16)),
+                          fillColor: Color.fromARGB(153, 255, 255, 255),
+                          focusColor: Color.fromARGB(255, 231, 231, 231)),
+                      validator: (value) {
+                        if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
+                                .hasMatch(value!) ||
+                            value.length < 3) {
+                          return 'please enter valid email';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                    child: TextFormField(
+                      obscureText: true,
+                      controller: passwordEditingController,
+                      keyboardType: TextInputType.visiblePassword,
+                      enabled: true,
+                      style: GoogleFonts.roboto(
+                          fontSize: 16.sp, color: Color.fromRGBO(0, 0, 0, 1)),
+                      decoration: InputDecoration(
+                          hintText: "Enter your password",
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 17.0, horizontal: 10),
+                          enabled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: Color.fromARGB(255, 199, 199, 179))),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: Color.fromARGB(255, 199, 199, 179))),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: Color.fromARGB(255, 255, 255, 255)),
+                              borderRadius: BorderRadius.circular(16)),
+                          fillColor: Color.fromARGB(153, 255, 255, 255),
+                          focusColor: Color.fromARGB(255, 231, 231, 231)),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'please enter password';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
+
+            SizedBox(height: 2.h),
             Text(
               'By clicking login, you agree to our terms and policies',
               textAlign: TextAlign.center,
@@ -140,15 +194,12 @@ class LoginView extends GetView<LoginController> {
             SizedBox(
               height: 15,
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(
-                  onTap: () {
-                    Get.to(OtpVerificationView());
-                  },
-                  child: Container(
-                    width: 189,
+                Container(
+                    width: 45.w,
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -167,7 +218,19 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ],
                     ),
-                    child: Center(
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          elevation: MaterialStateProperty.all(0),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.transparent)),
+                      onPressed: () {
+                        if (formkey.currentState!.validate()) {
+                          loginController.loginFunct(
+                              password: passwordEditingController.text,
+                              email: emailEditingController.text,
+                              context: context);
+                        }
+                      },
                       child: Text(
                         'LOGIN',
                         style: GoogleFonts.roboto(
@@ -177,11 +240,58 @@ class LoginView extends GetView<LoginController> {
                           color: Color(0xffffffff),
                         ),
                       ),
+                    )),
+              ],
+            ),
+            SizedBox(
+              height: 1.h,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("New to Wonder App?",
+                    style: GoogleFonts.roboto(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey,
+                    )),
+              ],
+            ),
+            SizedBox(
+              height: 1.h,
+            ),
+            // Figma Flutter Generator Rectangle41Widget - RECTANGLE
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    Get.to(SellerRegistView());
+                  },
+                  child: Container(
+                    width: 45.w,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.10000000149011612),
+                            offset: Offset(0, 2.7899999618530273),
+                            blurRadius: 7.510000228881836)
+                      ],
+                      color: Color.fromRGBO(255, 255, 255, 0.8999999761581421),
                     ),
+                    child: Center(
+                        child: Text("Register Now",
+                            style: GoogleFonts.roboto(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                height: 1.2110513051,
+                                color: Color.fromARGB(255, 77, 96, 221)))),
                   ),
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),

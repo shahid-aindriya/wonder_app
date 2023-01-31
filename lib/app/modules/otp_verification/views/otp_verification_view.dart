@@ -84,6 +84,31 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
               SizedBox(
                 height: 15,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Didn’t received OTP?",
+                    style: GoogleFonts.roboto(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w300,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Text("  Resend",
+                        style: GoogleFonts.roboto(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromARGB(255, 62, 76, 202),
+                        )),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
               Container(
                 height: 210,
                 child: Image.asset(
