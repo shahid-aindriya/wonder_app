@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
@@ -19,13 +20,16 @@ import '../widgets/wallet_tab.dart';
 class InvoiceView extends GetView<InvoiceController> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
+  final InvoiceController invoiceController = Get.put(InvoiceController());
+  @override
   Widget build(BuildContext context) {
+    invoiceController.getInvoiceLists();
     return DefaultTabController(
       length: 2,
       child: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/images/wonder_app_background.png"),
+                image: AssetImage("assets/images/wonder_app_background.jpg"),
                 fit: BoxFit.cover)),
         child: Scaffold(
           drawer: Drawer(
@@ -117,7 +121,6 @@ class InvoiceView extends GetView<InvoiceController> {
                     ),
                     trailing: IconButton(
                         onPressed: () {
-                          
                           Get.to(MyShopsView());
                         },
                         icon: Icon(Icons.arrow_forward_ios_outlined)),
@@ -199,7 +202,9 @@ class InvoiceView extends GetView<InvoiceController> {
                           fontWeight: FontWeight.normal),
                     ),
                     trailing: IconButton(
-                        onPressed: () {
+                        onPressed: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.clear();
                           Get.offAll(LoginView());
                         },
                         icon: Icon(Icons.arrow_forward_ios_outlined)),

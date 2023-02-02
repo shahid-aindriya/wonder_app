@@ -108,6 +108,12 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 fontSize: 18,
                                 color: Color.fromRGBO(0, 0, 0, 1)),
                             decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
                                 hintStyle: GoogleFonts.roboto(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w300,
@@ -118,6 +124,12 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 18.0, horizontal: 18),
                                 enabled: true,
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: BorderSide(
@@ -189,7 +201,19 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 18.0, horizontal: 18),
                                 enabled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
                                 enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
+                                errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: BorderSide(
                                         width: 0,
@@ -262,6 +286,12 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 18.0, horizontal: 18),
                                 enabled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: BorderSide(
@@ -269,6 +299,12 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                         color: Color.fromARGB(
                                             255, 199, 199, 179))),
                                 filled: true,
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
                                 focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         width: 0,
@@ -343,6 +379,12 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 18.0, horizontal: 18),
                                 enabled: true,
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
                                 enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: BorderSide(
@@ -350,6 +392,12 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                         color: Color.fromARGB(
                                             255, 199, 199, 179))),
                                 filled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
                                 focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         width: 0,
@@ -444,6 +492,14 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                             const EdgeInsets.symmetric(
                                                 vertical: 18.0, horizontal: 18),
                                         enabled: true,
+                                        errorBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(16),
+                                                topLeft: Radius.circular(16)),
+                                            borderSide: BorderSide(
+                                                width: 0,
+                                                color: Color.fromARGB(
+                                                    255, 199, 199, 179))),
                                         disabledBorder: OutlineInputBorder(
                                             borderRadius: BorderRadius.only(
                                                 bottomLeft: Radius.circular(16),
@@ -453,28 +509,12 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                                 color: Color.fromARGB(
                                                     255, 199, 199, 179))),
                                         enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(16),
-                                                topLeft: Radius.circular(16)),
-                                            borderSide: BorderSide(
-                                                width: 0,
-                                                color: Color.fromARGB(
-                                                    255, 199, 199, 179))),
+                                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), topLeft: Radius.circular(16)),
+                                            borderSide: BorderSide(width: 0, color: Color.fromARGB(255, 199, 199, 179))),
                                         filled: true,
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(width: 0, color: Color.fromARGB(255, 255, 255, 255)),
-                                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), topLeft: Radius.circular(16))),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 0, color: Color.fromARGB(255, 255, 255, 255)), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), topLeft: Radius.circular(16))),
                                         fillColor: Color.fromARGB(153, 255, 255, 255),
                                         focusColor: Color.fromARGB(255, 231, 231, 231)),
-                                    validator: (value) {
-                                      if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                              .hasMatch(value!) ||
-                                          value.length < 3) {
-                                        return 'please enter valid email';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
                                   ),
                                 ),
                                 InkWell(
@@ -570,7 +610,19 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 18.0, horizontal: 18),
                                 enabled: true,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
                                 enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
+                                errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(16),
                                     borderSide: BorderSide(
                                         width: 0,
@@ -589,7 +641,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                               if (!RegExp(r"^[A-Z]{5}\d{4}[A-Z]{1}$")
                                       .hasMatch(value!) ||
                                   value.length < 3) {
-                                return 'please enter valid Pan number';
+                                return 'please enter valid Pan number and in Capital letters';
                               } else {
                                 return null;
                               }
@@ -641,6 +693,14 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                             const EdgeInsets.symmetric(
                                                 vertical: 18.0, horizontal: 18),
                                         enabled: true,
+                                        errorBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(16),
+                                                topLeft: Radius.circular(16)),
+                                            borderSide: BorderSide(
+                                                width: 0,
+                                                color: Color.fromARGB(
+                                                    255, 199, 199, 179))),
                                         disabledBorder: OutlineInputBorder(
                                             borderRadius: BorderRadius.only(
                                                 bottomLeft: Radius.circular(16),
@@ -650,28 +710,12 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                                 color: Color.fromARGB(
                                                     255, 199, 199, 179))),
                                         enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(16),
-                                                topLeft: Radius.circular(16)),
-                                            borderSide: BorderSide(
-                                                width: 0,
-                                                color: Color.fromARGB(
-                                                    255, 199, 199, 179))),
+                                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), topLeft: Radius.circular(16)),
+                                            borderSide: BorderSide(width: 0, color: Color.fromARGB(255, 199, 199, 179))),
                                         filled: true,
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(width: 0, color: Color.fromARGB(255, 255, 255, 255)),
-                                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), topLeft: Radius.circular(16))),
+                                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 0, color: Color.fromARGB(255, 255, 255, 255)), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(16), topLeft: Radius.circular(16))),
                                         fillColor: Color.fromARGB(153, 255, 255, 255),
                                         focusColor: Color.fromARGB(255, 231, 231, 231)),
-                                    validator: (value) {
-                                      if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                              .hasMatch(value!) ||
-                                          value.length < 3) {
-                                        return 'please enter valid email';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
                                   ),
                                 ),
                                 InkWell(
@@ -731,22 +775,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      if (formKey.currentState!.validate() &&
-                          controller.adhaarimg != '') {
-                        Get.to(PasswordGenerationView(
-                          adhaarNumber: adhaarNumberEditingController.text,
-                          adhaarimag: controller.adhaarimg,
-                          name: nameEditingController.text,
-                          panImag: controller.panimg,
-                          panNumber: panNumberEditingController.text,
-                          phoneNmber: phoneNumberEditingController.text,
-                          email: emailEditingController.text,
-                        ));
-                      }
-                    },
-                    child: Container(
+                  Container(
                       width: 124,
                       height: 50,
                       decoration: BoxDecoration(
@@ -766,7 +795,24 @@ class SellerRegistView extends GetView<SellerRegistController> {
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                            elevation: MaterialStateProperty.all(0)),
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            Get.to(PasswordGenerationView(
+                              adhaarNumber: adhaarNumberEditingController.text,
+                              adhaarimag: controller.adhaarimg,
+                              name: nameEditingController.text,
+                              panImag: controller.panimg,
+                              panNumber: panNumberEditingController.text,
+                              phoneNmber: phoneNumberEditingController.text,
+                              email: emailEditingController.text,
+                            ));
+                          }
+                        },
                         child: Text(
                           'Next',
                           style: GoogleFonts.roboto(
@@ -776,9 +822,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                             color: Color(0xffffffff),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
+                      )),
                 ],
               ),
               SizedBox(

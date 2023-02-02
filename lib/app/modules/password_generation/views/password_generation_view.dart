@@ -298,69 +298,89 @@ class PasswordGenerationView extends GetView<PasswordGenerationController> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        InkWell(
-                          onTap: () async {
-                            if (passwordController.text !=
-                                confirmPasswordController.text) {
-                              MotionToast.warning(
-                                position: MotionToastPosition.top,
-                                title: const Text(
-                                  'Warning ',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                description:
-                                    const Text('Password Does not match'),
-                                animationCurve: Curves.bounceIn,
-                                borderRadius: 0,
-                                animationDuration:
-                                    const Duration(milliseconds: 1000),
-                              ).show(context);
-                            } else {
-                              await controller.sellerRegister(
-                                  adarImag: adhaarimag,
-                                  adhaar: adhaarNumber,
-                                  email: email,
-                                  name: name,
-                                  pan: panNumber,
-                                  panImag: panImag,
-                                  password: passwordController.text,
-                                  phone: phoneNmber);
-                            }
-                          },
-                          child: Container(
-                            width: 124,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border(),
-                              gradient: LinearGradient(
-                                begin: Alignment(-0.934, -1),
-                                end: Alignment(1.125, 1.333),
-                                colors: <Color>[
-                                  Color(0xe53f46bd),
-                                  Color(0xe5417de8)
-                                ],
-                                stops: <double>[0, 1],
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0x3f000000),
-                                  offset: Offset(0, 0.7870440483),
-                                  blurRadius: 2.7546541691,
-                                ),
+                        Container(
+                          width: 124,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border(),
+                            gradient: LinearGradient(
+                              begin: Alignment(-0.934, -1),
+                              end: Alignment(1.125, 1.333),
+                              colors: <Color>[
+                                Color(0xe53f46bd),
+                                Color(0xe5417de8)
                               ],
+                              stops: <double>[0, 1],
                             ),
-                            child: Center(
-                              child: Text(
-                                'Save',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.2110513051,
-                                  color: Color(0xffffffff),
-                                ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0x3f000000),
+                                offset: Offset(0, 0.7870440483),
+                                blurRadius: 2.7546541691,
+                              ),
+                            ],
+                          ),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent),
+                                elevation: MaterialStateProperty.all(0)),
+                            onPressed: () async {
+                              if (passwordController.text !=
+                                  confirmPasswordController.text) {
+                                MotionToast.warning(
+                                  position: MotionToastPosition.top,
+                                  title: const Text(
+                                    'Warning ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  description:
+                                      const Text('Password Does not match'),
+                                  animationCurve: Curves.bounceIn,
+                                  borderRadius: 0,
+                                  animationDuration:
+                                      const Duration(milliseconds: 1000),
+                                ).show(context);
+                              } else if (passwordController.text.isEmpty &&
+                                  controller.isOn.value == false) {
+                                MotionToast.error(
+                                  position: MotionToastPosition.top,
+                                  title: const Text(
+                                    'Error ',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  description:
+                                      const Text('Please Enter Password'),
+                                  animationCurve: Curves.bounceIn,
+                                  borderRadius: 0,
+                                  animationDuration:
+                                      const Duration(milliseconds: 1000),
+                                ).show(context);
+                              } else {
+                                await controller.sellerRegister(
+                                    adarImag: adhaarimag,
+                                    adhaar: adhaarNumber,
+                                    email: email,
+                                    name: name,
+                                    pan: panNumber,
+                                    panImag: panImag,
+                                    password: passwordController.text,
+                                    phone: phoneNmber,
+                                    context: context);
+                              }
+                            },
+                            child: Text(
+                              'Save',
+                              style: GoogleFonts.roboto(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                height: 1.2110513051,
+                                color: Color(0xffffffff),
                               ),
                             ),
                           ),

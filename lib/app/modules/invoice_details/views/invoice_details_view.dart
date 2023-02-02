@@ -1,14 +1,27 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/data/urls.dart';
+import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 
 import '../controllers/invoice_details_controller.dart';
 
 class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
+  final InvoiceDatum? data;
+
+  InvoiceDetailsView({this.data});
+  final InvoiceDetailsController invoiceDetailsController =
+      Get.put(InvoiceDetailsController());
   @override
   Widget build(BuildContext context) {
+    String formattedDate = DateFormat("dd MMMM, yyyy")
+        .format(DateTime.parse(data!.invoiceDate.toString()));
+    String formattedDate2 = DateFormat("dd MMM yyyy, HH:mm")
+        .format(DateTime.parse(data!.invoiceDate.toString()).toLocal());
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -62,7 +75,7 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                 fontSize: 16, fontWeight: FontWeight.w400),
                           ),
                           Text(
-                            "28 Dec 2022, 19:30",
+                            formattedDate2,
                             style: GoogleFonts.roboto(
                                 fontSize: 12, fontWeight: FontWeight.w300),
                           )
@@ -78,12 +91,7 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                       height: 270,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 2),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(14),
-                          topRight: Radius.circular(14),
-                          bottomLeft: Radius.circular(14),
-                          bottomRight: Radius.circular(14),
-                        ),
+                        borderRadius: BorderRadius.circular(14),
                         gradient: LinearGradient(
                             begin: Alignment(
                                 1.1437236070632935, -0.005003529135137796),
@@ -120,7 +128,7 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                       height: 64,
                                       child: Center(
                                         child: Text(
-                                          "₹1850",
+                                          "₹${data!.invoiceAmount}",
                                           style: GoogleFonts.roboto(
                                               color: Color.fromARGB(
                                                   255, 73, 117, 231),
@@ -152,7 +160,7 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.w300),
                                     ),
-                                    Text("45656564131",
+                                    Text(data!.invoiceNumber,
                                         style: GoogleFonts.roboto(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500)),
@@ -165,9 +173,11 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                           fontSize: 14,
                                           fontWeight: FontWeight.w300),
                                     ),
-                                    Text("26 December,2022",
+                                    AutoSizeText(formattedDate,
+                                        maxLines: 2,
+                                        minFontSize: 14,
+                                        maxFontSize: 20,
                                         style: GoogleFonts.roboto(
-                                            fontSize: 18,
                                             fontWeight: FontWeight.w500)),
                                   ],
                                 )
@@ -200,12 +210,12 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                 leading: CircleAvatar(
                                     child: Image.asset(
                                         "assets/images/Ellipse 21.png")),
-                                title: Text("Rakesh K Raju",
+                                title: Text(data!.customerName!,
                                     style: GoogleFonts.roboto(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500)),
                                 subtitle: Text(
-                                  "+91 94666 64658",
+                                  data!.phone.toString(),
                                   style: GoogleFonts.roboto(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w300),
@@ -246,7 +256,13 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                 elevation: MaterialStateProperty.all(0),
                                 backgroundColor: MaterialStateProperty.all(
                                     Color.fromARGB(134, 255, 255, 255))),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await invoiceDetailsController
+                                  .approveOrDeclineInvoice(
+                                      context: context,
+                                      choice: "Approve",
+                                      invoiceId: data!.id);
+                            },
                             icon: Icon(Icons.check,
                                 color: Color.fromARGB(255, 0, 158, 16)),
                             label: Text("Approve",
@@ -267,7 +283,13 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                 elevation: MaterialStateProperty.all(0),
                                 backgroundColor: MaterialStateProperty.all(
                                     Color.fromARGB(134, 255, 255, 255))),
-                            onPressed: () {},
+                            onPressed: () async {
+                              await invoiceDetailsController
+                                  .approveOrDeclineInvoice(
+                                      context: context,
+                                      choice: "Reject",
+                                      invoiceId: data!.id);
+                            },
                             icon: Icon(Icons.close,
                                 color: Color.fromARGB(255, 255, 80, 80)),
                             label: Text("Decline",
@@ -295,8 +317,9 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                       padding: const EdgeInsets.only(top: 10.0, bottom: 20),
                       child: Container(
                           width: 100.w,
-                          child:
-                              Image.asset("assets/images/invoice_image.png")),
+                          child: data!.invoiceImage == ""
+                              ? Image.asset("assets/images/invoice_image.png")
+                              : Image.network("$baseUrl${data!.invoiceImage}")),
                     )
 
                     // Padding(

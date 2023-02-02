@@ -9,15 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/api/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
+import 'package:wonder_app/app/modules/request_pending/views/request_pending_view.dart';
 
+import '../../../data/urls.dart';
 import '../models/login_respose_model.dart';
 
 class LoginController extends GetxController {
   //TODO: Implement LoginController
   final ApiService _apiService = Get.put(ApiService());
   final count = 0.obs;
-  final _baseUrl = "http://64.227.156.53:8000/".obs;
-  final _headers = {"Content-Type": "application/json"}.obs;
+
   @override
   void onClose() {}
   void increment() => count.value++;
@@ -26,17 +27,36 @@ class LoginController extends GetxController {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var body = {"email": email, "password": password};
 
-    var request = await http.post(Uri.parse("${_baseUrl.value}vendor-login/"),
-        headers: _headers, body: jsonEncode(body));
+    var request = await http.post(Uri.parse("${baseUrl.value}vendor-login/"),
+        headers: headers, body: jsonEncode(body));
     log(request.body);
 
     if (request.statusCode == 201) {
       final loginResponseModel = loginResponseModelFromJson(request.body);
 
       log(loginResponseModel.success.toString());
-      if (loginResponseModel.success == true) {
+      if (loginResponseModel.success == true &&
+          loginResponseModel.isApproved == true) {
         prefs.setInt("userId", loginResponseModel.userId);
         Get.offAll(InvoiceView());
+        MotionToast.success(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Welcome ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: const Text('Succesfully logged in'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      } else if (loginResponseModel.success == true &&
+          loginResponseModel.isApproved == false) {
+        Get.to(RequestPendingView());
       } else {
         MotionToast.error(
           dismissable: true,

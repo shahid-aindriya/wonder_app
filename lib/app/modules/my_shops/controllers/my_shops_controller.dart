@@ -21,19 +21,26 @@ class MyShopsController extends GetxController {
     update();
   }
 
-  var shopLists = RxList<ShopDatum>().obs;
+  RxList<ShopDatum> shopLists = <ShopDatum>[].obs;
+
   Future<dynamic> getListOfShops() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
-    var body = {"user_id": userId.toString()};
-    var request = await http.post(Uri.parse("${baseUrl.value}vendor-all-shop/"),
-        headers: headers, body: jsonEncode(body));
-    // log(request.statusCode.toString());
-    if (request.statusCode == 201) {
-      final shopsListModel = shopsListModelFromJson(request.body);
-      log(shopsListModel.shopData[0].licenseImage.toString());
-      shopLists.value.assignAll(shopsListModel.shopData);
-      return shopsListModel.shopData;
+    if (userId == null) {
+      log("message");
+    } else {
+      var body = {"user_id": userId.toString()};
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-all-shop/"),
+          headers: headers,
+          body: jsonEncode(body));
+      // log(request.statusCode.toString());
+      if (request.statusCode == 201) {
+        final shopsListModel = shopsListModelFromJson(request.body);
+        log(shopsListModel.shopData[0].licenseImage.toString());
+        shopLists.assignAll(shopsListModel.shopData);
+        return shopsListModel.shopData;
+      }
     }
   }
 }

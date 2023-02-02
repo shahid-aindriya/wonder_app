@@ -61,12 +61,7 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 4),
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(36),
-                          topRight: Radius.circular(36),
-                          bottomLeft: Radius.circular(36),
-                          bottomRight: Radius.circular(36),
-                        ),
+                        borderRadius: BorderRadius.circular(36),
                         image: DecorationImage(
                             image:
                                 NetworkImage("$baseUrl${data!.featuredImage}"),
@@ -203,6 +198,88 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                         ),
                       ),
                     ),
+
+                    // Figma Flutter Generator Rectangle17Widget - RECTANGLE
+                    Padding(
+                      padding: const EdgeInsets.only(top: 13),
+                      child: Container(
+                        width: 100.w,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: Colors.white)),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                          title: Text("Offers",
+                              style: GoogleFonts.roboto(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400)),
+                          trailing: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.arrow_forward_ios_rounded)),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 13),
+                      child: Container(
+                        width: 100.w,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: Colors.white)),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                          title: Text("License Details",
+                              style: GoogleFonts.roboto(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400)),
+                          trailing: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.arrow_forward_ios_rounded)),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 13),
+                      child: Container(
+                        width: 100.w,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: Colors.white)),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                          title: Text("Gst Details",
+                              style: GoogleFonts.roboto(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400)),
+                          trailing: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.arrow_forward_ios_rounded)),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 13, bottom: 20),
+                      child: Container(
+                        width: 100.w,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: Colors.white)),
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14)),
+                          title: Text("Bank Details",
+                              style: GoogleFonts.roboto(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w400)),
+                          trailing: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.arrow_forward_ios_rounded)),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               )

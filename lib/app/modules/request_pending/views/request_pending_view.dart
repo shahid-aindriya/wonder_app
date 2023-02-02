@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
+import 'package:wonder_app/app/modules/login/views/login_view.dart';
 
 import '../../../data/colors.dart';
 import '../controllers/request_pending_controller.dart';
@@ -27,7 +27,7 @@ class RequestPendingView extends GetView<RequestPendingController> {
                     borderRadius: BorderRadius.circular(10)),
                 child: IconButton(
                     onPressed: () {
-                      Get.back();
+                      Get.offAll(LoginView());
                     },
                     icon: Icon(
                       Icons.arrow_back_ios_new,
@@ -45,7 +45,7 @@ class RequestPendingView extends GetView<RequestPendingController> {
                 child: Center(
                   child: InkWell(
                     onTap: () {
-                      Get.to(StoreDetailsView());
+                      // Get.to(StoreDetailsView());
                     },
                     child: Container(
                         width: 95.w,
