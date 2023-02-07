@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/my_shops/model/shops_list_model.dart';
+import 'package:wonder_app/app/modules/shop_details/widgets/edit_shop_details.dart';
 
 import '../controllers/shop_details_controller.dart';
 
@@ -93,7 +94,11 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                       fontWeight: FontWeight.w500),
                                 ),
                                 TextButton.icon(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Get.to(EditShopDetails(
+                                        data: data,
+                                      ));
+                                    },
                                     icon: Icon(Icons.edit, size: 19),
                                     label: Text("Edit",
                                         style: GoogleFonts.roboto(
@@ -164,11 +169,11 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                         const EdgeInsets.only(bottom: 10.0),
                                     child: Row(
                                       children: [
-                                        Text("Radius"),
+                                        Text("Commission"),
                                         SizedBox(
                                           width: 22.w,
                                         ),
-                                        Text(data!.radius,
+                                        Text("${data!.commission}%",
                                             style: GoogleFonts.roboto(
                                                 fontSize: 18.sp,
                                                 fontWeight: FontWeight.w400))

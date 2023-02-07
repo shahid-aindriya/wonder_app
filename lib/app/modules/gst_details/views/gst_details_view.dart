@@ -3,13 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:wonder_app/app/modules/bank_details/views/bank_details_view.dart';
 
 import '../controllers/gst_details_controller.dart';
 
 class GstDetailsView extends GetView<GstDetailsController> {
+  final shopName;
+  final shopAdress;
+  final shopLocation;
+  final categoryId;
+  final shopImage;
+  final licenceNumber;
+  final licenceImage;
+  final gstPercentage;
+  final commission;
+  final featured;
+  GstDetailsView(
+      {this.shopName,
+      this.shopAdress,
+      this.shopLocation,
+      this.categoryId,
+      this.shopImage,
+      this.gstPercentage,
+      this.commission,
+      this.featured,
+      this.licenceNumber,
+      this.licenceImage});
+  @override
+  final GstDetailsController controller = Get.put(GstDetailsController());
   @override
   Widget build(BuildContext context) {
+    final TextEditingController gstNumberController = TextEditingController();
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -74,6 +97,7 @@ class GstDetailsView extends GetView<GstDetailsController> {
                     height: 8,
                   ),
                   TextFormField(
+                    controller: gstNumberController,
                     enabled: true,
                     style: GoogleFonts.roboto(
                         fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
@@ -133,93 +157,103 @@ class GstDetailsView extends GetView<GstDetailsController> {
                   SizedBox(
                     height: 8,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          enabled: true,
-                          style: GoogleFonts.roboto(
-                              fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
-                          decoration: InputDecoration(
-                              hintStyle: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300,
-                                height: 1.1725,
-                                color: Color.fromARGB(93, 0, 0, 0),
-                              ),
-                              hintText: "Browse Document",
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 18.0, horizontal: 18),
-                              enabled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(16),
-                                      topLeft: Radius.circular(16)),
-                                  borderSide: BorderSide(
-                                      width: 0,
-                                      color:
-                                          Color.fromARGB(255, 199, 199, 179))),
-                              filled: true,
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 0,
-                                      color:
-                                          Color.fromARGB(255, 255, 255, 255)),
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(16),
-                                      topLeft: Radius.circular(16))),
-                              fillColor: Color.fromARGB(153, 255, 255, 255),
-                              focusColor: Color.fromARGB(255, 231, 231, 231)),
-                          validator: (value) {
-                            if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                    .hasMatch(value!) ||
-                                value.length < 3) {
-                              return 'please enter valid email';
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
-                      ),
-                      Container(
-                        width: 100,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                          border: Border(),
-                          gradient: LinearGradient(
-                            begin: Alignment(-0.934, -1),
-                            end: Alignment(1.125, 1.333),
-                            colors: <Color>[
-                              Color(0xe53f46bd),
-                              Color(0xe5417de8)
-                            ],
-                            stops: <double>[0, 1],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color(0x3f000000),
-                              offset: Offset(0, 0.7870440483),
-                              blurRadius: 2.7546541691,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            'Upload',
+                  GetBuilder<GstDetailsController>(builder: (context) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            enabled: true,
                             style: GoogleFonts.roboto(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              height: 1.2110513051,
-                              color: Color(0xffffffff),
+                                fontSize: 18,
+                                color: Color.fromRGBO(0, 0, 0, 1)),
+                            decoration: InputDecoration(
+                                hintStyle: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w300,
+                                  height: 1.1725,
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                ),
+                                hintText: controller.gstImage == ''
+                                    ? "Browse Document"
+                                    : "Uploaded",
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 18.0, horizontal: 18),
+                                enabled: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(16),
+                                        topLeft: Radius.circular(16)),
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color: Color.fromARGB(
+                                            255, 199, 199, 179))),
+                                filled: true,
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 0,
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255)),
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(16),
+                                        topLeft: Radius.circular(16))),
+                                fillColor: Color.fromARGB(153, 255, 255, 255),
+                                focusColor: Color.fromARGB(255, 231, 231, 231)),
+                            validator: (value) {
+                              if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
+                                      .hasMatch(value!) ||
+                                  value.length < 3) {
+                                return 'please enter valid email';
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            controller.pickimage();
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              border: Border(),
+                              gradient: LinearGradient(
+                                begin: Alignment(-0.934, -1),
+                                end: Alignment(1.125, 1.333),
+                                colors: <Color>[
+                                  Color(0xe53f46bd),
+                                  Color(0xe5417de8)
+                                ],
+                                stops: <double>[0, 1],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x3f000000),
+                                  offset: Offset(0, 0.7870440483),
+                                  blurRadius: 2.7546541691,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Upload',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.2110513051,
+                                  color: Color(0xffffffff),
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  }),
                 ],
               ),
             ),
@@ -234,7 +268,19 @@ class GstDetailsView extends GetView<GstDetailsController> {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.to(BankDetailsView());
+                    controller.addShopToServer(
+                        address: shopAdress,
+                        context: context,
+                        commission: commission,
+                        featured: featured,
+                        gstNumber: gstNumberController.text,
+                        gstPercentage: gstPercentage,
+                        location: shopLocation,
+                        categoryId: categoryId,
+                        licenseImage: licenceImage,
+                        shopImage: shopImage,
+                        shopName: shopName);
+                    // Get.to(BankDetailsView());
                   },
                   child: Container(
                     width: 124,

@@ -15,19 +15,22 @@ class LoginResponseModel {
     required this.userId,
     required this.success,
     required this.isApproved,
+    required this.haveShop,
     required this.message,
   });
 
   dynamic userId;
   bool success;
-  dynamic isApproved;
+  bool isApproved;
+  bool haveShop;
   String message;
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
       LoginResponseModel(
-        userId: json["user_id"],
+        userId: json["user_id"] ?? "null",
         success: json["success"],
-        isApproved: json["is_approved"] ?? "null",
+        isApproved: json["is_approved"],
+        haveShop: json["have_shop"],
         message: json["message"],
       );
 
@@ -35,6 +38,7 @@ class LoginResponseModel {
         "user_id": userId,
         "success": success,
         "is_approved": isApproved,
+        "have_shop": haveShop,
         "message": message,
       };
 }

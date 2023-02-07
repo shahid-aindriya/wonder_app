@@ -14,6 +14,8 @@ import '../modules/invoice_details/bindings/invoice_details_binding.dart';
 import '../modules/invoice_details/views/invoice_details_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/map_place_picker/bindings/map_place_picker_binding.dart';
+import '../modules/map_place_picker/views/map_place_picker_view.dart';
 import '../modules/my_shops/bindings/my_shops_binding.dart';
 import '../modules/my_shops/views/my_shops_view.dart';
 import '../modules/notifications/bindings/notifications_binding.dart';
@@ -44,7 +46,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.INVOICE;
+  static const INITIAL = Routes.SPLASH_SCREEN;
 
   static final routes = [
     GetPage(
@@ -141,6 +143,11 @@ class AppPages {
       name: _Paths.SHOP_DETAILS,
       page: () => ShopDetailsView(),
       binding: ShopDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.MAP_PLACE_PICKER,
+      page: () => MapPlacePickerView(),
+      binding: MapPlacePickerBinding(),
     ),
   ];
 }

@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -10,7 +12,6 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/add_invoice/models/all_user_model.dart';
-
 import '../../../data/urls.dart';
 import '../../my_shops/model/shops_list_model.dart';
 
@@ -72,6 +73,8 @@ class AddInvoiceController extends GetxController {
 
   String invoiceImg = '';
   File? image;
+  dynamic compressedImage;
+  dynamic newImage;
   pickimage() async {
     final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
     if (pimage == null) {
@@ -80,7 +83,10 @@ class AddInvoiceController extends GetxController {
       image = File(pimage.path);
 
       final bytes = File(pimage.path).readAsBytesSync();
-      invoiceImg = base64Encode(bytes);
+
+      compressedImage = testComporessList(bytes);
+      invoiceImg = base64Encode(await compressedImage);
+      log(invoiceImg);
     }
     // log(img);
     update();
@@ -91,6 +97,7 @@ class AddInvoiceController extends GetxController {
     isLoading.value = true;
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
+
     var body = {
       "customer_id": selectUserId,
       "user_id": userId,
@@ -105,8 +112,9 @@ class AddInvoiceController extends GetxController {
     var request = await http.post(
         Uri.parse("${baseUrl.value}vendor-add-invoice/"),
         headers: headers,
-        body: jsonEncode(body));
+        body: json.encode(body));
     log(request.statusCode.toString());
+    // log(request.body.toString());
     if (request.statusCode == 201) {
       selectUserId = null;
       invoiceImg = '';
@@ -148,9 +156,22 @@ class AddInvoiceController extends GetxController {
     // log(request.statusCode.toString());
     if (request.statusCode == 201) {
       final shopsListModel = shopsListModelFromJson(request.body);
-      log(shopsListModel.shopData[0].licenseImage.toString());
+      // log(shopsListModel.shopData[0].licenseImage.toString());
       shopLists.value.assignAll(shopsListModel.shopData);
       return shopsListModel.shopData;
     }
+  }
+
+  testComporessList(Uint8List list) async {
+    var result = await FlutterImageCompress.compressWithList(
+      list,
+      minHeight: 500,
+      minWidth: 400,
+      quality: 70,
+      rotate: 0,
+    );
+    log(list.length.toString());
+    log(result.length.toString());
+    return result.toList();
   }
 }

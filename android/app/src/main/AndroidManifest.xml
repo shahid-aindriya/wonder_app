@@ -11,6 +11,8 @@
         android:label="wonder_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyB1wjIvMb5foy65Etk2JeVhHK_NVgxT8ho"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

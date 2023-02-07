@@ -9,9 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/api/api_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
-import 'package:wonder_app/app/modules/request_pending/views/request_pending_view.dart';
+import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
 
 import '../../../data/urls.dart';
+import '../../request_pending/views/request_pending_view.dart';
 import '../models/login_respose_model.dart';
 
 class LoginController extends GetxController {
@@ -34,10 +35,9 @@ class LoginController extends GetxController {
     if (request.statusCode == 201) {
       final loginResponseModel = loginResponseModelFromJson(request.body);
 
-      log(loginResponseModel.success.toString());
-      if (loginResponseModel.success == true &&
-          loginResponseModel.isApproved == true) {
-        prefs.setInt("userId", loginResponseModel.userId);
+      if (loginResponseModel.isApproved == true &&
+          loginResponseModel.haveShop == true) {
+        prefs.setInt("userId", loginResponseModel.userId!);
         Get.offAll(InvoiceView());
         MotionToast.success(
           dismissable: true,
@@ -54,8 +54,10 @@ class LoginController extends GetxController {
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
-      } else if (loginResponseModel.success == true &&
-          loginResponseModel.isApproved == false) {
+      } else if (loginResponseModel.isApproved == true &&
+          loginResponseModel.haveShop == false) {
+        Get.to(StoreDetailsView());
+      } else if (loginResponseModel.isApproved == false) {
         Get.to(RequestPendingView());
       } else {
         MotionToast.error(

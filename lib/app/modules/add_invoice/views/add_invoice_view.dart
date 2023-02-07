@@ -123,7 +123,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 5.0),
                                   child: Text(
-                                    data.name,
+                                    data.phone,
                                     overflow: TextOverflow.visible,
                                   ),
                                 ));
@@ -243,7 +243,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                                     contentPadding: const EdgeInsets.symmetric(
                                         vertical: 18.0, horizontal: 18),
                                     enabled: true,
-                                    enabledBorder: OutlineInputBorder(
+                                    disabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.only(
                                             bottomLeft: Radius.circular(16),
                                             topLeft: Radius.circular(16)),
@@ -341,6 +341,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                       ),
                       TextFormField(
                         enabled: true,
+                        keyboardType: TextInputType.number,
                         controller: addInvoiceController.invoiceNumber,
                         style: GoogleFonts.roboto(
                             fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
@@ -490,6 +491,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                       ),
                       TextFormField(
                         enabled: true,
+                        keyboardType: TextInputType.number,
                         controller: addInvoiceController.preTaxController,
                         style: GoogleFonts.roboto(
                             fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
@@ -546,6 +548,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                         height: 8,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.number,
                         controller:
                             addInvoiceController.invoiceAmountController,
                         enabled: true,

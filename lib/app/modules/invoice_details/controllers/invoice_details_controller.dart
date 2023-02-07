@@ -22,7 +22,7 @@ class InvoiceDetailsController extends GetxController {
     var body = {"invoice_id": invoiceId, "status": choice};
 
     var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-invoice-list/"),
+        Uri.parse("${baseUrl.value}vendor-invoice-status-change/"),
         headers: headers,
         body: jsonEncode(body));
     log(request.body);

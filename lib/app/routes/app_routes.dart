@@ -23,6 +23,7 @@ abstract class Routes {
   static const MY_SHOPS = _Paths.MY_SHOPS;
   static const SPLASH_SCREEN = _Paths.SPLASH_SCREEN;
   static const SHOP_DETAILS = _Paths.SHOP_DETAILS;
+  static const MAP_PLACE_PICKER = _Paths.MAP_PLACE_PICKER;
 }
 
 abstract class _Paths {
@@ -45,4 +46,5 @@ abstract class _Paths {
   static const MY_SHOPS = '/my-shops';
   static const SPLASH_SCREEN = '/splash-screen';
   static const SHOP_DETAILS = '/shop-details';
+  static const MAP_PLACE_PICKER = '/map-place-picker';
 }

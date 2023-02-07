@@ -1,20 +1,119 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wonder_app/app/modules/bank_details/views/bank_details_view.dart';
+import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
+
+import '../../../data/urls.dart';
+import '../model/shop_add_response.dart';
 
 class GstDetailsController extends GetxController {
   //TODO: Implement GstDetailsController
 
   final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {}
   void increment() => count.value++;
+
+  String gstImage = '';
+  File? image;
+  pickimage() async {
+    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pimage == null) {
+      return;
+    } else {
+      image = File(pimage.path);
+
+      final bytes = File(pimage.path).readAsBytesSync();
+      gstImage = base64Encode(bytes);
+    }
+    // log(img);
+    update();
+  }
+
+  addShopToServer(
+      {shopName,
+      userId,
+      categoryId,
+      shopImage,
+      licenseImage,
+      address,
+      location,
+      commission,
+      gstNumber,
+      gstPercentage,
+      featured,
+      context}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+    var body = {
+      "name": shopName,
+      "user_id": userId,
+      "category_id": categoryId,
+      "gst_number": gstNumber,
+      "address": address,
+      "latitude": "9.9816358",
+      "longitude": "76.2998842",
+      "location": location,
+      "is_featured": featured,
+      "commission": commission,
+      "image": gstImage,
+      "gst_image": gstImage,
+      "license_image": gstImage
+    };
+    var request = await http.post(Uri.parse("${baseUrl.value}vendor-add-shop/"),
+        headers: headers, body: jsonEncode(body));
+    log(request.body.toString());
+
+    if (request.statusCode == 201) {
+      final addshopresponse = addshopresponseFromJson(request.body);
+      if (addshopresponse.success == true) {
+        final shopId = addshopresponse.shopId;
+        Get.to(BankDetailsView(
+          shopId: shopId,
+        ));
+        MotionToast.success(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Success ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: const Text('Shop Added Succesfully'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      } else {
+        Get.offAll(InvoiceView());
+        MotionToast.success(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Error ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: const Text('Something went wrong'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      }
+    }
+  }
 }

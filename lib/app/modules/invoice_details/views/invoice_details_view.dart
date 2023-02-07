@@ -196,6 +196,8 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                             SizedBox(
                               height: 7,
                             ),
+
+                            
                             Row(
                               children: [
                                 Text(

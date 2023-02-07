@@ -2,19 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/modules/my_shops/model/shops_list_model.dart';
+
+import '../../../data/urls.dart';
 
 class EditShopDetails extends StatelessWidget {
-  EditShopDetails({super.key});
-  final TextEditingController shopNameController =
-      TextEditingController(text: "Zudio Shoppee");
-  final TextEditingController shopAdressController = TextEditingController(
-      text: "Infopark Expy, Kakkanad, Ernakulam 682030.. ");
-  final TextEditingController shopLocationController =
-      TextEditingController(text: "Kakkanad");
-  final TextEditingController shopCategoryController =
-      TextEditingController(text: "Textiles");
+  ShopDatum? data;
+  EditShopDetails({super.key, this.data});
+
   @override
   Widget build(BuildContext context) {
+    final TextEditingController shopNameController =
+        TextEditingController(text: data!.name);
+    final TextEditingController shopAdressController =
+        TextEditingController(text: data!.address);
+    final TextEditingController shopLocationController =
+        TextEditingController(text: data!.location);
+    final TextEditingController shopCategoryController =
+        TextEditingController(text: data!.category);
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -65,7 +70,7 @@ class EditShopDetails extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(36),
                     image: DecorationImage(
-                        image: AssetImage("assets/images/Rectangle55.png"),
+                        image: NetworkImage("$baseUrl${data!.featuredImage}"),
                         fit: BoxFit.cover),
                   ),
                   child: Column(
