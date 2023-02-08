@@ -25,7 +25,7 @@ class InvoiceDetailsController extends GetxController {
         Uri.parse("${baseUrl.value}vendor-invoice-status-change/"),
         headers: headers,
         body: jsonEncode(body));
-    log(request.body);
+    log(request.statusCode.toString());
     if (request.statusCode == 201) {
       MotionToast.success(
         dismissable: true,

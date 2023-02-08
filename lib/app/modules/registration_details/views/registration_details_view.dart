@@ -270,7 +270,7 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
                     children: [
                       InkWell(
                         onTap: () {
-                          Get.to(GstDetailsView(
+                          Get.off(GstDetailsView(
                             categoryId: categoryId,
                             licenceImage: controller.licenceImage,
                             licenceNumber: licenseController.text,

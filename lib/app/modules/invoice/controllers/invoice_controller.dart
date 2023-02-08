@@ -8,6 +8,8 @@ import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 import '../../../data/urls.dart';
 import 'package:http/http.dart' as http;
 
+import '../../invoice_details/models/invoice_details_response.dart';
+
 class InvoiceController extends GetxController {
   //TODO: Implement InvoiceController
 
@@ -43,5 +45,16 @@ class InvoiceController extends GetxController {
     // } catch (e) {
     //   log(e.toString());
     // }
+  }
+
+  RxList<AmountData> amountdataList = <AmountData>[].obs;
+  invoiceDetails({int? invoiceId}) async {
+    var body = {"invoice_id": 1};
+
+    var request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-invoice-details/"),
+        headers: headers,
+        body: jsonEncode(body));
+    log(request.statusCode.toString());
   }
 }

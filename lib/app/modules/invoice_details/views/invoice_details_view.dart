@@ -88,7 +88,6 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                     // Figma Flutter Generator Rectangle17Widget - RECTANGLE
                     Container(
                       width: 100.w,
-                      height: 270,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.white, width: 2),
                         borderRadius: BorderRadius.circular(14),
@@ -127,12 +126,14 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                       width: 146,
                                       height: 64,
                                       child: Center(
-                                        child: Text(
+                                        child: AutoSizeText(
                                           "₹${data!.invoiceAmount}",
+                                          maxLines: 2,
+                                          minFontSize: 25,
+                                          maxFontSize: 31,
                                           style: GoogleFonts.roboto(
                                               color: Color.fromARGB(
                                                   255, 73, 117, 231),
-                                              fontSize: 31,
                                               fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -193,11 +194,100 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                 color: Colors.white,
                               ),
                             ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Amount Details",
+                                  style: GoogleFonts.roboto(
+                                      color: Color.fromARGB(155, 0, 0, 0),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Current Amount -",
+                                        style: GoogleFonts.roboto(
+                                            color: Color.fromARGB(155, 0, 0, 0),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w300)),
+                                    SizedBox(
+                                      width: 14.w,
+                                    ),
+                                    Expanded(
+                                      child: Text("₹1243",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.roboto(
+                                              color: Color.fromARGB(
+                                                  255, 73, 117, 231),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600)),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Commission Amount - ",
+                                        style: GoogleFonts.roboto(
+                                            color: Color.fromARGB(155, 0, 0, 0),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w300)),
+                                    SizedBox(
+                                      width: 8.w,
+                                    ),
+                                    Expanded(
+                                      child: Text("₹243",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.roboto(
+                                              color: Color.fromARGB(
+                                                  255, 73, 117, 231),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600)),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Text("Additional Amount - ",
+                                        style: GoogleFonts.roboto(
+                                            color: Color.fromARGB(155, 0, 0, 0),
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w300)),
+                                    SizedBox(
+                                      width: 10.w,
+                                    ),
+                                    Expanded(
+                                      child: Text("₹1243",
+                                          textAlign: TextAlign.start,
+                                          style: GoogleFonts.roboto(
+                                              color: Color.fromARGB(
+                                                  255, 73, 117, 231),
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600)),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child: Divider(
+                                thickness: 2,
+                                color: Colors.white,
+                              ),
+                            ),
                             SizedBox(
                               height: 7,
                             ),
-
-                            
                             Row(
                               children: [
                                 Text(

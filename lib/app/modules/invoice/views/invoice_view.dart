@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
-import 'package:wonder_app/app/modules/my_shops/views/my_shops_view.dart';
 
+import '../../my_shops/views/my_shops_view.dart';
 import '../../notifications/views/notifications_view.dart';
 import '../../profile_view/views/profile_view_view.dart';
 import '../controllers/invoice_controller.dart';
@@ -122,6 +122,7 @@ class InvoiceView extends GetView<InvoiceController> {
                     trailing: IconButton(
                         onPressed: () {
                           Get.to(MyShopsView());
+                          // Get.to(BankDetailsView());
                         },
                         icon: Icon(Icons.arrow_forward_ios_outlined)),
                   ),

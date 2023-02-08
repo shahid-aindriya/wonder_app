@@ -76,9 +76,9 @@ class GstDetailsController extends GetxController {
 
     if (request.statusCode == 201) {
       final addshopresponse = addshopresponseFromJson(request.body);
+      final shopId = addshopresponse.shopId;
       if (addshopresponse.success == true) {
-        final shopId = addshopresponse.shopId;
-        Get.to(BankDetailsView(
+        Get.off(BankDetailsView(
           shopId: shopId,
         ));
         MotionToast.success(
@@ -98,7 +98,7 @@ class GstDetailsController extends GetxController {
         ).show(context);
       } else {
         Get.offAll(InvoiceView());
-        MotionToast.success(
+        MotionToast.error(
           dismissable: true,
           enableAnimation: false,
           position: MotionToastPosition.top,

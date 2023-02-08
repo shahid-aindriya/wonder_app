@@ -645,7 +645,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                       const Duration(milliseconds: 1000),
                                 ).show(context);
                               } else if (formKey.currentState!.validate()) {
-                                Get.to(RegistrationDetailsView(
+                                Get.off(RegistrationDetailsView(
                                   featured: controller.isChecked,
                                   commission: commissionController.text,
                                   gstPercentage: gstPercentageController.text,

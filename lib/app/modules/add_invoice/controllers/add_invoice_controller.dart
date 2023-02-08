@@ -93,13 +93,13 @@ class AddInvoiceController extends GetxController {
   }
 
   var isLoading = false.obs;
-  addInvoice(context) async {
+  addInvoice({context, customerid}) async {
     isLoading.value = true;
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
 
     var body = {
-      "customer_id": selectUserId,
+      "customer_id": customerid,
       "user_id": userId,
       "shop_id": selectShopId,
       "invoice_image": invoiceImg,
@@ -173,5 +173,22 @@ class AddInvoiceController extends GetxController {
     log(list.length.toString());
     log(result.length.toString());
     return result.toList();
+  }
+
+  RxList<UsersDatum> searchUserList = <UsersDatum>[].obs;
+  getSearchResults(String value) {
+    searchUserList.clear();
+    for (var index in userLists.value) {
+      if (index.phone.toString().toLowerCase().contains(
+            value.toLowerCase(),
+          )) {
+        UsersDatum data = UsersDatum(
+            id: index.id,
+            name: index.name,
+            phone: index.phone,
+            image: index.image);
+        searchUserList.add(data);
+      }
+    }
   }
 }

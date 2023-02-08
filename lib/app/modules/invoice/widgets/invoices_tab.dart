@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -49,8 +50,18 @@ class InvoiceTab extends StatelessWidget {
                       String formattedDate = DateFormat("MMM dd, yyyy")
                           .format(DateTime.parse(datas.invoiceDate.toString()));
                       // log(formattedDate);
+                      String path;
+                      if (datas.status == "Pending") {
+                        path = "assets/images/pending.svg";
+                      } else if (datas.status == "Approve") {
+                        path = "assets/images/aprove.svg";
+                      } else {
+                        path = "assets/images/rejected.svg";
+                      }
                       return InkWell(
-                        onTap: () {
+                        onTap: () async {
+                          await invoiceController.invoiceDetails(
+                              invoiceId: datas.id);
                           Get.to(InvoiceDetailsView(
                             data: datas,
                           ));
@@ -244,8 +255,11 @@ class InvoiceTab extends StatelessWidget {
                                                 bottom: 8,
                                                 left: 2,
                                                 right: 2),
-                                            child: Image.asset(
-                                                "assets/images/invoice_frame.png"),
+                                            child: SvgPicture.asset(datas
+                                                        .status ==
+                                                    "Pending"
+                                                ? "assets/images/pending.svg"
+                                                : "assets/images/aporved.svg"),
                                           ),
                                         ),
                                         SizedBox(

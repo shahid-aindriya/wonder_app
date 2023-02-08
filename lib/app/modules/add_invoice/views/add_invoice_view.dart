@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/modules/add_invoice/widgets/searcg.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 
 import '../controllers/add_invoice_controller.dart';
@@ -13,8 +16,12 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
       Get.put(AddInvoiceController());
   final InvoiceController invoiceController = Get.put(InvoiceController());
   final formKey = GlobalKey<FormState>();
+  final TextEditingController searchUserController = TextEditingController();
+  final TextEditingController selectUserId = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    log(selectUserId.toString());
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -78,58 +85,107 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                       SizedBox(
                         height: 8,
                       ),
-                      Obx(() {
-                        return DropdownButtonFormField(
-                          isExpanded: true,
-                          isDense: true,
-                          style: GoogleFonts.roboto(
-                              fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
-                          decoration: InputDecoration(
-                              hintStyle: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300,
-                                height: 1.1725,
-                                color: Color.fromARGB(93, 0, 0, 0),
+
+                      TextFormField(
+                        enabled: true,
+                        controller: searchUserController,
+                        style: GoogleFonts.roboto(
+                            fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                        decoration: InputDecoration(
+                            suffixIcon: Icon(Icons.search),
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              height: 1.1725,
+                              color: Color.fromARGB(93, 0, 0, 0),
+                            ),
+                            hintText: "Search user",
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18.0, horizontal: 18),
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(16)),
+                            fillColor: Color.fromARGB(153, 255, 255, 255),
+                            focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        // validator: (value) {
+                        //   if (!RegExp((r'^-?[0-9]+$')).hasMatch(value!) ||
+                        //       value.length < 3) {
+                        //     return 'please enter valid Number';
+                        //   } else {
+                        //     return null;
+                        //   }
+                        // },
+                        onChanged: (value) {
+                          searchUserController.clear();
+                          Get.to(
+                              SearchUser(
+                                text: value,
                               ),
-                              hintText: "Select user",
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 18.0, horizontal: 18),
-                              enabled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(
-                                      width: 0,
-                                      color:
-                                          Color.fromARGB(255, 199, 199, 179))),
-                              filled: true,
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 0,
-                                      color:
-                                          Color.fromARGB(255, 255, 255, 255)),
-                                  borderRadius: BorderRadius.circular(16)),
-                              fillColor: Color.fromARGB(153, 255, 255, 255),
-                              focusColor: Color.fromARGB(255, 231, 231, 231)),
-                          value: addInvoiceController.selectUserId,
-                          onChanged: (value) {
-                            addInvoiceController.changeUser(
-                              value: value,
-                            );
-                          },
-                          items:
-                              addInvoiceController.userLists.value.map((data) {
-                            return DropdownMenuItem(
-                                value: data.id.toString(),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 5.0),
-                                  child: Text(
-                                    data.phone,
-                                    overflow: TextOverflow.visible,
-                                  ),
-                                ));
-                          }).toList(),
-                        );
-                      }),
+                              arguments:
+                                  TextData(searchUserController, selectUserId));
+                        },
+                      ),
+                      // Obx(() {
+                      //   return DropdownButtonFormField(
+                      //     isExpanded: true,
+                      //     isDense: true,
+                      //     style: GoogleFonts.roboto(
+                      //         fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                      //     decoration: InputDecoration(
+                      //         hintStyle: GoogleFonts.roboto(
+                      //           fontSize: 18,
+                      //           fontWeight: FontWeight.w300,
+                      //           height: 1.1725,
+                      //           color: Color.fromARGB(93, 0, 0, 0),
+                      //         ),
+                      //         hintText: "Select user",
+                      //         contentPadding: const EdgeInsets.symmetric(
+                      //             vertical: 18.0, horizontal: 18),
+                      //         enabled: true,
+                      //         enabledBorder: OutlineInputBorder(
+                      //             borderRadius: BorderRadius.circular(16),
+                      //             borderSide: BorderSide(
+                      //                 width: 0,
+                      //                 color:
+                      //                     Color.fromARGB(255, 199, 199, 179))),
+                      //         filled: true,
+                      //         focusedBorder: OutlineInputBorder(
+                      //             borderSide: BorderSide(
+                      //                 width: 0,
+                      //                 color:
+                      //                     Color.fromARGB(255, 255, 255, 255)),
+                      //             borderRadius: BorderRadius.circular(16)),
+                      //         fillColor: Color.fromARGB(153, 255, 255, 255),
+                      //         focusColor: Color.fromARGB(255, 231, 231, 231)),
+                      //     value: addInvoiceController.selectUserId,
+                      //     onChanged: (value) {
+                      //       addInvoiceController.changeUser(
+                      //         value: value,
+                      //       );
+                      //     },
+                      //     items:
+                      //         addInvoiceController.userLists.value.map((data) {
+                      //       return DropdownMenuItem(
+                      //           value: data.id.toString(),
+                      //           child: Padding(
+                      //             padding: const EdgeInsets.only(bottom: 5.0),
+                      //             child: Text(
+                      //               data.phone,
+                      //               overflow: TextOverflow.visible,
+                      //             ),
+                      //           ));
+                      //     }).toList(),
+                      //   );
+                      // }),
                       Padding(
                         padding: const EdgeInsets.only(left: 14.0, top: 20),
                         child: Row(
@@ -689,8 +745,10 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                                           : () {
                                               if (formKey.currentState!
                                                   .validate()) {
-                                                addInvoiceController
-                                                    .addInvoice(context);
+                                                addInvoiceController.addInvoice(
+                                                    context: context,
+                                                    customerid: int.tryParse(
+                                                        selectUserId.text));
                                               }
                                             },
                                       icon: addInvoiceController
@@ -718,4 +776,11 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
           )),
     );
   }
+}
+
+class TextData {
+  final TextEditingController number;
+  final TextEditingController id;
+
+  TextData(this.number, this.id);
 }

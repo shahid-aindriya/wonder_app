@@ -438,39 +438,44 @@ class BankDetailsView extends GetView<BankDetailsController> {
                             },
                           ),
                         ),
-                        Container(
-                          width: 100,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                            border: Border(),
-                            gradient: LinearGradient(
-                              begin: Alignment(-0.934, -1),
-                              end: Alignment(1.125, 1.333),
-                              colors: <Color>[
-                                Color(0xe53f46bd),
-                                Color(0xe5417de8)
-                              ],
-                              stops: <double>[0, 1],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0x3f000000),
-                                offset: Offset(0, 0.7870440483),
-                                blurRadius: 2.7546541691,
+                        InkWell(
+                          onTap: () {
+                            bankDetailsController.pickimage();
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              border: Border(),
+                              gradient: LinearGradient(
+                                begin: Alignment(-0.934, -1),
+                                end: Alignment(1.125, 1.333),
+                                colors: <Color>[
+                                  Color(0xe53f46bd),
+                                  Color(0xe5417de8)
+                                ],
+                                stops: <double>[0, 1],
                               ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Upload',
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                height: 1.2110513051,
-                                color: Color(0xffffffff),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x3f000000),
+                                  offset: Offset(0, 0.7870440483),
+                                  blurRadius: 2.7546541691,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Upload',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.2110513051,
+                                  color: Color(0xffffffff),
+                                ),
                               ),
                             ),
                           ),
