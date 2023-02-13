@@ -4,15 +4,19 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import '../../invoice/controllers/invoice_controller.dart';
 import '../controllers/notifications_controller.dart';
 
 class NotificationsView extends GetView<NotificationsController> {
+  final InvoiceController? invoiceController;
+
+  NotificationsView({this.invoiceController});
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
           backgroundColor: Colors.transparent,

@@ -14,7 +14,7 @@ class RequestPendingView extends GetView<RequestPendingController> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
           backgroundColor: Colors.transparent,

@@ -3,15 +3,21 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import '../../../data/urls.dart';
+
 class ShopLicenseDetails extends StatelessWidget {
-  ShopLicenseDetails({super.key});
-  final TextEditingController licenseController = TextEditingController();
+  final licence;
+  final image;
+  ShopLicenseDetails({super.key, this.licence, this.image});
+
   @override
   Widget build(BuildContext context) {
+    final TextEditingController licenseController =
+        TextEditingController(text: licence);
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -130,7 +136,9 @@ class ShopLicenseDetails extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 10.0, bottom: 20),
                     child: Container(
                         width: 100.w,
-                        child: Image.asset("assets/images/invoice_image.png")),
+                        child: image != null
+                            ? Image.network("$baseUrlForImage$image")
+                            : Image.asset("assets/images/invoice_image.png")),
                   )
                 ],
               ),

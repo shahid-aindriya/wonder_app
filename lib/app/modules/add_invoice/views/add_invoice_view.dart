@@ -25,7 +25,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -89,6 +89,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                       TextFormField(
                         enabled: true,
                         controller: searchUserController,
+                        keyboardType: TextInputType.number,
                         style: GoogleFonts.roboto(
                             fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                         decoration: InputDecoration(

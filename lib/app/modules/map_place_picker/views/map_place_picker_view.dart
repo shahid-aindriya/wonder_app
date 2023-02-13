@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
 
+import '../../store_details/views/store_details_view.dart';
 import '../controllers/map_place_picker_controller.dart';
 
 class MapPlacePickerView extends GetView<MapPlacePickerController> {
@@ -13,7 +14,7 @@ class MapPlacePickerView extends GetView<MapPlacePickerController> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController controller = Get.arguments;
+    final LocationDatas datas = Get.arguments;
     return Scaffold(
       body: PlacePicker(
         apiKey: "AIzaSyB1wjIvMb5foy65Etk2JeVhHK_NVgxT8ho",
@@ -84,10 +85,12 @@ class MapPlacePickerView extends GetView<MapPlacePickerController> {
                                                   .shortName);
                                               s = "$s${selectedPlace.addressComponents![i].shortName} ,";
                                             }
-                                            controller.text = selectedPlace
-                                                .formattedAddress
-                                                .toString();
-
+                                            datas.location!.text =
+                                                selectedPlace.formattedAddress!;
+                                            datas.lat = selectedPlace
+                                                .geometry!.location.lat;
+                                            datas.long = selectedPlace
+                                                .geometry!.location.lat;
                                             Get.back();
                                           },
                                           // ignore: sort_child_properties_last

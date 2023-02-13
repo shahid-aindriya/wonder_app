@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -29,10 +31,24 @@ class BankDetailsController extends GetxController {
       image = File(pimage.path);
 
       final bytes = File(pimage.path).readAsBytesSync();
-      chequeImage = base64Encode(bytes);
+      final compressedImage = testComporessList(bytes);
+      chequeImage = base64Encode(await compressedImage);
     }
     // log(img);
     update();
+  }
+
+  testComporessList(Uint8List list) async {
+    var result = await FlutterImageCompress.compressWithList(
+      list,
+      minHeight: 500,
+      minWidth: 400,
+      quality: 70,
+      rotate: 0,
+    );
+    log(list.length.toString());
+    log(result.length.toString());
+    return result.toList();
   }
 
   addBankDetails({shopId, int? accountNum, accType, ifscCode, name}) async {

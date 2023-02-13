@@ -34,10 +34,10 @@ class MyShopsController extends GetxController {
           Uri.parse("${baseUrl.value}vendor-all-shop/"),
           headers: headers,
           body: jsonEncode(body));
-      // log(request.statusCode.toString());
+      log(request.body.toString());
       if (request.statusCode == 201) {
         final shopsListModel = shopsListModelFromJson(request.body);
-        log(shopsListModel.shopData[0].licenseImage.toString());
+        // log(shopsListModel.shopData[0].licenseImage.toString());
         shopLists.assignAll(shopsListModel.shopData);
         return shopsListModel.shopData;
       }

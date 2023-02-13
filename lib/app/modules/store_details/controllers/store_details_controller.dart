@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wonder_app/app/modules/store_details/model/store_category_model.dart';
@@ -48,7 +50,8 @@ class StoreDetailsController extends GetxController {
       image = File(pimage.path);
 
       final bytes = File(pimage.path).readAsBytesSync();
-      shopImage = base64Encode(bytes);
+      final compressedImage = testComporessList(bytes);
+      shopImage = base64Encode(await compressedImage);
     }
     // log(img);
     update();
@@ -66,4 +69,24 @@ class StoreDetailsController extends GetxController {
       categoryLists.value.assignAll(shopShopCategoryModel.categories);
     }
   }
+
+  testComporessList(Uint8List list) async {
+    var result = await FlutterImageCompress.compressWithList(
+      list,
+      minHeight: 600,
+      minWidth: 400,
+      quality: 100,
+      format: CompressFormat.png,
+      rotate: 0,
+    );
+    log(list.length.toString());
+    log(result.length.toString());
+    return result.toList();
+  }
+
+ 
+ 
+ 
+
+
 }

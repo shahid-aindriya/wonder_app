@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/my_shops/model/shops_list_model.dart';
+import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
 
 import '../../../data/urls.dart';
 
@@ -20,10 +21,12 @@ class EditShopDetails extends StatelessWidget {
         TextEditingController(text: data!.location);
     final TextEditingController shopCategoryController =
         TextEditingController(text: data!.category);
+    final ShopDetailsController shopDetailsController =
+        Get.put(ShopDetailsController());
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -248,7 +251,10 @@ class EditShopDetails extends StatelessWidget {
                               backgroundColor:
                                   MaterialStateProperty.all(Colors.transparent),
                               elevation: MaterialStateProperty.all(0)),
-                          onPressed: () async {},
+                          onPressed: () async {
+                            shopDetailsController.editShopDetails(
+                                shopId: data!.id);
+                          },
                           child: Text(
                             'Save',
                             style: GoogleFonts.roboto(

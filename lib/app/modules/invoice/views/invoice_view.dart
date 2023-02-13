@@ -8,6 +8,7 @@ import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
 
+import '../../add_invoice/controllers/add_invoice_controller.dart';
 import '../../my_shops/views/my_shops_view.dart';
 import '../../notifications/views/notifications_view.dart';
 import '../../profile_view/views/profile_view_view.dart';
@@ -19,11 +20,13 @@ import '../widgets/wallet_tab.dart';
 
 class InvoiceView extends GetView<InvoiceController> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  @override
   final InvoiceController invoiceController = Get.put(InvoiceController());
+  final AddInvoiceController addInvoiceController =
+      Get.put(AddInvoiceController());
   @override
   Widget build(BuildContext context) {
-    invoiceController.getInvoiceLists();
+    invoiceController.notifications();
+    // invoiceController.getInvoiceLists();
     return DefaultTabController(
       length: 2,
       child: Container(
@@ -234,11 +237,68 @@ class InvoiceView extends GetView<InvoiceController> {
               );
             }),
             actions: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Obx(() {
+                  return Container(
+                      width: 60.w,
+                      child: DropdownButtonFormField(
+                        isExpanded: true,
+                        isDense: true,
+                        style: GoogleFonts.roboto(
+                            fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                        decoration: InputDecoration(
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              height: 1.1725,
+                              color: Color.fromARGB(93, 0, 0, 0),
+                            ),
+                            hintText: "Select Shop",
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 18),
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(16)),
+                            fillColor: Color.fromARGB(153, 255, 255, 255),
+                            focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        value: addInvoiceController.selectShopId,
+                        onChanged: (value) {
+                          invoiceController.onDropDownChanged(value);
+                          addInvoiceController.changeShop(
+                            value: value,
+                          );
+                        },
+                        items: addInvoiceController.shopLists.value.map((data) {
+                          return DropdownMenuItem(
+                              value: data.id.toString(),
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 5.0),
+                                child: Text(
+                                  data.name,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ));
+                        }).toList(),
+                      ));
+                }),
+              ),
               Container(
                 decoration: BoxDecoration(),
                 child: InkWell(
                   onTap: () {
-                    Get.to(NotificationsView());
+                    Get.to(NotificationsView(
+                      invoiceController: invoiceController,
+                    ));
                   },
                   child: Center(
                     child: BellWidget(),
@@ -342,8 +402,8 @@ class InvoiceView extends GetView<InvoiceController> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    InvoiceTab(),
-                    WalletTab(),
+                    InvoiceTab(invoiceController: invoiceController),
+                    WalletTab(invoiceController: invoiceController),
                   ],
                 ),
               ),

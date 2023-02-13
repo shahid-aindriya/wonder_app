@@ -30,9 +30,10 @@ class AddInvoiceController extends GetxController {
   @override
   void onClose() {}
   void increment() => count.value++;
-
+  var shopLists = RxList<ShopDatum>().obs;
   String? selectUserId;
   dynamic selectShopId;
+
   final TextEditingController invoiceNumber = TextEditingController();
   final TextEditingController invoiceDAte = TextEditingController();
   final TextEditingController preTaxController = TextEditingController();
@@ -146,7 +147,6 @@ class AddInvoiceController extends GetxController {
     isLoading.value = false;
   }
 
-  var shopLists = RxList<ShopDatum>().obs;
   Future<dynamic> getListOfShops() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
@@ -158,6 +158,8 @@ class AddInvoiceController extends GetxController {
       final shopsListModel = shopsListModelFromJson(request.body);
       // log(shopsListModel.shopData[0].licenseImage.toString());
       shopLists.value.assignAll(shopsListModel.shopData);
+
+      update();
       return shopsListModel.shopData;
     }
   }
@@ -165,9 +167,10 @@ class AddInvoiceController extends GetxController {
   testComporessList(Uint8List list) async {
     var result = await FlutterImageCompress.compressWithList(
       list,
-      minHeight: 500,
+      minHeight: 600,
       minWidth: 400,
-      quality: 70,
+      quality: 100,
+      format: CompressFormat.png,
       rotate: 0,
     );
     log(list.length.toString());

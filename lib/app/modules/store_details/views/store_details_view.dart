@@ -16,10 +16,14 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
   final TextEditingController shopAdressController = TextEditingController();
   final TextEditingController gstPercentageController = TextEditingController();
   final TextEditingController commissionController = TextEditingController();
+  final TextEditingController closeTimeController = TextEditingController();
+  final TextEditingController openTimeController = TextEditingController();
   @override
   final StoreDetailsController controller = Get.put(StoreDetailsController());
 
   StoreDetailsView({this.storeLocation});
+  dynamic lat;
+  dynamic long;
   @override
   Widget build(BuildContext context) {
     // log(storeLocation.toString());
@@ -30,7 +34,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -222,7 +226,10 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                             suffixIcon: IconButton(
                                 onPressed: () async {
                                   Get.to(MapPlacePickerView(),
-                                      arguments: shopLocationController);
+                                      arguments: LocationDatas(
+                                          lat: lat,
+                                          location: shopLocationController,
+                                          long: long));
 
                                   // Get.to(MapPlacePicker());
                                 },
@@ -313,7 +320,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
                         validator: (value) {
-                          if (value == null) {
+                          if (value!.isEmpty) {
                             return 'please enter valid amount';
                           } else {
                             return null;
@@ -373,10 +380,162 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
                         validator: (value) {
-                          if (value == null) {
+                          if (value!.isEmpty) {
                             return 'please enter valid amount';
                           } else {
                             return null;
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 14.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Opening Time',
+                              style: GoogleFonts.roboto(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                height: 1.1725,
+                                color: Color(0xff4956b2),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextFormField(
+                        controller: openTimeController,
+                        enabled: true,
+                        keyboardType: TextInputType.none,
+                        style: GoogleFonts.roboto(
+                            fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                        decoration: InputDecoration(
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              height: 1.1725,
+                              color: Color.fromARGB(93, 0, 0, 0),
+                            ),
+                            hintText: "Enter opening time",
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18.0, horizontal: 18),
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(16)),
+                            fillColor: Color.fromARGB(153, 255, 255, 255),
+                            focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'please enter opening time';
+                          } else {
+                            return null;
+                          }
+                        },
+                        onTap: () async {
+                          TimeOfDay? selectedOpeningTime;
+                          final TimeOfDay? picked = await showTimePicker(
+                            context: context,
+                            initialTime: selectedOpeningTime ?? TimeOfDay.now(),
+                          );
+                          if (picked != null) {
+                            selectedOpeningTime = picked;
+                            openTimeController.text =
+                                " ${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
+                          } else {
+                            var current = TimeOfDay.now();
+                            openTimeController.text =
+                                " ${current.hour}:${current.minute}";
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 14.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Closing Time',
+                              style: GoogleFonts.roboto(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                height: 1.1725,
+                                color: Color(0xff4956b2),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextFormField(
+                        controller: closeTimeController,
+                        enabled: true,
+                        keyboardType: TextInputType.none,
+                        style: GoogleFonts.roboto(
+                            fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                        decoration: InputDecoration(
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              height: 1.1725,
+                              color: Color.fromARGB(93, 0, 0, 0),
+                            ),
+                            hintText: "Enter closing time",
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18.0, horizontal: 18),
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(16)),
+                            fillColor: Color.fromARGB(153, 255, 255, 255),
+                            focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'please enter closing time';
+                          } else {
+                            return null;
+                          }
+                        },
+                        onTap: () async {
+                          TimeOfDay? selectedOpeningTime;
+                          final TimeOfDay? picked = await showTimePicker(
+                            context: context,
+                            initialTime: selectedOpeningTime ?? TimeOfDay.now(),
+                          );
+                          if (picked != null) {
+                            selectedOpeningTime = picked;
+                            closeTimeController.text =
+                                " ${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
+                          } else {
+                            var current = TimeOfDay.now();
+                            closeTimeController.text =
+                                " ${current.hour}:${current.minute}";
                           }
                         },
                       ),
@@ -654,6 +813,8 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                   shopImage: controller.shopImage,
                                   shopLocation: shopLocationController.text,
                                   shopName: shopNameController.text,
+                                  closingTime: closeTimeController.text,
+                                  openingTime: openTimeController.text,
                                 ));
                               }
                             },
@@ -706,4 +867,11 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
           )),
     );
   }
+}
+
+class LocationDatas {
+  TextEditingController? location;
+  dynamic long;
+  dynamic lat;
+  LocationDatas({this.location, this.lat, this.long});
 }

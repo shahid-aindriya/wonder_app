@@ -5,19 +5,24 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/data/urls.dart';
+import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 
 import '../controllers/invoice_details_controller.dart';
 
 class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
   final InvoiceDatum? data;
-
-  InvoiceDetailsView({this.data});
+  final AmountData? amountdataList;
+  InvoiceDetailsView({this.data, this.amountdataList});
+  final InvoiceController invoiceController = Get.put(InvoiceController());
   final InvoiceDetailsController invoiceDetailsController =
       Get.put(InvoiceDetailsController());
   @override
   Widget build(BuildContext context) {
+    invoiceDetailsController.amount = data!.amountData.additionalAmount;
+    invoiceDetailsController.invoiceId = data!.id;
     String formattedDate = DateFormat("dd MMMM, yyyy")
         .format(DateTime.parse(data!.invoiceDate.toString()));
     String formattedDate2 = DateFormat("dd MMM yyyy, HH:mm")
@@ -25,12 +30,12 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
               backgroundColor: Color.fromARGB(255, 77, 96, 221),
-              onPressed: () {},
+              onPressed: () async {},
               child: Icon(Icons.download)),
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -218,7 +223,10 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                       width: 14.w,
                                     ),
                                     Expanded(
-                                      child: Text("₹1243",
+                                      child: Text(
+                                          data != null
+                                              ? "₹ ${data!.amountData.currentAmount}"
+                                              : "₹0",
                                           textAlign: TextAlign.start,
                                           style: GoogleFonts.roboto(
                                               color: Color.fromARGB(
@@ -239,10 +247,13 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.w300)),
                                     SizedBox(
-                                      width: 8.w,
+                                      width: 5.w,
                                     ),
                                     Expanded(
-                                      child: Text("₹243",
+                                      child: Text(
+                                          data != null
+                                              ? "₹ ${data!.amountData.commissionAmount}"
+                                              : "₹0",
                                           textAlign: TextAlign.start,
                                           style: GoogleFonts.roboto(
                                               color: Color.fromARGB(
@@ -263,10 +274,13 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                             fontSize: 14,
                                             fontWeight: FontWeight.w300)),
                                     SizedBox(
-                                      width: 10.w,
+                                      width: 9.w,
                                     ),
                                     Expanded(
-                                      child: Text("₹1243",
+                                      child: Text(
+                                          data != null
+                                              ? "₹ ${data!.amountData.additionalAmount}"
+                                              : "₹0",
                                           textAlign: TextAlign.start,
                                           style: GoogleFonts.roboto(
                                               color: Color.fromARGB(
@@ -332,64 +346,40 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton.icon(
-                            style: ButtonStyle(
-                                fixedSize:
-                                    MaterialStateProperty.all(Size(44.w, 53)),
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(7),
-                                        side: BorderSide(
-                                            color: Color.fromARGB(
-                                                255, 0, 158, 16)))),
-                                elevation: MaterialStateProperty.all(0),
-                                backgroundColor: MaterialStateProperty.all(
-                                    Color.fromARGB(134, 255, 255, 255))),
-                            onPressed: () async {
-                              await invoiceDetailsController
-                                  .approveOrDeclineInvoice(
-                                      context: context,
-                                      choice: "Approve",
-                                      invoiceId: data!.id);
-                            },
-                            icon: Icon(Icons.check,
-                                color: Color.fromARGB(255, 0, 158, 16)),
-                            label: Text("Approve",
-                                style: GoogleFonts.roboto(
-                                    color: Color.fromARGB(255, 0, 158, 16),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500))),
-                        ElevatedButton.icon(
-                            style: ButtonStyle(
-                                fixedSize:
-                                    MaterialStateProperty.all(Size(44.w, 53)),
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(7),
-                                        side: BorderSide(
-                                            color: Color.fromARGB(
-                                                255, 255, 80, 80)))),
-                                elevation: MaterialStateProperty.all(0),
-                                backgroundColor: MaterialStateProperty.all(
-                                    Color.fromARGB(134, 255, 255, 255))),
-                            onPressed: () async {
-                              await invoiceDetailsController
-                                  .approveOrDeclineInvoice(
-                                      context: context,
-                                      choice: "Reject",
-                                      invoiceId: data!.id);
-                            },
-                            icon: Icon(Icons.close,
-                                color: Color.fromARGB(255, 255, 80, 80)),
-                            label: Text("Decline",
-                                style: GoogleFonts.roboto(
-                                    color: Color.fromARGB(255, 255, 80, 80),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500)))
-                      ],
+                    Visibility(
+                        visible: data!.status == "Pending" ? true : false,
+                        child: ApproveAndDecline(
+                            invoiceDetailsController: invoiceDetailsController,
+                            data: data)),
+
+                    Visibility(
+                      visible: data!.status == "Pending" ? false : true,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              style: ButtonStyle(
+                                  fixedSize:
+                                      MaterialStateProperty.all(Size(60.w, 53)),
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          side: BorderSide(color: greyColor))),
+                                  elevation: MaterialStateProperty.all(0),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color.fromARGB(134, 255, 255, 255))),
+                              onPressed: null,
+                              child: Text(
+                                  data!.status == "Reject"
+                                      ? "Rejected"
+                                      : "Approved",
+                                  style: GoogleFonts.roboto(
+                                      color: greyColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500))),
+                        ],
+                      ),
                     ),
 
                     Padding(
@@ -430,6 +420,80 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
               )
             ],
           )),
+    );
+  }
+}
+
+class ApproveAndDecline extends StatelessWidget {
+  const ApproveAndDecline({
+    super.key,
+    required this.invoiceDetailsController,
+    required this.data,
+  });
+
+  final InvoiceDetailsController invoiceDetailsController;
+  final InvoiceDatum? data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ElevatedButton.icon(
+            style: ButtonStyle(
+                fixedSize: MaterialStateProperty.all(Size(44.w, 53)),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7),
+                    side: BorderSide(color: Color.fromARGB(255, 0, 158, 16)))),
+                elevation: MaterialStateProperty.all(0),
+                backgroundColor: MaterialStateProperty.all(
+                    Color.fromARGB(134, 255, 255, 255))),
+            onPressed: data!.amountData.additionalAmount > 0
+                ? () {
+                    invoiceDetailsController.openCheckout(
+                        amount: data!.amountData.additionalAmount + 00,
+                        razorKey: data!.amountData.razorKey,
+                        invoiceId: data!.id);
+                    // invoiceDetailsController.openCheckout(
+                    //     invoiceId: data!.id,
+                    //     amount: data!.amountData.additionalAmount + 00,
+                    //     razorKey: data!.amountData.razorKey);
+                  }
+                : () async {
+                    await invoiceDetailsController.approveOrDeclineInvoice(
+                        context: context,
+                        choice: "Approve",
+                        invoiceId: data!.id);
+                  },
+            icon: Icon(Icons.check, color: Color.fromARGB(255, 0, 158, 16)),
+            label: Text(
+                data!.amountData.additionalAmount > 0
+                    ? "Pay & Approve"
+                    : "Approve",
+                style: GoogleFonts.roboto(
+                    color: Color.fromARGB(255, 0, 158, 16),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500))),
+        ElevatedButton.icon(
+            style: ButtonStyle(
+                fixedSize: MaterialStateProperty.all(Size(44.w, 53)),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(7),
+                    side: BorderSide(color: Color.fromARGB(255, 255, 80, 80)))),
+                elevation: MaterialStateProperty.all(0),
+                backgroundColor: MaterialStateProperty.all(
+                    Color.fromARGB(134, 255, 255, 255))),
+            onPressed: () async {
+              await invoiceDetailsController.approveOrDeclineInvoice(
+                  context: context, choice: "Reject", invoiceId: data!.id);
+            },
+            icon: Icon(Icons.close, color: Color.fromARGB(255, 255, 80, 80)),
+            label: Text("Decline",
+                style: GoogleFonts.roboto(
+                    color: Color.fromARGB(255, 255, 80, 80),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500)))
+      ],
     );
   }
 }

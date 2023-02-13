@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
-import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 import 'package:wonder_app/app/modules/request_pending/views/request_pending_view.dart';
+import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
 
 import '../../../../api/api_service.dart';
 import '../model/response_model.dart';
@@ -72,7 +72,7 @@ class PasswordGenerationController extends GetxController {
     } else if (sellerRegistrationResponse.isApproved == false) {
       Get.to(RequestPendingView());
     } else {
-      Get.to(InvoiceView());
+      Get.to(StoreDetailsView());
     }
   }
 }

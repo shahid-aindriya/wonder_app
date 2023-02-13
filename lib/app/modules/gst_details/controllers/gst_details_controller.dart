@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +26,7 @@ class GstDetailsController extends GetxController {
   @override
   void onClose() {}
   void increment() => count.value++;
-
+  dynamic compressedImage;
   String gstImage = '';
   File? image;
   pickimage() async {
@@ -34,7 +37,8 @@ class GstDetailsController extends GetxController {
       image = File(pimage.path);
 
       final bytes = File(pimage.path).readAsBytesSync();
-      gstImage = base64Encode(bytes);
+      compressedImage = testComporessList(bytes);
+      gstImage = base64Encode(await compressedImage);
     }
     // log(img);
     update();
@@ -42,6 +46,8 @@ class GstDetailsController extends GetxController {
 
   addShopToServer(
       {shopName,
+      closingTime,
+      openingTime,
       userId,
       categoryId,
       shopImage,
@@ -49,6 +55,7 @@ class GstDetailsController extends GetxController {
       address,
       location,
       commission,
+      licenceNumber,
       gstNumber,
       gstPercentage,
       featured,
@@ -63,10 +70,13 @@ class GstDetailsController extends GetxController {
       "address": address,
       "latitude": "9.9816358",
       "longitude": "76.2998842",
+      "opening_time": openingTime,
+      "closing_time": closingTime,
       "location": location,
       "is_featured": featured,
       "commission": commission,
       "image": gstImage,
+      "license_number": licenceNumber,
       "gst_image": gstImage,
       "license_image": gstImage
     };
@@ -115,5 +125,19 @@ class GstDetailsController extends GetxController {
         ).show(context);
       }
     }
+  }
+
+  testComporessList(Uint8List list) async {
+    var result = await FlutterImageCompress.compressWithList(
+      list,
+      minHeight: 600,
+      minWidth: 400,
+      quality: 100,
+      format: CompressFormat.png,
+      rotate: 0,
+    );
+    log(list.length.toString());
+    log(result.length.toString());
+    return result.toList();
   }
 }

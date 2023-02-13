@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -6,8 +8,11 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/my_shops/model/shops_list_model.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/edit_shop_details.dart';
+import 'package:wonder_app/app/modules/shop_details/widgets/shop_gst_details.dart';
+import 'package:wonder_app/app/modules/shop_details/widgets/shop_license_details.dart';
 
 import '../controllers/shop_details_controller.dart';
+import '../widgets/bank_details.dart';
 
 class ShopDetailsView extends GetView<ShopDetailsController> {
   ShopDatum? data;
@@ -17,7 +22,7 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -240,7 +245,12 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w400)),
                           trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(ShopLicenseDetails(
+                                  image: data!.licenseImage,
+                                  licence: data!.licenseNumber,
+                                ));
+                              },
                               icon: Icon(Icons.arrow_forward_ios_rounded)),
                         ),
                       ),
@@ -260,7 +270,12 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w400)),
                           trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(ShopGstDetails(
+                                  gst: data!.gstNumber,
+                                  image: data!.gstImage,
+                                ));
+                              },
                               icon: Icon(Icons.arrow_forward_ios_rounded)),
                         ),
                       ),
@@ -280,7 +295,16 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w400)),
                           trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                log(data!.bankData.chequeCopy.toString());
+                                Get.to(BankDetailsOfShop(
+                                  accounType: data!.bankData.accountType,
+                                  accountNumber: data!.bankData.accountNumber,
+                                  holderName: data!.bankData.name,
+                                  ifscCode: data!.bankData.ifscCode,
+                                  image: data!.bankData.chequeCopy,
+                                ));
+                              },
                               icon: Icon(Icons.arrow_forward_ios_rounded)),
                         ),
                       ),

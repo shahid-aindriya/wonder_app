@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 
 class WalletTab extends StatelessWidget {
-  const WalletTab({
+  final InvoiceController invoiceController;
+
+  WalletTab({
+    required this.invoiceController,
     Key? key,
   }) : super(key: key);
 
@@ -45,31 +50,35 @@ class WalletTab extends StatelessWidget {
                             fontWeight: FontWeight.w400),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: Text(
-                            overflow: TextOverflow.clip,
-                            "14,325",
-                            style: GoogleFonts.roboto(
-                                fontSize: 24.sp,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                    Obx(() {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: Text(
+                              invoiceController.walletAmount.value == ''
+                                  ? '0'
+                                  : invoiceController.walletAmount.value,
+                              overflow: TextOverflow.clip,
+                              style: GoogleFonts.roboto(
+                                  fontSize: 24.sp,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Container(
-                              height: 24,
-                              width: 24,
-                              child: Image.asset(
-                                "assets/images/gold.png",
-                                fit: BoxFit.contain,
-                              )),
-                        )
-                      ],
-                    ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Container(
+                                height: 24,
+                                width: 24,
+                                child: Image.asset(
+                                  "assets/images/gold.png",
+                                  fit: BoxFit.contain,
+                                )),
+                          )
+                        ],
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -78,20 +87,15 @@ class WalletTab extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 15),
-          child: ElevatedButton.icon(
+          child: ElevatedButton(
+              onPressed: () {},
               style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(7))),
                   elevation: MaterialStateProperty.all(12),
                   backgroundColor: MaterialStateProperty.all(Colors.white)),
-              onPressed: () {},
-              icon: Icon(
-                size: 15,
-                Icons.add,
-                color: Color.fromARGB(255, 63, 72, 191),
-              ),
-              label: Text(
-                "Add Points",
+              child: Text(
+                "Request coins",
                 style: GoogleFonts.roboto(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -123,66 +127,72 @@ class WalletTab extends StatelessWidget {
             ],
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(top: 15, right: 5.w, left: 5.w),
-                  child: Container(
-                    width: 100.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(14),
-                        topRight: Radius.circular(14),
-                        bottomLeft: Radius.circular(14),
-                        bottomRight: Radius.circular(14),
-                      ),
-                      gradient: LinearGradient(
-                          begin: Alignment(
-                              1.4153012037277222, 0.15562866628170013),
-                          end: Alignment(
-                              -0.15562868118286133, 0.044075123965740204),
-                          colors: [
-                            Color.fromRGBO(255, 255, 255, 0.75),
-                            Color.fromRGBO(255, 255, 255, 0.6800000071525574)
-                          ]),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                            child: Image.asset("assets/images/Ellipse 21.png")),
-                        title: Text("Rakesh K Raju",
-                            style: GoogleFonts.roboto(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                        subtitle: Text(
-                          "Redeemed Wonder Points",
-                          style: GoogleFonts.roboto(
-                              fontSize: 14, fontWeight: FontWeight.w300),
+        Obx(() {
+          return Expanded(
+            child: ListView.builder(
+                itemCount: invoiceController.walletTransactionLists.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 15, right: 5.w, left: 5.w),
+                    child: Container(
+                      width: 100.w,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(14),
+                          topRight: Radius.circular(14),
+                          bottomLeft: Radius.circular(14),
+                          bottomRight: Radius.circular(14),
                         ),
-                        trailing: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "-36",
+                        gradient: LinearGradient(
+                            begin: Alignment(
+                                1.4153012037277222, 0.15562866628170013),
+                            end: Alignment(
+                                -0.15562868118286133, 0.044075123965740204),
+                            colors: [
+                              Color.fromRGBO(255, 255, 255, 0.75),
+                              Color.fromRGBO(255, 255, 255, 0.6800000071525574)
+                            ]),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                              child:
+                                  Image.asset("assets/images/Ellipse 21.png")),
+                          title: Text(
+                              invoiceController
+                                  .walletTransactionLists[index].phone,
                               style: GoogleFonts.roboto(
-                                  color: Color.fromARGB(255, 243, 106, 106),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text("2 Minutes Ago",
+                                  fontSize: 16, fontWeight: FontWeight.w600)),
+                          subtitle: Text(
+                            "Redeemed Wonder Points",
+                            style: GoogleFonts.roboto(
+                                fontSize: 14, fontWeight: FontWeight.w300),
+                          ),
+                          trailing: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "-${invoiceController.walletTransactionLists[index].amount}",
                                 style: GoogleFonts.roboto(
-                                    fontSize: 10, fontWeight: FontWeight.w300))
-                          ],
+                                    color: Color.fromARGB(255, 243, 106, 106),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              Text("2 Minutes Ago",
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w300))
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }),
-        )
+                  );
+                }),
+          );
+        })
       ],
     );
   }

@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/data/urls.dart';
 
 class ShopGstDetails extends StatelessWidget {
-  ShopGstDetails({super.key});
-  final TextEditingController gstController =
-      TextEditingController(text: "3457634657efr");
+  final gst;
+  final image;
+  ShopGstDetails({super.key, this.gst, this.image});
+
   @override
   Widget build(BuildContext context) {
+    final TextEditingController gstController =
+        TextEditingController(text: gst);
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.png"),
+              image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -131,7 +135,9 @@ class ShopGstDetails extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 10.0, bottom: 20),
                     child: Container(
                         width: 100.w,
-                        child: Image.asset("assets/images/invoice_image.png")),
+                        child: image != null
+                            ? Image.network("$baseUrlForImage$image")
+                            : Image.asset("assets/images/invoice_image.png")),
                   )
                 ],
               ),
