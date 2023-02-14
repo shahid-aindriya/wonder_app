@@ -29,6 +29,7 @@ class InvoiceDetailsController extends GetxController {
 
   dynamic invoiceId;
   dynamic amount;
+  dynamic shopId;
   @override
   void dispose() {
     razorpay.clear();
@@ -82,7 +83,7 @@ class InvoiceDetailsController extends GetxController {
     if (requests.statusCode == 201) {
       Get.snackbar("Info ", "Payment completed succesfully",
           backgroundColor: Colors.green);
-      await inoviceController.getInvoiceLists();
+      await inoviceController.onDropDownChanged(shopId);
       Get.offAll(InvoiceView());
     }
   }

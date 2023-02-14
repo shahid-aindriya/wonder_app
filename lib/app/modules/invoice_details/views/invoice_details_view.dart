@@ -15,12 +15,14 @@ import '../controllers/invoice_details_controller.dart';
 class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
   final InvoiceDatum? data;
   final AmountData? amountdataList;
+
   InvoiceDetailsView({this.data, this.amountdataList});
   final InvoiceController invoiceController = Get.put(InvoiceController());
   final InvoiceDetailsController invoiceDetailsController =
       Get.put(InvoiceDetailsController());
   @override
   Widget build(BuildContext context) {
+    invoiceDetailsController.shopId = data!.shopId;
     invoiceDetailsController.amount = data!.amountData.additionalAmount;
     invoiceDetailsController.invoiceId = data!.id;
     String formattedDate = DateFormat("dd MMMM, yyyy")

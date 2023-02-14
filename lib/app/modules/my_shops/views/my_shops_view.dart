@@ -15,6 +15,7 @@ class MyShopsView extends GetView<MyShopsController> {
   MyShopsView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    shopController.getListOfShops();
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -50,168 +51,168 @@ class MyShopsView extends GetView<MyShopsController> {
             ),
           ),
         ),
-        body: ListView(
-          children: [
-            FutureBuilder(
-                future: shopController.getListOfShops(),
-                builder: (context, snapshot) {
-                  return shopController.shopLists.isEmpty
-                      ? Column(
-                          children: [
-                            SizedBox(
-                              height: 10.h,
+        body: RefreshIndicator(
+          onRefresh: () => shopController.getListOfShops(),
+          child: ListView(
+            children: [
+              Obx(() {
+                return shopController.shopLists.isEmpty
+                    ? Column(
+                        children: [
+                          SizedBox(
+                            height: 10.h,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Lottie.asset(
+                                    "assets/images/13659-no-data.json"),
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Lottie.asset(
-                                      "assets/images/13659-no-data.json"),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : GridView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemCount: shopController.shopLists.value.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2, childAspectRatio: .77),
-                          itemBuilder: (context, index) {
-                            var data = shopController.shopLists[index];
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                child: Card(
-                                  elevation: 10,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(15.0)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 5.0, right: 5, top: 5),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Flexible(
-                                          child: InkWell(
-                                            onTap: () {
-                                              Get.to(ShopDetailsView(
-                                                data: data,
-                                              ));
-                                            },
-                                            child: Container(
-                                                width: 100.w,
-                                                height: 18.h,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topLeft: Radius
-                                                                .circular(16),
-                                                            topRight:
-                                                                Radius.circular(
-                                                                    16)),
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                        "$baseUrl${data.featuredImage}",
-                                                      ),
-                                                      fit: BoxFit.fitWidth,
-                                                    )),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(0.0),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      // Figma Flutter Generator Rectangle33Widget - RECTANGLE
-                                                      IconButton(
-                                                          onPressed: () {},
-                                                          icon: Icon(
-                                                            Icons.favorite,
-                                                            color: Colors.grey,
-                                                          ))
-                                                    ],
-                                                  ),
-                                                )),
+                          ),
+                        ],
+                      )
+                    : GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: shopController.shopLists.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, childAspectRatio: .77),
+                        itemBuilder: (context, index) {
+                          var data = shopController.shopLists[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              child: Card(
+                                elevation: 10,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 5.0, right: 5, top: 5),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Flexible(
+                                        child: InkWell(
+                                          onTap: () {
+                                            Get.to(ShopDetailsView(
+                                              shopController: shopController,
+                                              data: data,
+                                            ));
+                                          },
+                                          child: Container(
+                                              width: 100.w,
+                                              height: 18.h,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          topLeft:
+                                                              Radius.circular(
+                                                                  16),
+                                                          topRight:
+                                                              Radius.circular(
+                                                                  16)),
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(
+                                                      "$baseUrl${data.featuredImage}",
+                                                    ),
+                                                    fit: BoxFit.fitWidth,
+                                                  )),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(0.0),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    // Figma Flutter Generator Rectangle33Widget - RECTANGLE
+                                                    IconButton(
+                                                        onPressed: () {},
+                                                        icon: Icon(
+                                                          Icons.favorite,
+                                                          color: Colors.grey,
+                                                        ))
+                                                  ],
+                                                ),
+                                              )),
+                                        ),
+                                      ),
+                                      Text(
+                                        "${data.name} ,",
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 17.sp,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      Text(
+                                        data.location,
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 17.sp,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                              "assets/images/textile_vector.png"),
+                                          SizedBox(
+                                            width: 8,
                                           ),
-                                        ),
-                                        Text(
-                                          "${data.name} ,",
-                                          style: GoogleFonts.roboto(
-                                              fontSize: 17.sp,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        Text(
-                                          data.location,
-                                          style: GoogleFonts.roboto(
-                                              fontSize: 17.sp,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                        SizedBox(
-                                          height: 3,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Image.asset(
-                                                "assets/images/textile_vector.png"),
-                                            SizedBox(
-                                              width: 8,
-                                            ),
-                                            Text(
-                                              data.category,
-                                              style: GoogleFonts.roboto(
-                                                  fontSize: 16.sp,
-                                                  fontWeight: FontWeight.w300),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 4,
-                                        ),
-                                        // GetBuilder<MyShopsController>(
-                                        //     builder: (context1) {
-                                        //   return Row(
-                                        //     children: [
-                                        //       StarRating(
-                                        //           starSize: 18,
-                                        //           color: Color.fromARGB(
-                                        //               255, 240, 188, 3),
-                                        //           length: 5,
-                                        //           rating: shopController
-                                        //               .rating1[index],
-                                        //           onRaitingTap: (rating) {
-                                        //             shopController.starRating(
-                                        //                 index, rating);
-                                        //           }),
-                                        //       Text(
-                                        //         " (125)",
-                                        //         style: GoogleFonts.roboto(
-                                        //             fontSize: 14.sp,
-                                        //             fontWeight:
-                                        //                 FontWeight.w300),
-                                        //       )
-                                        //     ],
-                                        //   );
-                                        // }),
-                                      ],
-                                    ),
+                                          Text(
+                                            data.category,
+                                            style: GoogleFonts.roboto(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.w300),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      // GetBuilder<MyShopsController>(
+                                      //     builder: (context1) {
+                                      //   return Row(
+                                      //     children: [
+                                      //       StarRating(
+                                      //           starSize: 18,
+                                      //           color: Color.fromARGB(
+                                      //               255, 240, 188, 3),
+                                      //           length: 5,
+                                      //           rating: shopController
+                                      //               .rating1[index],
+                                      //           onRaitingTap: (rating) {
+                                      //             shopController.starRating(
+                                      //                 index, rating);
+                                      //           }),
+                                      //       Text(
+                                      //         " (125)",
+                                      //         style: GoogleFonts.roboto(
+                                      //             fontSize: 14.sp,
+                                      //             fontWeight:
+                                      //                 FontWeight.w300),
+                                      //       )
+                                      //     ],
+                                      //   );
+                                      // }),
+                                    ],
                                   ),
                                 ),
                               ),
-                            );
-                          },
-                        );
-                })
-          ],
+                            ),
+                          );
+                        },
+                      );
+              })
+            ],
+          ),
         ),
         bottomNavigationBar: Container(
           height: 70,

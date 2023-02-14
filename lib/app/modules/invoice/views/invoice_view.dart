@@ -23,6 +23,7 @@ class InvoiceView extends GetView<InvoiceController> {
   final InvoiceController invoiceController = Get.put(InvoiceController());
   final AddInvoiceController addInvoiceController =
       Get.put(AddInvoiceController());
+
   @override
   Widget build(BuildContext context) {
     invoiceController.notifications();

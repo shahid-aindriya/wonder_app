@@ -203,7 +203,6 @@ class EditShopDetails extends StatelessWidget {
                     height: 10,
                   ),
                   TextFormField(
-                    controller: shopCategoryController,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                           borderSide:
@@ -220,6 +219,170 @@ class EditShopDetails extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      "Commission",
+                      style: GoogleFonts.roboto(
+                          fontSize: 14.sp, fontWeight: FontWeight.w300),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      "Gst-Percentage%",
+                      style: GoogleFonts.roboto(
+                          fontSize: 14.sp, fontWeight: FontWeight.w300),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      "Licence Number",
+                      style: GoogleFonts.roboto(
+                          fontSize: 14.sp, fontWeight: FontWeight.w300),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                      border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.white, width: 1.3),
+                          borderRadius: BorderRadius.circular(16)),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  GetBuilder<ShopDetailsController>(builder: (scontext) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            enabled: false,
+                            style: GoogleFonts.roboto(
+                                fontSize: 18,
+                                color: Color.fromRGBO(0, 0, 0, 1)),
+                            decoration: InputDecoration(
+                              hintText: "Browse Document",
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.white, width: 1.3),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      bottomLeft: Radius.circular(16))),
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.white, width: 1.3),
+                                  borderRadius: BorderRadius.circular(16)),
+                              errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.white, width: 1.3),
+                                  borderRadius: BorderRadius.circular(16)),
+                            ),
+                            // validator: (value) {
+                            //   if (!RegExp(r'^-?[0-9]+$')
+                            //           .hasMatch(value!) ||
+                            //       value.length < 3) {
+                            //     return 'please enter valid email';
+                            //   } else {
+                            //     return null;
+                            //   }
+                            // },
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          child: Container(
+                            width: 100,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  bottomRight: Radius.circular(10)),
+                              border: Border(),
+                              gradient: LinearGradient(
+                                begin: Alignment(-0.934, -1),
+                                end: Alignment(1.125, 1.333),
+                                colors: <Color>[
+                                  Color(0xe53f46bd),
+                                  Color(0xe5417de8)
+                                ],
+                                stops: <double>[0, 1],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0x3f000000),
+                                  offset: Offset(0, 0.7870440483),
+                                  blurRadius: 2.7546541691,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Upload',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.2110513051,
+                                  color: Color(0xffffffff),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

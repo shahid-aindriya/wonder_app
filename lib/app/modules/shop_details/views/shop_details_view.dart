@@ -6,19 +6,26 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
+import 'package:wonder_app/app/modules/my_shops/controllers/my_shops_controller.dart';
 import 'package:wonder_app/app/modules/my_shops/model/shops_list_model.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/edit_shop_details.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/shop_gst_details.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/shop_license_details.dart';
+import 'package:wonder_app/app/modules/shop_details/widgets/shop_offers.dart';
 
 import '../controllers/shop_details_controller.dart';
 import '../widgets/bank_details.dart';
 
 class ShopDetailsView extends GetView<ShopDetailsController> {
+  final MyShopsController? shopController;
   ShopDatum? data;
-  ShopDetailsView({Key? key, this.data}) : super(key: key);
+  ShopDetailsView({Key? key, this.data, this.shopController}) : super(key: key);
+  final ShopDetailsController shopDetailsController =
+      Get.put(ShopDetailsController());
   @override
   Widget build(BuildContext context) {
+    shopDetailsController.shopId = data!.id;
+    shopDetailsController.getOffers();
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -225,7 +232,12 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w400)),
                           trailing: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(ShopOffers(
+                                  controller: shopDetailsController,
+                                  shopId: data!.id,
+                                ));
+                              },
                               icon: Icon(Icons.arrow_forward_ios_rounded)),
                         ),
                       ),
@@ -308,6 +320,21 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                               icon: Icon(Icons.arrow_forward_ios_rounded)),
                         ),
                       ),
+                    ),
+
+                    ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                Color.fromARGB(255, 196, 38, 27))),
+                        onPressed: () {
+                          shopDetailsController.deleteShop(
+                              bankid: data!.bankData.bankId,
+                              controller: shopController,
+                              context: context);
+                        },
+                        child: Text("Delete Shop")),
+                    SizedBox(
+                      height: 10,
                     )
                   ],
                 ),

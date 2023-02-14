@@ -75,7 +75,7 @@ class AddInvoiceController extends GetxController {
   String invoiceImg = '';
   File? image;
   dynamic compressedImage;
-  dynamic newImage;
+
   pickimage() async {
     final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
     if (pimage == null) {
