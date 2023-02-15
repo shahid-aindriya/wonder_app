@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
+import 'package:wonder_app/app/modules/request_coins/views/request_coins_view.dart';
 
 class WalletTab extends StatelessWidget {
   final InvoiceController invoiceController;
@@ -88,7 +90,9 @@ class WalletTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 15),
           child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(RequestCoinsView());
+              },
               style: ButtonStyle(
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(7))),
@@ -128,70 +132,92 @@ class WalletTab extends StatelessWidget {
           ),
         ),
         Obx(() {
-          return Expanded(
-            child: ListView.builder(
-                itemCount: invoiceController.walletTransactionLists.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(top: 15, right: 5.w, left: 5.w),
-                    child: Container(
-                      width: 100.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(14),
-                          topRight: Radius.circular(14),
-                          bottomLeft: Radius.circular(14),
-                          bottomRight: Radius.circular(14),
-                        ),
-                        gradient: LinearGradient(
-                            begin: Alignment(
-                                1.4153012037277222, 0.15562866628170013),
-                            end: Alignment(
-                                -0.15562868118286133, 0.044075123965740204),
-                            colors: [
-                              Color.fromRGBO(255, 255, 255, 0.75),
-                              Color.fromRGBO(255, 255, 255, 0.6800000071525574)
-                            ]),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                              child:
-                                  Image.asset("assets/images/Ellipse 21.png")),
-                          title: Text(
-                              invoiceController
-                                  .walletTransactionLists[index].phone,
-                              style: GoogleFonts.roboto(
-                                  fontSize: 16, fontWeight: FontWeight.w600)),
-                          subtitle: Text(
-                            "Redeemed Wonder Points",
-                            style: GoogleFonts.roboto(
-                                fontSize: 14, fontWeight: FontWeight.w300),
-                          ),
-                          trailing: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "-${invoiceController.walletTransactionLists[index].amount}",
-                                style: GoogleFonts.roboto(
-                                    color: Color.fromARGB(255, 243, 106, 106),
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              Text("2 Minutes Ago",
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w300))
-                            ],
-                          ),
-                        ),
+          return invoiceController.walletTransactionLists.isEmpty
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Lottie.asset("assets/images/13659-no-data.json"),
+                        ],
                       ),
                     ),
-                  );
-                }),
-          );
+                  ],
+                )
+              : Expanded(
+                  child: ListView.builder(
+                      itemCount:
+                          invoiceController.walletTransactionLists.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding:
+                              EdgeInsets.only(top: 15, right: 5.w, left: 5.w),
+                          child: Container(
+                            width: 100.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(14),
+                                topRight: Radius.circular(14),
+                                bottomLeft: Radius.circular(14),
+                                bottomRight: Radius.circular(14),
+                              ),
+                              gradient: LinearGradient(
+                                  begin: Alignment(
+                                      1.4153012037277222, 0.15562866628170013),
+                                  end: Alignment(-0.15562868118286133,
+                                      0.044075123965740204),
+                                  colors: [
+                                    Color.fromRGBO(255, 255, 255, 0.75),
+                                    Color.fromRGBO(
+                                        255, 255, 255, 0.6800000071525574)
+                                  ]),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: ListTile(
+                                leading: Image.asset(
+                                    "assets/images/invoice_frame.png"),
+                                title: Text(
+                                    invoiceController
+                                        .walletTransactionLists[index].phone,
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600)),
+                                subtitle: Text(
+                                  "Redeemed Wonder Points",
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                                trailing: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "-${invoiceController.walletTransactionLists[index].amount}",
+                                      style: GoogleFonts.roboto(
+                                          color: Color.fromARGB(
+                                              255, 243, 106, 106),
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    Text("2 Minutes Ago",
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w300))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                );
         })
       ],
     );

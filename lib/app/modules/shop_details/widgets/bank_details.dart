@@ -1,18 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
 
+import '../../../data/urls.dart';
+
 class BankDetailsOfShop extends GetView<ShopDetailsController> {
+  final ShopDetailsController shopDetailsController;
   final image;
   final accountNumber;
   final holderName;
   final ifscCode;
   final accounType;
+  final shopId;
+  final bankId;
   BankDetailsOfShop(
       {super.key,
+      required this.shopDetailsController,
       this.image,
+      this.bankId,
+      this.shopId,
       this.accountNumber,
       this.accounType,
       this.holderName,
@@ -20,7 +30,6 @@ class BankDetailsOfShop extends GetView<ShopDetailsController> {
 
   @override
   Widget build(BuildContext context) {
-    print(image.toString());
     final TextEditingController accounumberController =
         TextEditingController(text: accountNumber);
     final TextEditingController holderNameController =
@@ -327,22 +336,99 @@ class BankDetailsOfShop extends GetView<ShopDetailsController> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 20),
-                      child: Container(
-                          width: 100.w,
-                          child:
-                              // (image != ('') ||
-                              //         image != null ||
-                              //         image.isBlank)
-                              //     ? Image.network("$baseUrlForImage$image")
-                              //     :
-                              Image.asset("assets/images/invoice_image.png")),
-                    )
+                    GetBuilder<ShopDetailsController>(builder: (condftext) {
+                      return Visibility(
+                        visible: shopDetailsController.checkImage == ''
+                            ? true
+                            : false,
+                        child: InkWell(
+                          onTap: () {
+                            shopDetailsController.pickCheckImage();
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(top: 10.0, bottom: 20),
+                            child: Container(
+                                width: 100.w,
+                                child: (image == "null" || image == null)
+                                    ? Image.asset(
+                                        "assets/images/invoice_image.png")
+                                    : Image.network("$baseUrlForImage$image")),
+                          ),
+                        ),
+                      );
+                    }),
+                    GetBuilder<ShopDetailsController>(builder: (condft2ext) {
+                      return Visibility(
+                        visible: shopDetailsController.checkImage == ''
+                            ? false
+                            : true,
+                        child: InkWell(
+                          onTap: () {
+                            shopDetailsController.pickCheckImage();
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.only(top: 10.0, bottom: 20),
+                            child: Container(
+                              width: 100.w,
+                              child: Image.memory(Base64Decoder()
+                                  .convert(shopDetailsController.checkImage)),
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
                   ],
                 ),
               ),
             ],
+          ),
+          bottomNavigationBar: Container(
+            height: 90,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border(),
+                      gradient: LinearGradient(
+                        begin: Alignment(-0.934, -1),
+                        end: Alignment(1.125, 1.333),
+                        colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+                        stops: <double>[0, 1],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x3f000000),
+                          offset: Offset(0, 0.7870440483),
+                          blurRadius: 2.7546541691,
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(Size(100, 50)),
+                          elevation: MaterialStateProperty.all(0),
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.transparent)),
+                      onPressed: () {
+                        shopDetailsController.editBankDetails(bankId: bankId);
+                      },
+                      child: Text(
+                        'Save',
+                        style: GoogleFonts.roboto(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          height: 1.2110513051,
+                          color: Color(0xffffffff),
+                        ),
+                      ),
+                    )),
+              ],
+            ),
           ),
         ));
   }

@@ -12,8 +12,8 @@ import '../../add_invoice/controllers/add_invoice_controller.dart';
 import '../../my_shops/views/my_shops_view.dart';
 import '../../notifications/views/notifications_view.dart';
 import '../../profile_view/views/profile_view_view.dart';
+import '../../terms_conditions/views/terms_conditions_view.dart';
 import '../controllers/invoice_controller.dart';
-import '../widgets/drawer_icon.dart';
 import '../widgets/invoices_tab.dart';
 import '../widgets/notification_icon.dart';
 import '../widgets/wallet_tab.dart';
@@ -27,6 +27,7 @@ class InvoiceView extends GetView<InvoiceController> {
   @override
   Widget build(BuildContext context) {
     invoiceController.notifications();
+    addInvoiceController.getListOfShops();
     // invoiceController.getInvoiceLists();
     return DefaultTabController(
       length: 2,
@@ -90,6 +91,9 @@ class InvoiceView extends GetView<InvoiceController> {
               Column(
                 children: [
                   ListTile(
+                    onTap: () {
+                      Get.to(ProfileViewView());
+                    },
                     leading: Image.asset(
                       "assets/images/User.png",
                       fit: BoxFit.contain,
@@ -112,6 +116,10 @@ class InvoiceView extends GetView<InvoiceController> {
                     child: Divider(color: Colors.white, thickness: 2),
                   ),
                   ListTile(
+                    onTap: () {
+                      Get.to(MyShopsView());
+                      // Get.to(BankDetailsView());
+                    },
                     leading: Image.asset(
                       "assets/images/Storefront.png",
                       fit: BoxFit.contain,
@@ -175,6 +183,9 @@ class InvoiceView extends GetView<InvoiceController> {
                     child: Divider(color: Colors.white, thickness: 2),
                   ),
                   ListTile(
+                    onTap: () {
+                      Get.to(TermsConditionsView());
+                    },
                     leading: Image.asset(
                       "assets/images/ClipboardText.png",
                       fit: BoxFit.contain,
@@ -187,7 +198,9 @@ class InvoiceView extends GetView<InvoiceController> {
                           fontWeight: FontWeight.normal),
                     ),
                     trailing: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(TermsConditionsView());
+                        },
                         icon: Icon(Icons.arrow_forward_ios_outlined)),
                   ),
                   Padding(
@@ -195,6 +208,11 @@ class InvoiceView extends GetView<InvoiceController> {
                     child: Divider(color: Colors.white, thickness: 2),
                   ),
                   ListTile(
+                    onTap: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.clear();
+                      Get.offAll(LoginView());
+                    },
                     leading: Image.asset(
                       "assets/images/SignOut.png",
                       fit: BoxFit.contain,
@@ -223,7 +241,6 @@ class InvoiceView extends GetView<InvoiceController> {
           ),
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            leadingWidth: 90,
             leading: Builder(builder: (contezxt) {
               return InkWell(
                 onTap: () {
@@ -232,7 +249,10 @@ class InvoiceView extends GetView<InvoiceController> {
                 child: Container(
                   decoration: BoxDecoration(),
                   child: Center(
-                    child: DrawerIcon(),
+                    child: Icon(
+                      Icons.menu,
+                      color: textGradientBlue,
+                    ),
                   ),
                 ),
               );

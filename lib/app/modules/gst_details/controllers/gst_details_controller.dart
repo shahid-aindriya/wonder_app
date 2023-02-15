@@ -76,6 +76,7 @@ class GstDetailsController extends GetxController {
       "is_featured": featured,
       "commission": commission,
       "image": gstImage,
+      "gst_pct": gstPercentage,
       "license_number": licenceNumber,
       "gst_image": gstImage,
       "license_image": gstImage

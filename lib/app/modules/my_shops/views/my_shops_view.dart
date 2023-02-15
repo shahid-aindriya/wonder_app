@@ -133,12 +133,12 @@ class MyShopsView extends GetView<MyShopsController> {
                                                       MainAxisAlignment.end,
                                                   children: [
                                                     // Figma Flutter Generator Rectangle33Widget - RECTANGLE
-                                                    IconButton(
-                                                        onPressed: () {},
-                                                        icon: Icon(
-                                                          Icons.favorite,
-                                                          color: Colors.grey,
-                                                        ))
+                                                    // IconButton(
+                                                    //     onPressed: () {},
+                                                    //     icon: Icon(
+                                                    //       Icons.favorite,
+                                                    //       color: Colors.grey,
+                                                    //     ))
                                                   ],
                                                 ),
                                               )),

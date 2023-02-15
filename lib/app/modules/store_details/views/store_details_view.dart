@@ -258,9 +258,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
                         validator: (value) {
-                          if (!RegExp(r'^[#.0-9a-zA-Z\u00C0-\u00FF ,]+$')
-                                  .hasMatch(value!) ||
-                              value.length < 3) {
+                          if (value!.length < 3) {
                             return 'please enter valid adress';
                           } else {
                             return null;

@@ -82,12 +82,13 @@ class ProfileViewController extends GetxController {
   editProfile({context}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
+    var profileimage = profileImage == '' ? null : profileImage;
     var body = {
       "user_id": userId,
       "name": nameController.text,
       "email": emailController.text,
       "phone": numberController.text,
-      "image": profileImage
+      "image": profileimage
     };
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-profile-edit/"),

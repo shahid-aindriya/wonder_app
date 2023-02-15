@@ -28,6 +28,8 @@ import '../modules/profile_view/bindings/profile_view_binding.dart';
 import '../modules/profile_view/views/profile_view_view.dart';
 import '../modules/registration_details/bindings/registration_details_binding.dart';
 import '../modules/registration_details/views/registration_details_view.dart';
+import '../modules/request_coins/bindings/request_coins_binding.dart';
+import '../modules/request_coins/views/request_coins_view.dart';
 import '../modules/request_pending/bindings/request_pending_binding.dart';
 import '../modules/request_pending/views/request_pending_view.dart';
 import '../modules/seller_regist/bindings/seller_regist_binding.dart';
@@ -40,6 +42,8 @@ import '../modules/store_details/bindings/store_details_binding.dart';
 import '../modules/store_details/views/store_details_view.dart';
 import '../modules/success/bindings/success_binding.dart';
 import '../modules/success/views/success_view.dart';
+import '../modules/terms_conditions/bindings/terms_conditions_binding.dart';
+import '../modules/terms_conditions/views/terms_conditions_view.dart';
 
 part 'app_routes.dart';
 
@@ -148,6 +152,16 @@ class AppPages {
       name: _Paths.MAP_PLACE_PICKER,
       page: () => MapPlacePickerView(),
       binding: MapPlacePickerBinding(),
+    ),
+    GetPage(
+      name: _Paths.TERMS_CONDITIONS,
+      page: () => TermsConditionsView(),
+      binding: TermsConditionsBinding(),
+    ),
+    GetPage(
+      name: _Paths.REQUEST_COINS,
+      page: () =>  RequestCoinsView(),
+      binding: RequestCoinsBinding(),
     ),
   ];
 }

@@ -14,41 +14,74 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/my_shops/controllers/my_shops_controller.dart';
 
 import '../../../data/urls.dart';
+import '../../store_details/model/store_category_model.dart';
 import '../model/offer_data_response.dart';
 
 class ShopDetailsController extends GetxController {
   //TODO: Implement ShopDetailsController
 
   final count = 0.obs;
+  @override
+  void onInit() {
+    getShopCategories();
+    // TODO: implement onInit
+    super.onInit();
+  }
 
   void increment() => count.value++;
   dynamic shopId;
-  editShopDetails({shopId, shopImage, gstImage, licenceImage}) async {
+  String? categoryId;
+  editShopDetails(
+      {shopId,
+      gstNumber,
+      licenceNumber,
+      commission,
+      gstPct,
+      location,
+      address,
+      shopName,
+      MyShopsController? contorller}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
+
+    int catId = int.tryParse(categoryId!)!;
+    log(catId.toString());
+    log(shopName);
+    var gstimage = gstImage == '' ? null : gstImage;
+    var shopimage = shopImage == '' ? null : shopImage;
+    var licenceimage = licenceImage == '' ? null : licenceImage;
     var body = {
       "shop_id": shopId,
-      "name": "abc",
+      "name": shopName,
       "user_id": userId,
-      "category_id": 1,
-      "gst_number": "32435345",
-      "address": "dassdv dfvddfgd",
-      "location": "Ernakulam, Kerala, India",
+      "category_id": catId,
+      "gst_number": gstNumber,
+      "address": address,
+      "location": location,
       "latitude": "9.9816358",
       "longitude": "76.2998842",
-      "radius": "50",
-      "commission": "10",
-      "gst_pct": "10",
-      "license_number": "987654567",
-      "featured_image": shopImage,
-      "gst_image": gstImage,
-      "license_image": licenceImage,
+      "commission": commission,
+      "gst_pct": gstPct,
+      "license_number": licenceNumber,
+      "featured_image": shopimage,
+      "gst_image": gstimage,
+      "license_image": licenceimage,
       "is_featured": "True"
     };
     var request = await http.post(
         Uri.parse("${baseUrl.value}vendor-edit-shop/"),
         headers: headers,
         body: jsonEncode(body));
+    log(request.body.toString());
+    if (request.statusCode == 201) {
+      await contorller!.getListOfShops();
+      shopImage = '';
+      gstImage = '';
+      licenceImage = '';
+
+      Get.back();
+      Get.back();
+    }
   }
 
   deleteShop({bankid, MyShopsController? controller, context}) async {
@@ -149,6 +182,7 @@ class ShopDetailsController extends GetxController {
       final datas = jsonDecode(request.body);
       if (datas['success'] == true) {
         await getOffers();
+        offerImage = '';
         MotionToast.success(
           dismissable: true,
           enableAnimation: false,
@@ -166,5 +200,162 @@ class ShopDetailsController extends GetxController {
         ).show(context);
       }
     }
+  }
+
+  editOffers({offerId, context, name, discount, description}) async {
+    log(shopId.toString());
+    var checkimage = checkImage == '' ? null : checkImage;
+    var body = {
+      "offer_id": offerId,
+      "name": name,
+      "shop_id": shopId,
+      "discount": discount,
+      "description": description,
+      "image": checkimage
+    };
+    var request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-edit-shop-offer/"),
+        headers: headers,
+        body: jsonEncode(body));
+    log(request.body);
+    if (request.statusCode == 201) {
+      await getOffers();
+      offerImage = '';
+      MotionToast.success(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Success ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('offer edited Succesfully'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(context);
+    }
+  }
+
+  var categoryLists = RxList<ShopCategory>().obs;
+  Future<dynamic> getShopCategories() async {
+    var request = await http.get(
+      Uri.parse("${baseUrl.value}get-all-categories/"),
+      headers: headers,
+    );
+
+    log(request.body);
+    if (request.statusCode == 201) {
+      final shopShopCategoryModel = shopShopCategoryModelFromJson(request.body);
+      categoryLists.value.assignAll(shopShopCategoryModel.categories);
+    }
+  }
+
+  String shopImage = '';
+  File? image2;
+  dynamic compressedShopImage;
+
+  pickShopImage() async {
+    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pimage == null) {
+      return;
+    } else {
+      image2 = File(pimage.path);
+
+      final bytes = File(pimage.path).readAsBytesSync();
+
+      compressedShopImage = testComporessList(bytes);
+      shopImage = base64Encode(await compressedShopImage);
+      // log(invoiceImg);
+    }
+    // log(img);
+    update();
+  }
+
+  String licenceImage = '';
+  File? image3;
+  dynamic compressedLicenceImage;
+
+  pickLicenceImage() async {
+    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pimage == null) {
+      return;
+    } else {
+      image3 = File(pimage.path);
+
+      final bytes = File(pimage.path).readAsBytesSync();
+
+      compressedLicenceImage = testComporessList(bytes);
+      licenceImage = base64Encode(await compressedLicenceImage);
+      // log(invoiceImg);
+    }
+    // log(img);
+    update();
+  }
+
+  String gstImage = '';
+  File? image4;
+  dynamic compressedGstImage;
+
+  pickGstImage() async {
+    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pimage == null) {
+      return;
+    } else {
+      image4 = File(pimage.path);
+
+      final bytes = File(pimage.path).readAsBytesSync();
+
+      compressedGstImage = testComporessList(bytes);
+      gstImage = base64Encode(await compressedGstImage);
+      // log(invoiceImg);
+    }
+    // log(img);
+    update();
+  }
+
+  String checkImage = '';
+  File? image5;
+  dynamic compressedcheckImage;
+
+  pickCheckImage() async {
+    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pimage == null) {
+      return;
+    } else {
+      image5 = File(pimage.path);
+
+      final bytes = File(pimage.path).readAsBytesSync();
+
+      compressedcheckImage = testComporessList(bytes);
+      checkImage = base64Encode(await compressedcheckImage);
+      // log(invoiceImg);
+    }
+    // log(img);
+    update();
+  }
+
+  editBankDetails({bankId}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+    var check = checkImage == '' ? null : checkImage;
+    log(bankId.toString());
+    var body = {
+      "bank_id": bankId,
+      "name": "Abcd",
+      "user_id": userId,
+      "shop_id": shopId,
+      "account_number": 9000876654345,
+      "account_type": "current",
+      "ifsc_code": "IFC9009",
+      "cheque_copy": check
+    };
+    var request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-edit-bank-details/"),
+        headers: headers,
+        body: jsonEncode(body));
+    log(request.body);
   }
 }

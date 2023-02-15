@@ -47,7 +47,7 @@ class OfferDatum {
 
   factory OfferDatum.fromJson(Map<String, dynamic> json) => OfferDatum(
         id: json["id"],
-        title: json["title"],
+        title: json["title"] ?? "null",
         discount: json["discount"],
         description: json["description"],
         image: json["image"],

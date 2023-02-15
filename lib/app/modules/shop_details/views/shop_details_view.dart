@@ -109,6 +109,7 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                     onPressed: () {
                                       Get.to(EditShopDetails(
                                         data: data,
+                                        shopController: shopController!,
                                       ));
                                     },
                                     icon: Icon(Icons.edit, size: 19),
@@ -310,11 +311,14 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                               onPressed: () {
                                 log(data!.bankData.chequeCopy.toString());
                                 Get.to(BankDetailsOfShop(
+                                  shopId: data!.id,
+                                  shopDetailsController: shopDetailsController,
                                   accounType: data!.bankData.accountType,
                                   accountNumber: data!.bankData.accountNumber,
                                   holderName: data!.bankData.name,
                                   ifscCode: data!.bankData.ifscCode,
                                   image: data!.bankData.chequeCopy,
+                                  bankId: data!.bankData.bankId,
                                 ));
                               },
                               icon: Icon(Icons.arrow_forward_ios_rounded)),
@@ -322,17 +326,17 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                       ),
                     ),
 
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Color.fromARGB(255, 196, 38, 27))),
-                        onPressed: () {
-                          shopDetailsController.deleteShop(
-                              bankid: data!.bankData.bankId,
-                              controller: shopController,
-                              context: context);
-                        },
-                        child: Text("Delete Shop")),
+                    // ElevatedButton(
+                    //     style: ButtonStyle(
+                    //         backgroundColor: MaterialStateProperty.all(
+                    //             Color.fromARGB(255, 196, 38, 27))),
+                    //     onPressed: () {
+                    //       shopDetailsController.deleteShop(
+                    //           bankid: data!.bankData.bankId,
+                    //           controller: shopController,
+                    //           context: context);
+                    //     },
+                    //     child: Text("Delete Shop")),
                     SizedBox(
                       height: 10,
                     )

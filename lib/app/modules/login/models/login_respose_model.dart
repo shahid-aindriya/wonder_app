@@ -20,18 +20,18 @@ class LoginResponseModel {
   });
 
   dynamic userId;
-  bool success;
-  bool isApproved;
-  bool haveShop;
+  dynamic success;
+  dynamic isApproved;
+  dynamic haveShop;
   String message;
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
       LoginResponseModel(
         userId: json["user_id"] ?? "null",
-        success: json["success"],
-        isApproved: json["is_approved"],
-        haveShop: json["have_shop"],
-        message: json["message"],
+        success: json["success"] ?? "null",
+        isApproved: json["is_approved"] ?? "null",
+        haveShop: json["have_shop"] ?? "null",
+        message: json["message"] ?? "null",
       );
 
   Map<String, dynamic> toJson() => {
