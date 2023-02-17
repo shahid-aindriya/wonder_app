@@ -6,6 +6,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
+import 'package:wonder_app/app/modules/invoice/widgets/search_invoice.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
 
 import '../../add_invoice/controllers/add_invoice_controller.dart';
@@ -276,8 +277,6 @@ class InvoiceView extends GetView<InvoiceController> {
                               color: Color.fromARGB(93, 0, 0, 0),
                             ),
                             hintText: "Select Shop",
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 18),
                             enabled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
@@ -292,10 +291,10 @@ class InvoiceView extends GetView<InvoiceController> {
                                 borderRadius: BorderRadius.circular(16)),
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
-                        value: addInvoiceController.selectShopId,
+                        value: invoiceController.selectShopId,
                         onChanged: (value) {
                           invoiceController.onDropDownChanged(value);
-                          addInvoiceController.changeShop(
+                          invoiceController.changeShop(
                             value: value,
                           );
                         },
@@ -423,7 +422,124 @@ class InvoiceView extends GetView<InvoiceController> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    InvoiceTab(invoiceController: invoiceController),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                width: 50.w,
+                                child: TextFormField(
+                                  enabled: true,
+                                  keyboardType: TextInputType.none,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      color: Color.fromRGBO(0, 0, 0, 1)),
+                                  decoration: InputDecoration(
+                                      hintStyle: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 18,
+                                          color: Color.fromRGBO(0, 0, 0, .6)),
+                                      hintText: "Search invoice",
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 0.0, horizontal: 20),
+                                      enabled: true,
+                                      suffixIcon: InkWell(
+                                          onTap: () {},
+                                          child: Image.asset(
+                                              "assets/images/search.png")),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          borderSide: BorderSide(
+                                              width: 0,
+                                              color: Color.fromARGB(
+                                                  255, 199, 199, 179))),
+                                      filled: true,
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 0,
+                                              color:
+                                                  Color.fromARGB(255, 255, 255, 255)),
+                                          borderRadius: BorderRadius.circular(16)),
+                                      fillColor: Color.fromARGB(92, 255, 255, 255),
+                                      focusColor: Color.fromARGB(255, 231, 231, 231)),
+                                  onTap: () {
+                                    Get.to(SearchInvoice(
+                                      invoiceController: invoiceController,
+                                    ));
+                                  },
+                                ),
+                              ),
+                              Obx(() {
+                                return Container(
+                                  width: 40.w,
+                                  child: DropdownButtonFormField(
+                                    isDense: true,
+                                    isExpanded: true,
+                                    decoration: InputDecoration(
+                                        hintStyle: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 18,
+                                            color: Color.fromRGBO(0, 0, 0, .6)),
+                                        hintText: "Select",
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 0.0, horizontal: 10),
+                                        enabled: true,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            borderSide: BorderSide(
+                                                width: 0,
+                                                color: Color.fromARGB(
+                                                    255, 199, 199, 179))),
+                                        filled: true,
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                width: 0,
+                                                color: Color.fromARGB(
+                                                    255, 255, 255, 255)),
+                                            borderRadius:
+                                                BorderRadius.circular(16)),
+                                        fillColor:
+                                            Color.fromARGB(92, 255, 255, 255),
+                                        focusColor: Color.fromARGB(255, 231, 231, 231)),
+                                    value:
+                                        invoiceController.filterListValue.value,
+                                    onChanged: (value) {
+                                      invoiceController.filterListValue.value =
+                                          value.toString();
+                                      invoiceController
+                                          .onFilterListChange(value);
+                                    },
+                                    items: invoiceController.filterList
+                                        .map((data) {
+                                      return DropdownMenuItem(
+                                          value: data,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 5.0),
+                                            child: Text(
+                                              data,
+                                              overflow: TextOverflow.visible,
+                                            ),
+                                          ));
+                                    }).toList(),
+                                  ),
+                                );
+                              })
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                            child: InvoiceTab(
+                                invoiceController: invoiceController)),
+                      ],
+                    ),
                     WalletTab(invoiceController: invoiceController),
                   ],
                 ),

@@ -10,12 +10,12 @@ class SearchUser extends GetView<AddInvoiceController> {
   final AddInvoiceController _controller = Get.put(AddInvoiceController());
 
   SearchUser({this.text});
-
+  final focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
     final TextData phone = Get.arguments;
-    final TextEditingController searchController =
-        TextEditingController(text: text);
+    final TextEditingController searchController = TextEditingController();
+    focusNode.requestFocus();
     // TODO: implement build
 
     return Container(
@@ -62,6 +62,8 @@ class SearchUser extends GetView<AddInvoiceController> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
                       child: TextField(
+                        focusNode: focusNode,
+                        keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                             hintStyle: GoogleFonts.roboto(
                               fontSize: 18,

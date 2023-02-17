@@ -35,10 +35,10 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
               image: AssetImage("assets/images/wonder_app_background.jpg"),
               fit: BoxFit.cover)),
       child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-              backgroundColor: Color.fromARGB(255, 77, 96, 221),
-              onPressed: () async {},
-              child: Icon(Icons.download)),
+          // floatingActionButton: FloatingActionButton(
+          //     backgroundColor: Color.fromARGB(255, 77, 96, 221),
+          //     onPressed: () async {},
+          //     child: Icon(Icons.download)),
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             leading: Padding(

@@ -89,7 +89,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                       TextFormField(
                         enabled: true,
                         controller: searchUserController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.none,
                         style: GoogleFonts.roboto(
                             fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                         decoration: InputDecoration(
@@ -125,12 +125,8 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                         //     return null;
                         //   }
                         // },
-                        onChanged: (value) {
-                          searchUserController.clear();
-                          Get.to(
-                              SearchUser(
-                                text: value,
-                              ),
+                        onTap: () {
+                          Get.to(SearchUser(),
                               arguments:
                                   TextData(searchUserController, selectUserId));
                         },

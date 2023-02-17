@@ -27,7 +27,7 @@ class InvoiceTab extends StatelessWidget {
       },
       child: Obx(() {
         return invoiceController.invoiceLists.value.isEmpty
-            ? Column(
+            ? ListView(
                 children: [
                   SizedBox(
                     height: 10.h,
