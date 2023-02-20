@@ -23,11 +23,11 @@ class LoginController extends GetxController {
   @override
   void onClose() {}
   void increment() => count.value++;
-
+  var isLoading = false.obs;
   Future<dynamic> loginFunct({email, password, context}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+final prefs = await SharedPreferences.getInstance();
     var body = {"email": email, "password": password};
-
+    isLoading.value = true;
     var request = await http.post(Uri.parse("${baseUrl.value}vendor-login/"),
         headers: headers, body: jsonEncode(body));
     log(request.body);
@@ -60,7 +60,7 @@ class LoginController extends GetxController {
         Get.to(StoreDetailsView());
       } else if (loginResponseModel.isApproved == false) {
         Get.to(RequestPendingView());
-      } else {
+      } else if (loginResponseModel.message == "Invalid username or password") {
         MotionToast.error(
           dismissable: true,
           enableAnimation: false,
@@ -71,7 +71,7 @@ class LoginController extends GetxController {
               fontWeight: FontWeight.bold,
             ),
           ),
-          description: const Text('Email id not found'),
+          description: const Text('Invalid username or password'),
           animationCurve: Curves.bounceIn,
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
@@ -94,5 +94,12 @@ class LoginController extends GetxController {
         animationDuration: const Duration(milliseconds: 1000),
       ).show(context);
     }
+    isLoading.value = false;
+  }
+
+  var obscureText = true.obs;
+  changeText() {
+    obscureText.value = !obscureText.value;
+    update();
   }
 }

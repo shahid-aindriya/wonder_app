@@ -18,9 +18,13 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
   final featured;
   final closingTime;
   final openingTime;
+  final lat;
+  final long;
   RegistrationDetailsView(
       {this.shopName,
       this.closingTime,
+      this.lat,
+      this.long,
       this.openingTime,
       this.gstPercentage,
       this.commission,
@@ -273,6 +277,8 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
                           if (formKey.currentState!.validate()) {
                             Get.off(GstDetailsView(
                               categoryId: categoryId,
+                              lat: lat,
+                              long: long,
                               licenceImage: controller.licenceImage,
                               licenceNumber: licenseController.text,
                               shopAdress: shopAdress,

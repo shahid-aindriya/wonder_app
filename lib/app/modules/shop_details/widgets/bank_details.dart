@@ -7,9 +7,10 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
 
 import '../../../data/urls.dart';
+import '../../my_shops/model/shops_list_model.dart';
 
-class BankDetailsOfShop extends GetView<ShopDetailsController> {
-  final ShopDetailsController shopDetailsController;
+class BankDetailsOfShop extends StatelessWidget {
+  BankData data;
   final image;
   final accountNumber;
   final holderName;
@@ -19,15 +20,16 @@ class BankDetailsOfShop extends GetView<ShopDetailsController> {
   final bankId;
   BankDetailsOfShop(
       {super.key,
-      required this.shopDetailsController,
       this.image,
       this.bankId,
       this.shopId,
+      required this.data,
       this.accountNumber,
       this.accounType,
       this.holderName,
       this.ifscCode});
-
+  final ShopDetailsController shopDetailsController =
+      Get.put(ShopDetailsController());
   @override
   Widget build(BuildContext context) {
     final TextEditingController accounumberController =
@@ -415,7 +417,17 @@ class BankDetailsOfShop extends GetView<ShopDetailsController> {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.transparent)),
                       onPressed: () {
-                        shopDetailsController.editBankDetails(bankId: bankId);
+                        // log(shopId.toString());
+                        bankId == null
+                            ? shopDetailsController.addBankDetailss(
+                                accType: accountTypeController.text,
+                                accountNum:
+                                    int.tryParse(accounumberController.text),
+                                ifscCode: ifscCodeController.text,
+                                name: holderNameController.text,
+                                shopIds: data.shopId)
+                            : shopDetailsController.editBankDetails(
+                                bankId: bankId);
                       },
                       child: Text(
                         'Save',

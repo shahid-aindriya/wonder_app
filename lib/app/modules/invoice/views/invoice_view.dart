@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/data/colors.dart';
+import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/search_invoice.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
@@ -29,6 +30,7 @@ class InvoiceView extends GetView<InvoiceController> {
   Widget build(BuildContext context) {
     invoiceController.notifications();
     addInvoiceController.getListOfShops();
+    invoiceController.getUserData();
     // invoiceController.getInvoiceLists();
     return DefaultTabController(
       length: 2,
@@ -60,30 +62,49 @@ class InvoiceView extends GetView<InvoiceController> {
                 children: [
                   Container(
                     height: 124,
+                    width: 30.w,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(25)),
                     child: Padding(
                       padding: const EdgeInsets.all(3.0),
-                      child: Image.asset("assets/images/profile.png"),
+                      child: Obx(() {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(25),
+                          child: (invoiceController.userDetailLists.isEmpty ||
+                                  invoiceController
+                                          .userDetailLists.first.image ==
+                                      '')
+                              ? Image.asset("assets/images/User.png")
+                              : Image.network(
+                                  "$baseUrlForImage${invoiceController.userDetailLists.first.image}",
+                                  fit: BoxFit.fitWidth,
+                                ),
+                        );
+                      }),
                     ),
                   ),
                   SizedBox(
                     height: 10,
                   ),
-                  Text("Allen Solly",
-                      style: GoogleFonts.roboto(
-                          color: Color.fromARGB(255, 63, 69, 189),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600)),
+                  Obx(() {
+                    return Text(
+                        invoiceController.userDetailLists.isEmpty
+                            ? ""
+                            : invoiceController.userDetailLists.first.email,
+                        style: GoogleFonts.roboto(
+                            color: Color.fromARGB(255, 63, 69, 189),
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600));
+                  }),
                   SizedBox(
                     height: 10,
                   ),
-                  Text("Kakkanad",
-                      style: GoogleFonts.roboto(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300)),
+                  // Text("Kakkanad",
+                  //     style: GoogleFonts.roboto(
+                  //         color: Color.fromARGB(255, 0, 0, 0),
+                  //         fontSize: 18,
+                  //         fontWeight: FontWeight.w300)),
                 ],
               ),
               SizedBox(

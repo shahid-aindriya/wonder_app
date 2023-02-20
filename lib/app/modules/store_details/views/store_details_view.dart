@@ -18,12 +18,13 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
   final TextEditingController commissionController = TextEditingController();
   final TextEditingController closeTimeController = TextEditingController();
   final TextEditingController openTimeController = TextEditingController();
+  final TextEditingController latController = TextEditingController();
+  final TextEditingController longController = TextEditingController();
   @override
   final StoreDetailsController controller = Get.put(StoreDetailsController());
 
   StoreDetailsView({this.storeLocation});
-  dynamic lat;
-  dynamic long;
+
   @override
   Widget build(BuildContext context) {
     // log(storeLocation.toString());
@@ -220,6 +221,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                       TextFormField(
                         controller: shopLocationController,
                         enabled: true,
+                        keyboardType: TextInputType.none,
                         style: GoogleFonts.roboto(
                             fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                         decoration: InputDecoration(
@@ -227,9 +229,9 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                 onPressed: () async {
                                   Get.to(MapPlacePickerView(),
                                       arguments: LocationDatas(
-                                          lat: lat,
+                                          lat: latController,
                                           location: shopLocationController,
-                                          long: long));
+                                          long: longController));
 
                                   // Get.to(MapPlacePicker());
                                 },
@@ -257,6 +259,13 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                 borderRadius: BorderRadius.circular(16)),
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        onTap: () {
+                          Get.to(MapPlacePickerView(),
+                              arguments: LocationDatas(
+                                  lat: latController,
+                                  location: shopLocationController,
+                                  long: longController));
+                        },
                         validator: (value) {
                           if (value!.length < 3) {
                             return 'please enter valid adress';
@@ -529,11 +538,11 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                           if (picked != null) {
                             selectedOpeningTime = picked;
                             closeTimeController.text =
-                                " ${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
+                                "${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
                           } else {
                             var current = TimeOfDay.now();
                             closeTimeController.text =
-                                " ${current.hour}:${current.minute}";
+                                "${current.hour}:${current.minute}";
                           }
                         },
                       ),
@@ -803,6 +812,8 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                 ).show(context);
                               } else if (formKey.currentState!.validate()) {
                                 Get.off(RegistrationDetailsView(
+                                  lat: latController.text,
+                                  long: longController.text,
                                   featured: controller.isChecked,
                                   commission: commissionController.text,
                                   gstPercentage: gstPercentageController.text,
@@ -869,7 +880,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
 
 class LocationDatas {
   TextEditingController? location;
-  dynamic long;
-  dynamic lat;
+  TextEditingController? long;
+  TextEditingController? lat;
   LocationDatas({this.location, this.lat, this.long});
 }

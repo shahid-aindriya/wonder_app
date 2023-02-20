@@ -21,12 +21,14 @@ class InvoiceTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await invoiceController.getInvoiceLists();
-      },
-      child: Obx(() {
-        return invoiceController.invoiceLists.value.isEmpty
+    return Obx(() {
+      return RefreshIndicator(
+        onRefresh: invoiceController.selectShopId == null
+            ? () async {}
+            : () async {
+                await invoiceController.onPullRefreshInWallet();
+              },
+        child: invoiceController.invoiceLists.value.isEmpty
             ? ListView(
                 children: [
                   SizedBox(
@@ -284,8 +286,8 @@ class InvoiceTab extends StatelessWidget {
                     ),
                   );
                 },
-              );
-      }),
-    );
+              ),
+      );
+    });
   }
 }

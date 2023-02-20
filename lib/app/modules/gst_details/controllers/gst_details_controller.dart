@@ -58,6 +58,8 @@ class GstDetailsController extends GetxController {
       licenceNumber,
       gstNumber,
       gstPercentage,
+      lat,
+      long,
       featured,
       context}) async {
     final prefs = await SharedPreferences.getInstance();
@@ -68,8 +70,8 @@ class GstDetailsController extends GetxController {
       "category_id": categoryId,
       "gst_number": gstNumber,
       "address": address,
-      "latitude": "9.9816358",
-      "longitude": "76.2998842",
+      "latitude": lat,
+      "longitude": long,
       "opening_time": openingTime,
       "closing_time": closingTime,
       "location": location,

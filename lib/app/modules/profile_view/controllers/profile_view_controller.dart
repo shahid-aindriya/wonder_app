@@ -35,7 +35,7 @@ class ProfileViewController extends GetxController {
         Uri.parse("${baseUrl.value}vendor-profile-view/"),
         headers: headers,
         body: jsonEncode(body));
-    log("sdfgsdfgs${request.body}");
+    // log("sdfgsdfgs${request.body}");
     if (request.statusCode == 201) {
       final userDataResponse = userDataResponseFromJson(request.body);
       userDetailLists.assign(userDataResponse.userData);

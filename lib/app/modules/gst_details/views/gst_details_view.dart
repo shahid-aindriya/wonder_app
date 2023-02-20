@@ -19,10 +19,14 @@ class GstDetailsView extends GetView<GstDetailsController> {
   final featured;
   final closingTime;
   final openingTime;
+  final lat;
+  final long;
   GstDetailsView(
       {this.shopName,
       this.closingTime,
       this.openingTime,
+      this.lat,
+      this.long,
       this.shopAdress,
       this.shopLocation,
       this.categoryId,
@@ -270,6 +274,8 @@ class GstDetailsView extends GetView<GstDetailsController> {
                     if (formKey.currentState!.validate()) {
                       controller.addShopToServer(
                           address: shopAdress,
+                          lat: lat,
+                          long: long,
                           context: context,
                           commission: commission,
                           featured: featured,
@@ -280,6 +286,8 @@ class GstDetailsView extends GetView<GstDetailsController> {
                           licenseImage: licenceImage,
                           shopImage: shopImage,
                           licenceNumber: licenceNumber,
+                          closingTime: closingTime,
+                          openingTime: openingTime,
                           shopName: shopName);
                     }
                     // Get.to(BankDetailsView());

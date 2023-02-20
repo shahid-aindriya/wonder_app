@@ -14,7 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/my_shops/controllers/my_shops_controller.dart';
 
 import '../../../data/urls.dart';
+import '../../bank_details/models/bank_add_response.dart';
 import '../../store_details/model/store_category_model.dart';
+import '../../success/views/success_view.dart';
 import '../model/offer_data_response.dart';
 
 class ShopDetailsController extends GetxController {
@@ -28,24 +30,32 @@ class ShopDetailsController extends GetxController {
     super.onInit();
   }
 
-  void increment() => count.value++;
+  bool? isChecked;
+  checkBox(value) {
+    isChecked = value;
+    update();
+  }
+
   dynamic shopId;
   String? categoryId;
   editShopDetails(
       {shopId,
       gstNumber,
+      lat,
+      long,
       licenceNumber,
       commission,
       gstPct,
       location,
       address,
       shopName,
+      context,
       MyShopsController? contorller}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
 
     int catId = int.tryParse(categoryId!)!;
-    log(catId.toString());
+    // log(catId.toString());
     log(shopName);
     var gstimage = gstImage == '' ? null : gstImage;
     var shopimage = shopImage == '' ? null : shopImage;
@@ -58,15 +68,15 @@ class ShopDetailsController extends GetxController {
       "gst_number": gstNumber,
       "address": address,
       "location": location,
-      "latitude": "9.9816358",
-      "longitude": "76.2998842",
+      "latitude": lat,
+      "longitude": long,
       "commission": commission,
       "gst_pct": gstPct,
       "license_number": licenceNumber,
       "featured_image": shopimage,
       "gst_image": gstimage,
       "license_image": licenceimage,
-      "is_featured": "True"
+      "is_featured": isChecked
     };
     var request = await http.post(
         Uri.parse("${baseUrl.value}vendor-edit-shop/"),
@@ -81,6 +91,21 @@ class ShopDetailsController extends GetxController {
 
       Get.back();
       Get.back();
+      MotionToast.success(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Success ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('Shop edited Succesfully'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(context);
     }
   }
 
@@ -357,5 +382,35 @@ class ShopDetailsController extends GetxController {
         headers: headers,
         body: jsonEncode(body));
     log(request.body);
+  }
+
+  addBankDetailss({shopIds, int? accountNum, accType, ifscCode, name}) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+    // log(name);
+
+    log(shopIds);
+    // log(accountNum.toString());
+    // log(ifscCode);
+    var check = checkImage == '' ? null : checkImage;
+    var body = {
+      "name": name,
+      "user_id": userId,
+      "shop_id": shopIds,
+      "account_number": accountNum,
+      "account_type": "Current",
+      "ifsc_code": ifscCode,
+      "cheque_copy": check
+    };
+    var request = await http.post(Uri.parse("${baseUrl.value}vendor-add-bank/"),
+        headers: headers, body: jsonEncode(body));
+    log(request.body.toString());
+
+    if (request.statusCode == 201) {
+      final bankaddresponse = bankaddresponseFromJson(request.body);
+      if (bankaddresponse.success == true) {
+        Get.to(SuccessView());
+      }
+    }
   }
 }

@@ -9,6 +9,7 @@ import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 import '../../../data/urls.dart';
 import 'package:http/http.dart' as http;
 
+import '../../profile_view/model/userdata_response.dart';
 import '../model/wallet_screen_model.dart';
 
 class InvoiceController extends GetxController {
@@ -19,6 +20,7 @@ class InvoiceController extends GetxController {
   final count = 0.obs;
   @override
   void onInit() {
+    getUserData();
     // TODO: implement onInit
     super.onInit();
   }
@@ -111,15 +113,28 @@ class InvoiceController extends GetxController {
       walletTransactionLists.assignAll(walletScreenModel.transactionData);
       walletAmount.value = walletScreenModel.shopWalletAmount;
     }
-    log(request.body);
+    log(request.statusCode.toString());
   }
 
   onPullRefreshInWallet() async {
     var body = {"shop_id": selectShopId};
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
+        headers: headers,
+        body: jsonEncode(body));
     final requests = await http.post(
         Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
         headers: headers,
         body: jsonEncode(body));
+    if (request.statusCode == 201) {
+      invoiceLists.value.clear();
+      final invoiceData = invoiceDataFromJson(request.body);
+      invoiceLists.value.addAll(invoiceData.invoiceData);
+      invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
+      filterListValue.value = "All";
+      searchInvoiceList.clear();
+      update();
+    }
     if (requests.statusCode == 201) {
       final walletScreenModel = walletScreenModelFromJson(requests.body);
       walletTransactionLists.assignAll(walletScreenModel.transactionData);
@@ -182,6 +197,25 @@ class InvoiceController extends GetxController {
             amountData: index.amountData);
         searchInvoiceList.add(data);
       }
+    }
+  }
+
+  RxList<UserData> userDetailLists = <UserData>[].obs;
+
+  Future<dynamic> getUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+    var body = {"user_id": userId};
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-profile-view/"),
+        headers: headers,
+        body: jsonEncode(body));
+    // log("sdfgsdfgs${request.body}");
+    if (request.statusCode == 201) {
+      final userDataResponse = userDataResponseFromJson(request.body);
+      userDetailLists.assign(userDataResponse.userData);
+
+      update();
     }
   }
 }

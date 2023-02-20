@@ -427,15 +427,6 @@ class BankDetailsView extends GetView<BankDetailsController> {
                                   fillColor: Color.fromARGB(153, 255, 255, 255),
                                   focusColor:
                                       Color.fromARGB(255, 231, 231, 231)),
-                              validator: (value) {
-                                if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                        .hasMatch(value!) ||
-                                    value.length < 3) {
-                                  return 'please enter valid email';
-                                } else {
-                                  return null;
-                                }
-                              },
                             ),
                           ),
                           InkWell(
@@ -491,12 +482,14 @@ class BankDetailsView extends GetView<BankDetailsController> {
                       children: [
                         InkWell(
                           onTap: () {
-                            bankDetailsController.addBankDetails(
-                                accountNum:
-                                    int.tryParse(accountNumberController.text),
-                                ifscCode: ifscCodeController.text,
-                                name: holderNameController.text,
-                                shopId: shopId);
+                            if (formKey.currentState!.validate()) {
+                              bankDetailsController.addBankDetails(
+                                  accountNum: int.tryParse(
+                                      accountNumberController.text),
+                                  ifscCode: ifscCodeController.text,
+                                  name: holderNameController.text,
+                                  shopId: shopId);
+                            }
                           },
                           child: Container(
                             width: 124,

@@ -606,7 +606,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                   height: 1.1725,
                                   color: Color.fromARGB(93, 0, 0, 0),
                                 ),
-                                hintText: "Enter PAN number",
+                                hintText: "Eg. ABCDE1234E",
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 18.0, horizontal: 18),
                                 enabled: true,
