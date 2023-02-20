@@ -153,7 +153,13 @@ class LoginView extends GetView<LoginController> {
                                 onPressed: () {
                                   loginController.changeText();
                                 },
-                                icon: Icon(Icons.remove_red_eye_rounded)),
+                                icon: Icon(
+                                  Icons.remove_red_eye_rounded,
+                                  color:
+                                      loginController.obscureText.value == false
+                                          ? Colors.grey
+                                          : Colors.blue,
+                                )),
                             enabled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),

@@ -12,6 +12,9 @@ import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.da
 import '../controllers/add_invoice_controller.dart';
 
 class AddInvoiceView extends GetView<AddInvoiceController> {
+ 
+
+
   final AddInvoiceController addInvoiceController =
       Get.put(AddInvoiceController());
   final InvoiceController invoiceController = Get.put(InvoiceController());

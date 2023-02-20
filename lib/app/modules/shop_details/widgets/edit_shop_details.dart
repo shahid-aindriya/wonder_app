@@ -21,10 +21,13 @@ class EditShopDetails extends StatelessWidget {
       Get.put(ShopDetailsController());
   final formkey = GlobalKey<FormState>();
   @override
+  final TextEditingController latController = TextEditingController();
+  final TextEditingController longController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     dynamic lat = data!.latitude;
     dynamic long = data!.longitude;
-    shopDetailsController.isChecked == data!.isFeatured;
+    shopDetailsController.isChecked = data!.isFeatured;
     log(shopDetailsController.isChecked.toString());
     final TextEditingController shopNameController =
         TextEditingController(text: data!.name);
@@ -270,9 +273,9 @@ class EditShopDetails extends StatelessWidget {
                             onPressed: () {
                               Get.to(MapPlacePickerView(),
                                   arguments: LocationDatas(
-                                      lat: lat,
+                                      lat: latController,
                                       location: shopLocationController,
-                                      long: long));
+                                      long: longController));
                             },
                             icon: Icon(Icons.my_location_sharp)),
                         enabledBorder: OutlineInputBorder(
@@ -291,9 +294,9 @@ class EditShopDetails extends StatelessWidget {
                       onTap: () {
                         Get.to(MapPlacePickerView(),
                             arguments: LocationDatas(
-                                lat: lat,
+                                lat: latController,
                                 location: shopLocationController,
-                                long: long));
+                                long: longController));
                       },
                       validator: (value) {
                         if (value!.isEmpty) {

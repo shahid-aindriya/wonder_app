@@ -13,9 +13,11 @@ import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/add_invoice/models/all_user_model.dart';
 import '../../../data/urls.dart';
+import '../../invoice/controllers/invoice_controller.dart';
 import '../../my_shops/model/shops_list_model.dart';
 
 class AddInvoiceController extends GetxController {
+  final InvoiceController invoiceController = Get.put(InvoiceController());
   //TODO: Implement AddInvoiceController
   @override
   void onInit() {
@@ -127,6 +129,7 @@ class AddInvoiceController extends GetxController {
       remarksController.clear();
       invoiceDAte.clear();
       update();
+      await invoiceController.onDropDownChanged(selectShopId);
       MotionToast.success(
         dismissable: true,
         enableAnimation: false,

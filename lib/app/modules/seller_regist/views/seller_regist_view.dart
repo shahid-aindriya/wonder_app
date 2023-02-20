@@ -337,7 +337,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Adhaar Number',
+                                  'Aadhar Number',
                                   style: GoogleFonts.roboto(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
@@ -454,7 +454,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Adhar Card Photo',
+                                  'Aadhar Card Photo',
                                   style: GoogleFonts.roboto(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,11 +100,18 @@ class MyShopsView extends GetView<MyShopsController> {
                                     children: [
                                       Flexible(
                                         child: InkWell(
-                                          onTap: () {
+                                          onTap: () async {
+                                            final box = FlutterSecureStorage();
+                                            await box.write(
+                                                key: "shopId",
+                                                value: data.id.toString());
+
                                             Get.to(ShopDetailsView(
                                               shopController: shopController,
                                               data: data,
                                             ));
+
+                                            // log(valuse!.toString());
                                           },
                                           child: Container(
                                               width: 100.w,

@@ -417,15 +417,15 @@ class BankDetailsOfShop extends StatelessWidget {
                           backgroundColor:
                               MaterialStateProperty.all(Colors.transparent)),
                       onPressed: () {
-                        // log(shopId.toString());
-                        bankId == null
+                        // log(bankId);
+                        (bankId == "null")
                             ? shopDetailsController.addBankDetailss(
                                 accType: accountTypeController.text,
                                 accountNum:
                                     int.tryParse(accounumberController.text),
                                 ifscCode: ifscCodeController.text,
                                 name: holderNameController.text,
-                                shopIds: data.shopId)
+                              )
                             : shopDetailsController.editBankDetails(
                                 bankId: bankId);
                       },
