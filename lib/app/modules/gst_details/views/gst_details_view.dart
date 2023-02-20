@@ -279,6 +279,8 @@ class GstDetailsView extends GetView<GstDetailsController> {
                           categoryId: categoryId,
                           licenseImage: licenceImage,
                           shopImage: shopImage,
+                          closingTime: closingTime,
+                          openingTime: openingTime,
                           licenceNumber: licenceNumber,
                           shopName: shopName);
                     }

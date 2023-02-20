@@ -168,6 +168,7 @@ class InvoiceDetailsController extends GetxController {
         ).show(context);
         await inoviceController.getInvoiceLists();
         Get.back();
+        Get.back();
       } else {
         MotionToast.error(
           dismissable: true,

@@ -13,6 +13,7 @@ import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/add_invoice/models/all_user_model.dart';
 import '../../../data/urls.dart';
+import '../../invoice/controllers/invoice_controller.dart';
 import '../../my_shops/model/shops_list_model.dart';
 
 class AddInvoiceController extends GetxController {
@@ -94,7 +95,8 @@ class AddInvoiceController extends GetxController {
   }
 
   var isLoading = false.obs;
-  addInvoice({context, customerid}) async {
+  addInvoice(
+      {context, customerid, required InvoiceController controller}) async {
     isLoading.value = true;
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
@@ -114,7 +116,7 @@ class AddInvoiceController extends GetxController {
         Uri.parse("${baseUrl.value}vendor-add-invoice/"),
         headers: headers,
         body: json.encode(body));
-    log(request.statusCode.toString());
+    log(selectShopId);
     // log(request.body.toString());
     if (request.statusCode == 201) {
       selectUserId = null;
@@ -126,7 +128,10 @@ class AddInvoiceController extends GetxController {
       preTaxController.clear();
       remarksController.clear();
       invoiceDAte.clear();
+      await controller.onPullRefreshInWallet();
+
       update();
+
       MotionToast.success(
         dismissable: true,
         enableAnimation: false,

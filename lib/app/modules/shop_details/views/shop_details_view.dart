@@ -25,6 +25,7 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
   @override
   Widget build(BuildContext context) {
     shopDetailsController.shopId = data!.id;
+
     shopDetailsController.getOffers();
     return Container(
       decoration: BoxDecoration(
@@ -184,7 +185,7 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                       children: [
                                         Text("Commission"),
                                         SizedBox(
-                                          width: 22.w,
+                                          width: 13.w,
                                         ),
                                         Text("${data!.commission}%",
                                             style: GoogleFonts.roboto(
@@ -203,6 +204,7 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                           width: 18.w,
                                         ),
                                         Text(data!.category,
+                                            textAlign: TextAlign.start,
                                             style: GoogleFonts.roboto(
                                                 fontSize: 18.sp,
                                                 fontWeight: FontWeight.w400))
@@ -226,6 +228,12 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: Colors.white)),
                         child: ListTile(
+                          onTap: () {
+                            Get.to(ShopOffers(
+                              controller: shopDetailsController,
+                              shopId: data!.id,
+                            ));
+                          },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14)),
                           title: Text("Offers",
@@ -251,6 +259,12 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: Colors.white)),
                         child: ListTile(
+                          onTap: () {
+                            Get.to(ShopLicenseDetails(
+                              image: data!.licenseImage,
+                              licence: data!.licenseNumber,
+                            ));
+                          },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14)),
                           title: Text("License Details",
@@ -276,6 +290,12 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: Colors.white)),
                         child: ListTile(
+                          onTap: () {
+                            Get.to(ShopGstDetails(
+                              gst: data!.gstNumber,
+                              image: data!.gstImage,
+                            ));
+                          },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14)),
                           title: Text("Gst Details",
@@ -301,6 +321,18 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: Colors.white)),
                         child: ListTile(
+                          onTap: () {
+                            Get.to(() => BankDetailsOfShop(
+                                  shopId: data!.id,
+                                  data: data!.bankData,
+                                  accounType: data!.bankData.accountType,
+                                  accountNumber: data!.bankData.accountNumber,
+                                  holderName: data!.bankData.name,
+                                  ifscCode: data!.bankData.ifscCode,
+                                  image: data!.bankData.chequeCopy,
+                                  bankId: data!.bankData.bankId,
+                                ));
+                          },
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(14)),
                           title: Text("Bank Details",
@@ -309,17 +341,29 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                   fontWeight: FontWeight.w400)),
                           trailing: IconButton(
                               onPressed: () {
-                                log(data!.bankData.chequeCopy.toString());
-                                Get.to(BankDetailsOfShop(
-                                  shopId: data!.id,
-                                  shopDetailsController: shopDetailsController,
-                                  accounType: data!.bankData.accountType,
-                                  accountNumber: data!.bankData.accountNumber,
-                                  holderName: data!.bankData.name,
-                                  ifscCode: data!.bankData.ifscCode,
-                                  image: data!.bankData.chequeCopy,
-                                  bankId: data!.bankData.bankId,
-                                ));
+                                log(data!.id.toString());
+
+                                Get.to(() => BankDetailsOfShop(
+                                      shopId: data!.id,
+                                      data: data!.bankData,
+                                      accounType: data!.bankData.accountType,
+                                      accountNumber:
+                                          data!.bankData.accountNumber,
+                                      holderName: data!.bankData.name,
+                                      ifscCode: data!.bankData.ifscCode,
+                                      image: data!.bankData.chequeCopy,
+                                      bankId: data!.bankData.bankId,
+                                    ));
+                                // Get.to(BankDetailsOfShop(
+                                //   shopId: data!.id,
+                                //   data: data!.bankData,
+                                //   accounType: data!.bankData.accountType,
+                                //   accountNumber: data!.bankData.accountNumber,
+                                //   holderName: data!.bankData.name,
+                                //   ifscCode: data!.bankData.ifscCode,
+                                //   image: data!.bankData.chequeCopy,
+                                //   bankId: data!.bankData.bankId,
+                                // ));
                               },
                               icon: Icon(Icons.arrow_forward_ios_rounded)),
                         ),

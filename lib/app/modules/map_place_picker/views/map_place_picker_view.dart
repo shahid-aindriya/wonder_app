@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -73,18 +71,18 @@ class MapPlacePickerView extends GetView<MapPlacePickerController> {
                                             //       .formattedAddress,
                                             // ));
 
-                                            String s = '';
-                                            for (var i = 0;
-                                                i <
-                                                    selectedPlace
-                                                        .addressComponents!
-                                                        .length;
-                                                i++) {
-                                              log(selectedPlace
-                                                  .addressComponents![i]
-                                                  .shortName);
-                                              s = "$s${selectedPlace.addressComponents![i].shortName} ,";
-                                            }
+                                            // String s = '';
+                                            // for (var i = 0;
+                                            //     i <
+                                            //         selectedPlace
+                                            //             .addressComponents!
+                                            //             .length;
+                                            //     i++) {
+                                            //   log(selectedPlace
+                                            //       .addressComponents![i]
+                                            //       .shortName);
+                                            //   s = "$s${selectedPlace.addressComponents![i].shortName} ,";
+                                            // }
                                             datas.location!.text =
                                                 selectedPlace.formattedAddress!;
                                             datas.lat = selectedPlace

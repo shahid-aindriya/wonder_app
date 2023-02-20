@@ -14,10 +14,12 @@ import '../controllers/add_invoice_controller.dart';
 class AddInvoiceView extends GetView<AddInvoiceController> {
   final AddInvoiceController addInvoiceController =
       Get.put(AddInvoiceController());
-  final InvoiceController invoiceController = Get.put(InvoiceController());
+  final InvoiceController? invoiceController;
   final formKey = GlobalKey<FormState>();
   final TextEditingController searchUserController = TextEditingController();
   final TextEditingController selectUserId = TextEditingController();
+
+  AddInvoiceView({this.invoiceController});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                     borderRadius: BorderRadius.circular(10)),
                 child: IconButton(
                     onPressed: () async {
-                      await invoiceController.getInvoiceLists();
+                      // await invoiceController!.getInvoiceLists();
                       Get.back();
                     },
                     icon: Icon(
@@ -236,6 +238,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                               focusColor: Color.fromARGB(255, 231, 231, 231)),
                           value: addInvoiceController.selectShopId,
                           onChanged: (value) {
+                            addInvoiceController.selectShopId = value;
                             addInvoiceController.changeShop(
                               value: value,
                             );
@@ -743,6 +746,8 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                                               if (formKey.currentState!
                                                   .validate()) {
                                                 addInvoiceController.addInvoice(
+                                                    controller:
+                                                        invoiceController!,
                                                     context: context,
                                                     customerid: int.tryParse(
                                                         selectUserId.text));

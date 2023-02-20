@@ -10,6 +10,8 @@ import 'package:wonder_app/app/modules/my_shops/model/shops_list_model.dart';
 import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
 
 import '../../../data/urls.dart';
+import '../../map_place_picker/views/map_place_picker_view.dart';
+import '../../store_details/views/store_details_view.dart';
 
 class EditShopDetails extends StatelessWidget {
   ShopDatum? data;
@@ -19,7 +21,14 @@ class EditShopDetails extends StatelessWidget {
       Get.put(ShopDetailsController());
   final formkey = GlobalKey<FormState>();
   @override
+  final TextEditingController latController = TextEditingController();
+  final TextEditingController longController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
+    dynamic lat = data!.latitude;
+    dynamic long = data!.longitude;
+    shopDetailsController.isChecked = data!.isFeatured;
+    log(shopDetailsController.isChecked.toString());
     final TextEditingController shopNameController =
         TextEditingController(text: data!.name);
     final TextEditingController shopAdressController =
@@ -258,7 +267,17 @@ class EditShopDetails extends StatelessWidget {
                     ),
                     TextFormField(
                       controller: shopLocationController,
+                      keyboardType: TextInputType.none,
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              Get.to(MapPlacePickerView(),
+                                  arguments: LocationDatas(
+                                      lat: latController,
+                                      location: shopLocationController,
+                                      long: longController));
+                            },
+                            icon: Icon(Icons.my_location_sharp)),
                         enabledBorder: OutlineInputBorder(
                             borderSide:
                                 BorderSide(color: Colors.white, width: 1.3),
@@ -272,6 +291,13 @@ class EditShopDetails extends StatelessWidget {
                                 BorderSide(color: Colors.white, width: 1.3),
                             borderRadius: BorderRadius.circular(16)),
                       ),
+                      onTap: () {
+                        Get.to(MapPlacePickerView(),
+                            arguments: LocationDatas(
+                                lat: latController,
+                                location: shopLocationController,
+                                long: longController));
+                      },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'please enter valid location';
@@ -666,6 +692,41 @@ class EditShopDetails extends StatelessWidget {
                         ],
                       );
                     }),
+                    SizedBox(
+                      height: 13,
+                    ),
+                    GetBuilder<ShopDetailsController>(builder: (context) {
+                      return Row(
+                        children: [
+                          Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Checkbox(
+                              checkColor: Color(0xff4956b2),
+                              activeColor: Color.fromARGB(255, 255, 255, 255),
+                              fillColor: MaterialStateProperty.all(
+                                  Color.fromARGB(255, 255, 255, 255)),
+                              value: shopDetailsController.isChecked,
+                              onChanged: (value) {
+                                shopDetailsController.checkBox(value);
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text("Set Featured",
+                              style: GoogleFonts.roboto(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.1725,
+                                  color: Color(0xff4956b2)))
+                        ],
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -702,7 +763,10 @@ class EditShopDetails extends StatelessWidget {
                     onPressed: () async {
                       if (formkey.currentState!.validate()) {
                         shopDetailsController.editShopDetails(
+                            context: context,
                             address: shopLocationController.text,
+                            lat: lat,
+                            long: long,
                             contorller: shopController,
                             shopId: data!.id,
                             commission: shopCommissionController.text,

@@ -453,11 +453,11 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                           if (picked != null) {
                             selectedOpeningTime = picked;
                             openTimeController.text =
-                                " ${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
+                                "${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
                           } else {
                             var current = TimeOfDay.now();
                             openTimeController.text =
-                                " ${current.hour}:${current.minute}";
+                                "${current.hour}:${current.minute}";
                           }
                         },
                       ),
@@ -529,11 +529,11 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                           if (picked != null) {
                             selectedOpeningTime = picked;
                             closeTimeController.text =
-                                " ${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
+                                "${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
                           } else {
                             var current = TimeOfDay.now();
                             closeTimeController.text =
-                                " ${current.hour}:${current.minute}";
+                                "${current.hour}:${current.minute}";
                           }
                         },
                       ),

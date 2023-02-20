@@ -22,9 +22,11 @@ class InvoiceTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {
-        await invoiceController.getInvoiceLists();
-      },
+      onRefresh: invoiceController.selectShopId == null
+          ? () async {}
+          : () async {
+              await invoiceController.onPullRefreshInWallet();
+            },
       child: Obx(() {
         return invoiceController.invoiceLists.value.isEmpty
             ? ListView(
