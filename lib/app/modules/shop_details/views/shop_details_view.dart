@@ -77,8 +77,8 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(36),
                         image: DecorationImage(
-                            image:
-                                NetworkImage("$baseUrl${data!.featuredImage}"),
+                            image: NetworkImage(
+                                "$baseUrlForImage${data!.featuredImage}"),
                             fit: BoxFit.cover),
                       ))
                 ],

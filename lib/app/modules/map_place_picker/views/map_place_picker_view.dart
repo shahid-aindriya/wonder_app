@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
 
 import '../../store_details/views/store_details_view.dart';
 import '../controllers/map_place_picker_controller.dart';
@@ -19,6 +19,7 @@ class MapPlacePickerView extends GetView<MapPlacePickerController> {
         useCurrentLocation: true,
         initialPosition: LatLng(9.9312328, 76.26730410000005),
         forceSearchOnZoomChanged: true,
+        enableMyLocationButton: true,
         hintText: "Find a place ...",
         searchingText: "Please wait ...",
         selectInitialPosition: true,
@@ -83,12 +84,15 @@ class MapPlacePickerView extends GetView<MapPlacePickerController> {
                                             //       .shortName);
                                             //   s = "$s${selectedPlace.addressComponents![i].shortName} ,";
                                             // }
-                                            datas.location!.text =
-                                                selectedPlace.formattedAddress!;
-                                            datas.lat = selectedPlace
-                                                .geometry!.location.lat;
-                                            datas.long = selectedPlace
-                                                .geometry!.location.lat;
+                                            datas.location!.text = selectedPlace
+                                                .formattedAddress!
+                                                .toString();
+                                            datas.lat!.text = selectedPlace
+                                                .geometry!.location.lat
+                                                .toString();
+                                            datas.long!.text = selectedPlace
+                                                .geometry!.location.lat
+                                                .toString();
                                             Get.back();
                                           },
                                           // ignore: sort_child_properties_last

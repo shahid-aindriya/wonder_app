@@ -35,9 +35,16 @@ class InvoiceView extends GetView<InvoiceController> {
       length: 2,
       child: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/images/wonder_app_background.jpg"),
-                fit: BoxFit.cover)),
+          gradient: LinearGradient(
+              begin: Alignment(2, 1.0548897981643677),
+              end: Alignment(-1.0548897981643677, 1.226324439048767),
+              colors: [
+                Color.fromRGBO(239, 221, 214, 1),
+                Color.fromRGBO(220, 222, 242, 1),
+                Color.fromRGBO(250, 227, 243, 1),
+                Color.fromRGBO(228, 249, 254, 1)
+              ]),
+        ),
         child: Scaffold(
           drawer: Drawer(
             backgroundColor: Color.fromARGB(
@@ -85,14 +92,16 @@ class InvoiceView extends GetView<InvoiceController> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                      invoiceController.userDetailLists.isEmpty
-                          ? ""
-                          : invoiceController.userDetailLists.first.email,
-                      style: GoogleFonts.roboto(
-                          color: Color.fromARGB(255, 63, 69, 189),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600)),
+                  Obx(() {
+                    return Text(
+                        invoiceController.userDetailLists.isEmpty
+                            ? ""
+                            : invoiceController.userDetailLists.first.email,
+                        style: GoogleFonts.roboto(
+                            color: Color.fromARGB(255, 63, 69, 189),
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600));
+                  }),
                   SizedBox(
                     height: 10,
                   ),

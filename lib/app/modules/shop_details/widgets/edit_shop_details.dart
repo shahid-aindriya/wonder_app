@@ -100,8 +100,8 @@ class EditShopDetails extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(36),
                         image: DecorationImage(
-                            image:
-                                NetworkImage("$baseUrl${data!.featuredImage}"),
+                            image: NetworkImage(
+                                "$baseUrlForImage${data!.featuredImage}"),
                             fit: BoxFit.cover),
                       ),
                       child: Column(

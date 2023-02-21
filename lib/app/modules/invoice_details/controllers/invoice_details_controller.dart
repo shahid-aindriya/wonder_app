@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
 import '../../../data/urls.dart';
@@ -14,9 +15,8 @@ import '../../invoice/controllers/invoice_controller.dart';
 import '../models/invoice_approval_model.dart';
 
 class InvoiceDetailsController extends GetxController {
-  final InvoiceController inoviceController = Get.put(InvoiceController());
   //TODO: Implement InvoiceDetailsController
-
+  final InvoiceController invoiceControllers = Get.put(InvoiceController());
   final count = 0.obs;
   @override
   void onInit() {
@@ -83,7 +83,7 @@ class InvoiceDetailsController extends GetxController {
     if (requests.statusCode == 201) {
       Get.snackbar("Info ", "Payment completed succesfully",
           backgroundColor: Colors.green);
-      await inoviceController.onDropDownChanged(shopId);
+      await invoiceControllers.onDropDownChanged(shopId);
       Get.offAll(InvoiceView());
     }
   }
@@ -139,7 +139,11 @@ class InvoiceDetailsController extends GetxController {
   //   }
   // }
 
-  approveOrDeclineInvoice({choice, invoiceId, context}) async {
+  approveOrDeclineInvoice(
+      {choice,
+      invoiceId,
+      context,
+      InvoiceController? inoviceController}) async {
     log(invoiceId.toString());
     var body = {"invoice_id": invoiceId, "status": choice};
 
@@ -151,6 +155,7 @@ class InvoiceDetailsController extends GetxController {
     if (request.statusCode == 201) {
       final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
       if (invoiceApprovalModel.success == true) {
+        await inoviceController!.onPullRefreshInWallet();
         MotionToast.success(
           dismissable: true,
           enableAnimation: false,
@@ -166,7 +171,7 @@ class InvoiceDetailsController extends GetxController {
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
-        await inoviceController.getInvoiceLists();
+
         Get.back();
         Get.back();
       } else {
@@ -187,5 +192,13 @@ class InvoiceDetailsController extends GetxController {
         ).show(context);
       }
     }
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 }

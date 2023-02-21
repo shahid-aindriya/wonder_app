@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +17,9 @@ import '../controllers/invoice_details_controller.dart';
 class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
   final InvoiceDatum? data;
   final AmountData? amountdataList;
+  final InvoiceController? invoiceController;
+  InvoiceDetailsView({this.data, this.amountdataList, this.invoiceController});
 
-  InvoiceDetailsView({this.data, this.amountdataList});
-  final InvoiceController invoiceController = Get.put(InvoiceController());
   final InvoiceDetailsController invoiceDetailsController =
       Get.put(InvoiceDetailsController());
   @override
@@ -27,7 +29,8 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
     invoiceDetailsController.invoiceId = data!.id;
     String formattedDate = DateFormat("dd MMMM, yyyy")
         .format(DateTime.parse(data!.invoiceDate.toString()));
-    String formattedDate2 = DateFormat("dd MMM yyyy, HH:mm")
+    log(data!.invoiceDate.toString());
+    String formattedDate2 = DateFormat("dd MMM yyyy")
         .format(DateTime.parse(data!.invoiceDate.toString()).toLocal());
     return Container(
       decoration: BoxDecoration(
@@ -329,7 +332,10 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                       fontWeight: FontWeight.w300),
                                 ),
                                 trailing: InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    invoiceDetailsController
+                                        .makePhoneCall(data!.phone);
+                                  },
                                   child: Container(
                                     height: 50,
                                     width: 50,
@@ -351,6 +357,7 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                     Visibility(
                         visible: data!.status == "Pending" ? true : false,
                         child: ApproveAndDecline(
+                            invoiceController: invoiceController,
                             invoiceDetailsController: invoiceDetailsController,
                             data: data)),
 
@@ -403,7 +410,8 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                           width: 100.w,
                           child: data!.invoiceImage == ""
                               ? Image.asset("assets/images/invoice_image.png")
-                              : Image.network("$baseUrl${data!.invoiceImage}")),
+                              : Image.network(
+                                  "$baseUrlForImage${data!.invoiceImage}")),
                     )
 
                     // Padding(
@@ -427,12 +435,12 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
 }
 
 class ApproveAndDecline extends StatelessWidget {
-  const ApproveAndDecline({
-    super.key,
-    required this.invoiceDetailsController,
-    required this.data,
-  });
-
+  const ApproveAndDecline(
+      {super.key,
+      required this.invoiceDetailsController,
+      required this.data,
+      this.invoiceController});
+  final InvoiceController? invoiceController;
   final InvoiceDetailsController invoiceDetailsController;
   final InvoiceDatum? data;
 
@@ -463,6 +471,7 @@ class ApproveAndDecline extends StatelessWidget {
                   }
                 : () async {
                     await invoiceDetailsController.approveOrDeclineInvoice(
+                        inoviceController: invoiceController,
                         context: context,
                         choice: "Approve",
                         invoiceId: data!.id);
@@ -487,7 +496,10 @@ class ApproveAndDecline extends StatelessWidget {
                     Color.fromARGB(134, 255, 255, 255))),
             onPressed: () async {
               await invoiceDetailsController.approveOrDeclineInvoice(
-                  context: context, choice: "Reject", invoiceId: data!.id);
+                  inoviceController: invoiceController,
+                  context: context,
+                  choice: "Reject",
+                  invoiceId: data!.id);
             },
             icon: Icon(Icons.close, color: Color.fromARGB(255, 255, 80, 80)),
             label: Text("Decline",

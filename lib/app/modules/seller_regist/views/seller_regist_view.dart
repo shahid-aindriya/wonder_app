@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:wonder_app/app/modules/password_generation/views/password_generation_view.dart';
 
+import '../../password_generation/views/password_generation_view.dart';
 import '../controllers/seller_regist_controller.dart';
 
 class SellerRegistView extends GetView<SellerRegistController> {
@@ -519,7 +519,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    controller.pickimage();
+                                    controller.showPopup(context, true);
                                   },
                                   child: Container(
                                     width: 100,
@@ -670,7 +670,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                             height: 8,
                           ),
                           GetBuilder<SellerRegistController>(
-                              builder: (context) {
+                              builder: (contexts) {
                             return Row(
                               children: [
                                 Expanded(
@@ -720,7 +720,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 ),
                                 InkWell(
                                   onTap: () async {
-                                    await controller.pickimage2();
+                                    controller.showPopup(context, false);
                                   },
                                   child: Container(
                                     width: 100,
@@ -801,7 +801,17 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 MaterialStateProperty.all(Colors.transparent),
                             elevation: MaterialStateProperty.all(0)),
                         onPressed: () {
-                          if (formKey.currentState!.validate()) {
+                          if (controller.panimg == '' ||
+                              controller.adhaarimg == '') {
+                            controller.snackBar(
+                                context: context,
+                                text: "Aadhar and pan photo is mandatory");
+                            return;
+                          } else if (!(formKey.currentState!.validate())) {
+                            controller.snackBar(
+                                context: context,
+                                text: "Please fill all fileds properly");
+                          } else {
                             Get.to(PasswordGenerationView(
                               adhaarNumber: adhaarNumberEditingController.text,
                               adhaarimag: controller.adhaarimg,

@@ -59,6 +59,7 @@ class InvoiceTab extends StatelessWidget {
                       // await invoiceController.invoiceDetails(
                       //     invoiceId: datas.id);
                       Get.to(InvoiceDetailsView(
+                        invoiceController: invoiceController,
                         data: datas,
                       ));
                     },

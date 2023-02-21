@@ -137,44 +137,57 @@ class LoginView extends GetView<LoginController> {
                   SizedBox(height: 1.5.h),
                   Padding(
                     padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                    child: TextFormField(
-                      obscureText: true,
-                      controller: passwordEditingController,
-                      keyboardType: TextInputType.visiblePassword,
-                      enabled: true,
-                      style: GoogleFonts.roboto(
-                          fontSize: 16.sp, color: Color.fromRGBO(0, 0, 0, 1)),
-                      decoration: InputDecoration(
-                          hintText: "Enter your password",
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 17.0, horizontal: 10),
-                          enabled: true,
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                  width: 0,
-                                  color: Color.fromARGB(255, 199, 199, 179))),
-                          errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                  width: 0,
-                                  color: Color.fromARGB(255, 199, 199, 179))),
-                          filled: true,
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 0,
-                                  color: Color.fromARGB(255, 255, 255, 255)),
-                              borderRadius: BorderRadius.circular(16)),
-                          fillColor: Color.fromARGB(153, 255, 255, 255),
-                          focusColor: Color.fromARGB(255, 231, 231, 231)),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'please enter password';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
+                    child: Obx(() {
+                      return TextFormField(
+                        obscureText: loginController.obscureText.value,
+                        controller: passwordEditingController,
+                        keyboardType: TextInputType.visiblePassword,
+                        enabled: true,
+                        style: GoogleFonts.roboto(
+                            fontSize: 16.sp, color: Color.fromRGBO(0, 0, 0, 1)),
+                        decoration: InputDecoration(
+                            hintText: "Enter your password",
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 17.0, horizontal: 10),
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  loginController.changeText();
+                                },
+                                icon: Icon(
+                                  Icons.remove_red_eye_rounded,
+                                  color:
+                                      loginController.obscureText.value == false
+                                          ? Colors.blue
+                                          : Colors.grey,
+                                )),
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(16)),
+                            fillColor: Color.fromARGB(153, 255, 255, 255),
+                            focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'please enter password';
+                          } else {
+                            return null;
+                          }
+                        },
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -218,29 +231,45 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ],
                     ),
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                          elevation: MaterialStateProperty.all(0),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.transparent)),
-                      onPressed: () {
-                        if (formkey.currentState!.validate()) {
-                          loginController.loginFunct(
-                              password: passwordEditingController.text,
-                              email: emailEditingController.text,
-                              context: context);
-                        }
-                      },
-                      child: Text(
-                        'LOGIN',
-                        style: GoogleFonts.roboto(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          height: 1.2110513051,
-                          color: Color(0xffffffff),
+                    child: Obx(() {
+                      return ElevatedButton(
+                        style: ButtonStyle(
+                            elevation: MaterialStateProperty.all(0),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.transparent)),
+                        onPressed: loginController.isLoading.value == true
+                            ? null
+                            : () {
+                                if (formkey.currentState!.validate()) {
+                                  loginController.loginFunct(
+                                      password: passwordEditingController.text,
+                                      email: emailEditingController.text,
+                                      context: context);
+                                }
+                              },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (loginController.isLoading.value == true)
+                              CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            SizedBox(width: 10),
+                            Text(
+                              loginController.isLoading.value == true
+                                  ? 'Processing'
+                                  : 'LOGIN',
+                              style: GoogleFonts.roboto(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                height: 1.2110513051,
+                                color: Color(0xffffffff),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    )),
+                      );
+                    })),
               ],
             ),
             SizedBox(

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/map_place_picker/views/map_place_picker_view.dart';
 import 'package:wonder_app/app/modules/registration_details/views/registration_details_view.dart';
@@ -18,12 +16,13 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
   final TextEditingController commissionController = TextEditingController();
   final TextEditingController closeTimeController = TextEditingController();
   final TextEditingController openTimeController = TextEditingController();
+  final TextEditingController latController = TextEditingController();
+  final TextEditingController longController = TextEditingController();
   @override
   final StoreDetailsController controller = Get.put(StoreDetailsController());
 
   StoreDetailsView({this.storeLocation});
-  dynamic lat;
-  dynamic long;
+
   @override
   Widget build(BuildContext context) {
     // log(storeLocation.toString());
@@ -227,9 +226,9 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                 onPressed: () async {
                                   Get.to(MapPlacePickerView(),
                                       arguments: LocationDatas(
-                                          lat: lat,
+                                          lat: latController,
                                           location: shopLocationController,
-                                          long: long));
+                                          long: longController));
 
                                   // Get.to(MapPlacePicker());
                                 },
@@ -689,7 +688,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                 ),
                                 InkWell(
                                     onTap: () {
-                                      controller.pickimage();
+                                      // controller.pickimage();
                                     },
                                     child: Container(
                                         height: 56,
@@ -723,7 +722,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                                   MaterialStateProperty.all(
                                                       Colors.transparent)),
                                           onPressed: () {
-                                            controller.pickimage();
+                                            controller.showPopup(context);
                                           },
                                           child: Text(
                                             'Upload',
@@ -784,23 +783,9 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                           InkWell(
                             onTap: () {
                               if (controller.shopImage == '') {
-                                MotionToast.error(
-                                  dismissable: true,
-                                  enableAnimation: false,
-                                  position: MotionToastPosition.top,
-                                  title: const Text(
-                                    'Error ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  description:
-                                      const Text('Please fill all fields'),
-                                  animationCurve: Curves.bounceIn,
-                                  borderRadius: 0,
-                                  animationDuration:
-                                      const Duration(milliseconds: 1000),
-                                ).show(context);
+                                controller.alertPopu(
+                                    context: context,
+                                    data: "Please Enter All Fields");
                               } else if (formKey.currentState!.validate()) {
                                 Get.off(RegistrationDetailsView(
                                   featured: controller.isChecked,
@@ -869,7 +854,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
 
 class LocationDatas {
   TextEditingController? location;
-  dynamic long;
-  dynamic lat;
+  TextEditingController? long;
+  TextEditingController? lat;
   LocationDatas({this.location, this.lat, this.long});
 }

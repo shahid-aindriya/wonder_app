@@ -5,13 +5,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService extends GetxController {
-  final _baseUrl = "http://64.227.156.53:8000/".obs;
+  final _baseUrl = "https://wonderpoints.com/".obs;
   final _headers = {"Content-Type": "application/json"}.obs;
 
   Future<dynamic> get(String endpoint) async {
     var response =
         await http.get(Uri.parse(_baseUrl.value + endpoint), headers: _headers);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       return jsonDecode(response.body);
     } else {
       throw Exception('Failed to load data');

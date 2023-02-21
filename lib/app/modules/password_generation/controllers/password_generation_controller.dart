@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import 'package:wonder_app/app/modules/request_pending/views/request_pending_vie
 import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
 
 import '../../../../api/api_service.dart';
+import '../../../data/urls.dart';
 import '../model/response_model.dart';
+import 'package:http/http.dart' as http;
 
 class PasswordGenerationController extends GetxController {
   //TODO: Implement PasswordGenerationController
@@ -49,30 +52,34 @@ class PasswordGenerationController extends GetxController {
       "pan_image": panImag
     };
 
-    final request = await _apiService.post("/vendor-register/", body);
-
-    final sellerRegistrationResponse =
-        sellerRegistrationResponseFromJson(request);
-    log(request.toString());
-    if (sellerRegistrationResponse.success == false &&
-        sellerRegistrationResponse.message == "Email already exist") {
-      MotionToast.warning(
-        position: MotionToastPosition.top,
-        title: const Text(
-          'Warning ',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-register/"),
+        headers: headers,
+        body: jsonEncode(body));
+    if (request.statusCode == 201) {
+      final sellerRegistrationResponse =
+          sellerRegistrationResponseFromJson(request.body);
+      log(request.body.toString());
+      if (sellerRegistrationResponse.success == false &&
+          sellerRegistrationResponse.message == "Email already exist") {
+        MotionToast.warning(
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Warning ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        description: const Text('Email already exist'),
-        animationCurve: Curves.bounceIn,
-        borderRadius: 0,
-        animationDuration: const Duration(milliseconds: 1000),
-      ).show(context);
-    } else if (sellerRegistrationResponse.isApproved == false) {
-      Get.to(RequestPendingView());
-    } else {
-      Get.to(StoreDetailsView());
+          description: const Text('Email already exist'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      } else if (sellerRegistrationResponse.isApproved == false) {
+        Get.to(RequestPendingView());
+      } else {
+        Get.to(StoreDetailsView());
+      }
     }
   }
 }

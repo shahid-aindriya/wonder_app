@@ -127,7 +127,7 @@ class MyShopsView extends GetView<MyShopsController> {
                                                                   16)),
                                                   image: DecorationImage(
                                                     image: NetworkImage(
-                                                      "$baseUrl${data.featuredImage}",
+                                                      "$baseUrlForImage${data.featuredImage}",
                                                     ),
                                                     fit: BoxFit.fitWidth,
                                                   )),

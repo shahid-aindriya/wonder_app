@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/data/urls.dart';
 
-import '../../../data/urls.dart';
 import '../controllers/profile_view_controller.dart';
 
 class ProfileViewView extends GetView<ProfileViewController> {
@@ -66,176 +66,93 @@ class ProfileViewView extends GetView<ProfileViewController> {
                       return Column(children: [
                         Column(
                           children: [
-                            Visibility(
-                              visible: (profileViewController
-                                          .userDetailLists[index].image ==
-                                      '')
-                                  ? false
-                                  : true,
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
                               child: Container(
+                                width: 144,
+                                height: 144,
                                 decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: NetworkImage(
-                                          "$baseUrlForImage${data.image}"),
-                                      fit: BoxFit.fitWidth),
-                                  color: Colors.white,
+                                  color: Colors.transparent,
                                   borderRadius: BorderRadius.circular(25),
                                 ),
-                                child: Container(
-                                  width: 144,
-                                  height: 144,
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 76.0),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Container(
-                                          width: 45,
-                                          height: 34,
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.only(
-                                                  topRight: Radius.circular(10),
-                                                  topLeft:
-                                                      Radius.circular(10))),
-                                          child: IconButton(
-                                              onPressed: () {
-                                                profileViewController
-                                                    .pickimage();
-                                              },
-                                              icon: Icon(
-                                                Icons.camera_alt_rounded,
-                                                color: Color.fromARGB(
-                                                    255, 144, 149, 255),
-                                              )),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            GetBuilder<ProfileViewController>(
-                                builder: (contexat) {
-                              return Visibility(
-                                visible: data.image == '' ? true : false,
-                                child: profileViewController.profileImage != ''
-                                    ? Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: MemoryImage(
-                                                Base64Decoder().convert(
-                                                    profileViewController
-                                                        .profileImage),
-                                              ),
-                                              fit: BoxFit.fitWidth),
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                        ),
+                                child: Stack(
+                                  children: [
+                                    GetBuilder<ProfileViewController>(
+                                        builder: (context) {
+                                      return Visibility(
+                                        visible: profileViewController
+                                                    .profileImage ==
+                                                ''
+                                            ? true
+                                            : false,
                                         child: Container(
                                           width: 144,
                                           height: 144,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 76.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  width: 45,
-                                                  height: 34,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topRight: Radius
-                                                                  .circular(10),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      10))),
-                                                  child: IconButton(
-                                                      onPressed: () {
-                                                        profileViewController
-                                                            .pickimage();
-                                                      },
-                                                      icon: Icon(
-                                                        Icons
-                                                            .camera_alt_rounded,
-                                                        color: Color.fromARGB(
-                                                            255, 144, 149, 255),
-                                                      )),
-                                                )
-                                              ],
-                                            ),
-                                          ),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              child: data.image == ""
+                                                  ? Image.asset(
+                                                      "assets/images/User.png")
+                                                  : Image.network(
+                                                      "$baseUrlForImage${data.image}",
+                                                      fit: BoxFit.cover,
+                                                    )),
                                         ),
-                                      )
-                                    : Container(
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                  "assets/images/profile_vecto.png")),
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                        ),
+                                      );
+                                    }),
+                                    GetBuilder<ProfileViewController>(
+                                        builder: (contexert) {
+                                      return Visibility(
+                                        visible: profileViewController
+                                                    .profileImage ==
+                                                ''
+                                            ? false
+                                            : true,
                                         child: Container(
-                                          width: 124,
-                                          height: 124,
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 76.0),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  width: 45,
-                                                  height: 34,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topRight: Radius
-                                                                  .circular(10),
-                                                              topLeft: Radius
-                                                                  .circular(
-                                                                      10))),
-                                                  child: IconButton(
-                                                      onPressed: () {
-                                                        profileViewController
-                                                            .pickimage();
-                                                      },
-                                                      icon: Icon(
-                                                        Icons
-                                                            .camera_alt_rounded,
-                                                        color: Color.fromARGB(
-                                                            255, 144, 149, 255),
-                                                      )),
-                                                )
-                                              ],
-                                            ),
-                                          ),
+                                          width: 144,
+                                          height: 144,
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              child: Image.memory(
+                                                Base64Decoder().convert(
+                                                    profileViewController
+                                                        .profileImage),
+                                                fit: BoxFit.cover,
+                                              )),
                                         ),
+                                      );
+                                    }),
+                                    Positioned(
+                                      top: 110,
+                                      left: 50,
+                                      child: Container(
+                                        width: 45,
+                                        height: 34,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                topLeft: Radius.circular(10))),
+                                        child: IconButton(
+                                            onPressed: () {
+                                              profileViewController.pickimage();
+                                            },
+                                            icon: Icon(
+                                              Icons.camera_alt_rounded,
+                                              color: Color.fromARGB(
+                                                  255, 144, 149, 255),
+                                            )),
                                       ),
-                              );
-                            }),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
                             Text(
                               profileViewController.nameController.text,
                               style: GoogleFonts.roboto(
