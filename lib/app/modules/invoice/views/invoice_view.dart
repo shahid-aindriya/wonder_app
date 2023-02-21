@@ -48,6 +48,7 @@ class InvoiceView extends GetView<InvoiceController> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
+      
       body: jsonEncode(
           <String, dynamic>{"user_id": userId, "device_token": token}),
     );
