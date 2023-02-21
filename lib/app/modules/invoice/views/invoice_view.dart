@@ -1,7 +1,11 @@
+import 'dart:convert';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/data/colors.dart';
@@ -24,9 +28,42 @@ class InvoiceView extends GetView<InvoiceController> {
   final InvoiceController invoiceController = Get.put(InvoiceController());
   final AddInvoiceController addInvoiceController =
       Get.put(AddInvoiceController());
+          FirebaseMessaging messaging = FirebaseMessaging.instance;
+      
+  void pushFCMtoken() async {
+    String? token = await messaging.getToken();
+
+    print("token:$token");
+    print("hello");
+    await sendDeviceToken(token!);
+  }
+
+  Future<void> sendDeviceToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+    print("dzvjhjxhbv$userId");
+   
+    var response = await post(
+      Uri.parse('http://64.227.156.53:8000/vendor-update-device-token/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+          <String, dynamic>{"user_id": userId, "device_token": token}),
+    );
+    print('status${response.statusCode}');
+
+    if (response.statusCode == 201) {
+      print("got token");
+      print(response.statusCode);
+    } else {
+      throw Exception("failed to send token");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    pushFCMtoken();
     invoiceController.notifications();
     addInvoiceController.getListOfShops();
     // invoiceController.getInvoiceLists();

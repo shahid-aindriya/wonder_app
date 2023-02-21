@@ -23,13 +23,13 @@ AndroidNotificationChannel channel = AndroidNotificationChannel(
     importance: Importance.high,
     playSound: true);
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin=FlutterLocalNotificationsPlugin();
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
 FlutterTts flutterTts = FlutterTts();
-void speak(String body) async {
-  flutterTts.setLanguage("en-US");
-  flutterTts.setPitch(1);
-  flutterTts.speak(body);
-}
+// void speak(String body) async {
+//   flutterTts.setLanguage("en-US");
+//   flutterTts.setPitch(1);
+//   flutterTts.speak(body);
+// }
     Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('A bg message just showed up :  ${message.messageId}');
@@ -57,7 +57,6 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    pushFCMtoken();
      initMessaging();
   }
    void initMessaging()
@@ -86,7 +85,7 @@ class _MyAppState extends State<MyApp> {
           
        
             //notification from server to voice
-        speak(message.notification!.title!);
+        // speak(message.notification!.title!);
       }
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
@@ -106,34 +105,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-   void pushFCMtoken() async {
-    String? token = await messaging.getToken();
-
-    print("token:$token");
-    print("hello");
-    await sendDeviceToken(token!);
-  }
-
-  Future<void> sendDeviceToken(String token) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getInt("userId");
-    var response = await post(
-      Uri.parse('http://64.227.156.53:8000/vendor-update-device-token/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-          <String, dynamic>{"user_id": userId, "device_token": token}),
-    );
-    print('status${response.statusCode}');
-
-    if (response.statusCode == 201) {
-      print("got token");
-      print(response.statusCode);
-    } else {
-      throw Exception("failed to send token");
-    }
-  }
   
   @override
   Widget build(BuildContext context) {
