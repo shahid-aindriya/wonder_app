@@ -18,7 +18,7 @@ class WalletTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        invoiceController.onPullRefreshInWallet();
+        await invoiceController.onPullRefreshInWallet();
       },
       child: Column(
         children: [
@@ -164,12 +164,7 @@ class WalletTab extends StatelessWidget {
                             child: Container(
                               width: 100.w,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(14),
-                                  topRight: Radius.circular(14),
-                                  bottomLeft: Radius.circular(14),
-                                  bottomRight: Radius.circular(14),
-                                ),
+                                borderRadius: BorderRadius.circular(14),
                                 gradient: LinearGradient(
                                     begin: Alignment(1.4153012037277222,
                                         0.15562866628170013),
@@ -203,7 +198,15 @@ class WalletTab extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "-${invoiceController.walletTransactionLists[index].amount}",
+                                        invoiceController
+                                                    .walletTransactionLists[
+                                                        index]
+                                                    .amount ==
+                                                "0"
+                                            ? invoiceController
+                                                .walletTransactionLists[index]
+                                                .amount
+                                            : "-${invoiceController.walletTransactionLists[index].amount}",
                                         style: GoogleFonts.roboto(
                                             color: Color.fromARGB(
                                                 255, 243, 106, 106),

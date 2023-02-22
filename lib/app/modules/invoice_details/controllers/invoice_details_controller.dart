@@ -83,7 +83,7 @@ class InvoiceDetailsController extends GetxController {
     if (requests.statusCode == 201) {
       Get.snackbar("Info ", "Payment completed succesfully",
           backgroundColor: Colors.green);
-      await invoiceControllers.onDropDownChanged(shopId);
+      await invoiceControllers.onPullRefreshInWallet();
       Get.offAll(InvoiceView());
     }
   }

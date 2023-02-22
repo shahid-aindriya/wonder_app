@@ -17,7 +17,7 @@ class TermsConditionsController extends GetxController {
     // try {
 
     var request = await http.get(
-        Uri.parse("http://64.227.156.53:8000/terms-and-conditions/"),
+        Uri.parse("${baseUrl.value}terms-and-conditions/"),
         headers: headers);
 
     log(request.statusCode.toString());

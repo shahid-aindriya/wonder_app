@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/add_invoice/controllers/add_invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
@@ -20,6 +22,7 @@ class InvoiceController extends GetxController {
   final count = 0.obs;
   @override
   void onInit() {
+    pushFCMtoken();
     // TODO: implement onInit
     super.onInit();
   }
@@ -215,6 +218,37 @@ class InvoiceController extends GetxController {
       userDetailLists.assign(userDataResponse.userData);
 
       update();
+    }
+  }
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  void pushFCMtoken() async {
+    String? token = await messaging.getToken();
+
+    log("token:$token");
+    print("hello");
+    await sendDeviceToken(token!);
+  }
+
+  Future<void> sendDeviceToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+
+    var response = await post(
+      Uri.parse('${baseUrl.value}vendor-update-device-token/'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+          <String, dynamic>{"user_id": userId, "device_token": token}),
+    );
+    log('status${response.statusCode}');
+
+    if (response.statusCode == 201) {
+      print("got token");
+      print(response.statusCode);
+    } else {
+      throw Exception("failed to send token");
     }
   }
 }

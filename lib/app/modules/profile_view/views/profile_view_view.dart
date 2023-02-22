@@ -81,7 +81,7 @@ class ProfileViewView extends GetView<ProfileViewController> {
                                 child: Stack(
                                   children: [
                                     GetBuilder<ProfileViewController>(
-                                        builder: (context) {
+                                        builder: (con4text) {
                                       return Visibility(
                                         visible: profileViewController
                                                     .profileImage ==
@@ -140,7 +140,8 @@ class ProfileViewView extends GetView<ProfileViewController> {
                                                 topLeft: Radius.circular(10))),
                                         child: IconButton(
                                             onPressed: () {
-                                              profileViewController.pickimage();
+                                              profileViewController
+                                                  .showPopup(context);
                                             },
                                             icon: Icon(
                                               Icons.camera_alt_rounded,

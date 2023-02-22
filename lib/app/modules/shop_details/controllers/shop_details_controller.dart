@@ -192,6 +192,25 @@ class ShopDetailsController extends GetxController {
 
   addOffers({name, shopId, discount, descpition, context}) async {
     log(shopId.toString());
+
+    if (offerImage == '') {
+      MotionToast.error(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Error ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('please add image'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(context);
+      return;
+    }
     var body = {
       "name": name,
       "shop_id": shopId,
@@ -363,29 +382,35 @@ class ShopDetailsController extends GetxController {
     update();
   }
 
-  editBankDetails({bankId}) async {
+  editBankDetails({bankId, name, accnumber, acctype, ifsc}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
     var check = checkImage == '' ? null : checkImage;
     // log(bankId.toString());
     var body = {
       "bank_id": bankId,
-      "name": "Abcd",
+      "name": name,
       "user_id": userId,
       "shop_id": shopId,
-      "account_number": 9000876654345,
-      "account_type": "current",
-      "ifsc_code": "IFC9009",
+      "account_number": accnumber,
+      "account_type": acctype,
+      "ifsc_code": ifsc,
       "cheque_copy": check
     };
     var request = await http.post(
         Uri.parse("${baseUrl.value}vendor-edit-bank-details/"),
         headers: headers,
         body: jsonEncode(body));
-    // log(request.body);
+    log(request.body);
+    if (request.statusCode == 201) {
+      final bankaddresponse = jsonDecode(request.body);
+      if (bankaddresponse['success'] == true) {
+        Get.to(SuccessView());
+      }
+    }
   }
 
-  addBankDetailss({int? accountNum, accType, ifscCode, name}) async {
+  addBankDetailss({int? accountNum, accType, ifscCode, name, context}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
     // log(name);
@@ -395,15 +420,32 @@ class ShopDetailsController extends GetxController {
     // log(accountNum.toString());
     // log(ifscCode);
     int id = int.tryParse(shopIds)!;
-    var check = checkImage == '' ? null : checkImage;
+    if (checkImage == "") {
+      MotionToast.warning(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Error ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('Please Upload cheque image'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(context);
+      return;
+    }
     var body = {
       "name": name,
       "user_id": userId,
       "shop_id": id,
       "account_number": accountNum,
-      "account_type": "Current",
+      "account_type": accType,
       "ifsc_code": ifscCode,
-      "cheque_copy": check
+      "cheque_copy": checkImage
     };
     var request = await http.post(Uri.parse("${baseUrl.value}vendor-add-bank/"),
         headers: headers, body: jsonEncode(body));

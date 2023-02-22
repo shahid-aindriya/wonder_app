@@ -64,7 +64,7 @@ class BankDetailsController extends GetxController {
       "user_id": userId,
       "shop_id": shopId,
       "account_number": accountNum,
-      "account_type": "Current",
+      "account_type": accType,
       "ifsc_code": ifscCode,
       "cheque_copy": chequeImage
     };

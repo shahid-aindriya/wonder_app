@@ -31,6 +31,7 @@ class InvoiceView extends GetView<InvoiceController> {
     invoiceController.notifications();
     addInvoiceController.getListOfShops();
     invoiceController.getUserData();
+    invoiceController.pushFCMtoken();
     return DefaultTabController(
       length: 2,
       child: Container(

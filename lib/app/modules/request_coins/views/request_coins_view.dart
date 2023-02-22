@@ -85,7 +85,7 @@ class RequestCoinsView extends GetView<RequestCoinsController> {
                   TextFormField(
                     enabled: true,
                     controller: searchUserController,
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.none,
                     style: GoogleFonts.roboto(
                         fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                     decoration: InputDecoration(
@@ -113,11 +113,8 @@ class RequestCoinsView extends GetView<RequestCoinsController> {
                             borderRadius: BorderRadius.circular(16)),
                         fillColor: Color.fromARGB(153, 255, 255, 255),
                         focusColor: Color.fromARGB(255, 231, 231, 231)),
-                    onChanged: (value) {
-                      Get.to(
-                          SearchUser(
-                            text: value,
-                          ),
+                    onTap: () {
+                      Get.to(SearchUser(),
                           arguments:
                               TextData(searchUserController, selectUserId));
                     },

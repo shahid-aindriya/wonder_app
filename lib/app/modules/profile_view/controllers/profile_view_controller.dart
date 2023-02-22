@@ -49,8 +49,9 @@ class ProfileViewController extends GetxController {
   dynamic compressedImage;
   String profileImage = '';
   File? image;
-  pickimage() async {
-    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+  pickimage(bool value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
     } else {
@@ -60,9 +61,9 @@ class ProfileViewController extends GetxController {
       compressedImage = testComporessList(bytes);
       profileImage = base64Encode(await compressedImage);
       update();
+      return;
     }
     // log(img);
-    update();
   }
 
   testComporessList(Uint8List list) async {
@@ -70,8 +71,8 @@ class ProfileViewController extends GetxController {
       list,
       minHeight: 600,
       minWidth: 400,
-      quality: 100,
-      format: CompressFormat.png,
+      quality: 70,
+      format: CompressFormat.jpeg,
       rotate: 0,
     );
     log(list.length.toString());
@@ -118,5 +119,39 @@ class ProfileViewController extends GetxController {
         ).show(context);
       }
     }
+  }
+
+  showPopup(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.camera_alt),
+                  title: Text('Take a photo'),
+                  onTap: () {
+                    pickimage(true);
+                    // Handle the 'Take a photo' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.image),
+                  title: Text('Choose from gallery'),
+                  onTap: () {
+                    pickimage(false);
+                    // Handle the 'Choose from gallery' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

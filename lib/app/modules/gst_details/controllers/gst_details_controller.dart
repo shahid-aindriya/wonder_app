@@ -29,8 +29,9 @@ class GstDetailsController extends GetxController {
   dynamic compressedImage;
   String gstImage = '';
   File? image;
-  pickimage() async {
-    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+  pickimage(bool value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
     } else {
@@ -129,16 +130,51 @@ class GstDetailsController extends GetxController {
   }
 
   testComporessList(Uint8List list) async {
+    log(list.length.toString());
     var result = await FlutterImageCompress.compressWithList(
       list,
-      minHeight: 600,
+      minHeight: 400,
       minWidth: 400,
-      quality: 100,
-      format: CompressFormat.png,
+      quality: 10,
+      format: CompressFormat.jpeg,
       rotate: 0,
     );
-    log(list.length.toString());
+
     log(result.length.toString());
     return result.toList();
+  }
+
+  showPopup(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.camera_alt),
+                  title: Text('Take a photo'),
+                  onTap: () {
+                    pickimage(true);
+                    // Handle the 'Take a photo' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.image),
+                  title: Text('Choose from gallery'),
+                  onTap: () {
+                    pickimage(false);
+                    // Handle the 'Choose from gallery' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

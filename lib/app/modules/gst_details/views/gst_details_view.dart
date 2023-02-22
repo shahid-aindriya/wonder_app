@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../controllers/gst_details_controller.dart';
@@ -163,7 +165,7 @@ class GstDetailsView extends GetView<GstDetailsController> {
                     SizedBox(
                       height: 8,
                     ),
-                    GetBuilder<GstDetailsController>(builder: (context) {
+                    GetBuilder<GstDetailsController>(builder: (consdftext) {
                       return Row(
                         children: [
                           Expanded(
@@ -209,7 +211,7 @@ class GstDetailsView extends GetView<GstDetailsController> {
                           ),
                           InkWell(
                             onTap: () {
-                              controller.pickimage();
+                              controller.showPopup(context);
                             },
                             child: Container(
                               width: 100,
@@ -267,7 +269,23 @@ class GstDetailsView extends GetView<GstDetailsController> {
               children: [
                 InkWell(
                   onTap: () {
-                    if (formKey.currentState!.validate()) {
+                    if (controller.gstImage == '') {
+                      MotionToast.warning(
+                        dismissable: true,
+                        enableAnimation: false,
+                        position: MotionToastPosition.top,
+                        title: const Text(
+                          'Warning ',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        description: Text("Please upload documents"),
+                        animationCurve: Curves.bounceIn,
+                        borderRadius: 0,
+                        animationDuration: const Duration(milliseconds: 1000),
+                      ).show(context);
+                    } else if (formKey.currentState!.validate()) {
                       controller.addShopToServer(
                           address: shopAdress,
                           context: context,

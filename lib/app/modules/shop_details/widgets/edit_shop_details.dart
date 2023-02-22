@@ -374,6 +374,7 @@ class EditShopDetails extends StatelessWidget {
                     ),
                     TextFormField(
                       controller: shopCommissionController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderSide:
@@ -390,7 +391,7 @@ class EditShopDetails extends StatelessWidget {
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'please enter valid location';
+                          return 'please enter valid commission';
                         } else {
                           return null;
                         }
@@ -410,6 +411,7 @@ class EditShopDetails extends StatelessWidget {
                     ),
                     TextFormField(
                       controller: shopGstPctController,
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderSide:
@@ -426,7 +428,7 @@ class EditShopDetails extends StatelessWidget {
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'please enter valid location';
+                          return 'please enter valid gst';
                         } else {
                           return null;
                         }
@@ -462,7 +464,7 @@ class EditShopDetails extends StatelessWidget {
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'please enter valid location';
+                          return 'please enter valid licence number';
                         } else {
                           return null;
                         }
@@ -498,7 +500,7 @@ class EditShopDetails extends StatelessWidget {
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'please enter valid location';
+                          return 'please enter valid gst number';
                         } else {
                           return null;
                         }

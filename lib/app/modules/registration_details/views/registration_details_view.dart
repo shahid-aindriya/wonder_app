@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/gst_details/views/gst_details_view.dart';
 
@@ -212,7 +214,7 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  controller.pickimage();
+                                  controller.showPopup(context);
                                 },
                                 child: Container(
                                   width: 100,
@@ -270,7 +272,24 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
                     children: [
                       InkWell(
                         onTap: () {
-                          if (formKey.currentState!.validate()) {
+                          if (controller.licenceImage == '') {
+                            MotionToast.warning(
+                              dismissable: true,
+                              enableAnimation: false,
+                              position: MotionToastPosition.top,
+                              title: const Text(
+                                'Warning ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              description: Text("Please upload documents"),
+                              animationCurve: Curves.bounceIn,
+                              borderRadius: 0,
+                              animationDuration:
+                                  const Duration(milliseconds: 1000),
+                            ).show(context);
+                          } else if (formKey.currentState!.validate()) {
                             Get.off(GstDetailsView(
                               categoryId: categoryId,
                               licenceImage: controller.licenceImage,

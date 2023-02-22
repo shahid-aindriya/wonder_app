@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../controllers/bank_details_controller.dart';
@@ -14,6 +16,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
   final TextEditingController accountNumberController = TextEditingController();
   final TextEditingController ifscCodeController = TextEditingController();
   final TextEditingController branchNameController = TextEditingController();
+  final TextEditingController accountTypeController = TextEditingController();
   final BankDetailsController bankDetailsController =
       Get.put(BankDetailsController());
   final formKey = GlobalKey<FormState>();
@@ -207,6 +210,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
                     ),
                     TextFormField(
                       enabled: true,
+                      keyboardType: TextInputType.number,
                       style: GoogleFonts.roboto(
                           fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                       decoration: InputDecoration(
@@ -297,6 +301,68 @@ class BankDetailsView extends GetView<BankDetailsController> {
                         if (!RegExp(r'^[A-Za-z]{4}[a-zA-Z0-9]{7}$')
                             .hasMatch(value!)) {
                           return 'Invalid IFSC Code';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Account Type',
+                            style: GoogleFonts.roboto(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              height: 1.1725,
+                              color: Color(0xff4956b2),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      enabled: true,
+                      controller: accountTypeController,
+                      style: GoogleFonts.roboto(
+                          fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                      decoration: InputDecoration(
+                          hintStyle: GoogleFonts.roboto(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w300,
+                            height: 1.1725,
+                            color: Color.fromARGB(93, 0, 0, 0),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 18.0, horizontal: 18),
+                          enabled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: Color.fromARGB(255, 199, 199, 179))),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  width: 0,
+                                  color: Color.fromARGB(255, 255, 255, 255)),
+                              borderRadius: BorderRadius.circular(16)),
+                          fillColor: Color.fromARGB(153, 255, 255, 255),
+                          focusColor: Color.fromARGB(255, 231, 231, 231)),
+                      validator: (value) {
+                        if (!RegExp(r'(^[a-zA-Z ]*$)').hasMatch(value!) ||
+                            value.length < 3) {
+                          return 'Enter Valid type like current,savings or credit';
                         } else {
                           return null;
                         }
@@ -427,15 +493,6 @@ class BankDetailsView extends GetView<BankDetailsController> {
                                   fillColor: Color.fromARGB(153, 255, 255, 255),
                                   focusColor:
                                       Color.fromARGB(255, 231, 231, 231)),
-                              validator: (value) {
-                                if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
-                                        .hasMatch(value!) ||
-                                    value.length < 3) {
-                                  return 'please enter valid email';
-                                } else {
-                                  return null;
-                                }
-                              },
                             ),
                           ),
                           InkWell(
@@ -491,12 +548,33 @@ class BankDetailsView extends GetView<BankDetailsController> {
                       children: [
                         InkWell(
                           onTap: () {
-                            bankDetailsController.addBankDetails(
-                                accountNum:
-                                    int.tryParse(accountNumberController.text),
-                                ifscCode: ifscCodeController.text,
-                                name: holderNameController.text,
-                                shopId: shopId);
+                            if (bankDetailsController.chequeImage == '') {
+                              MotionToast.warning(
+                                dismissable: true,
+                                enableAnimation: false,
+                                position: MotionToastPosition.top,
+                                title: const Text(
+                                  'Error ',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                description:
+                                    const Text('Please Upload cheque image'),
+                                animationCurve: Curves.bounceIn,
+                                borderRadius: 0,
+                                animationDuration:
+                                    const Duration(milliseconds: 1000),
+                              ).show(context);
+                            } else if (formKey.currentState!.validate()) {
+                              bankDetailsController.addBankDetails(
+                                  accType: accountTypeController.text,
+                                  accountNum: int.tryParse(
+                                      accountNumberController.text),
+                                  ifscCode: ifscCodeController.text,
+                                  name: holderNameController.text,
+                                  shopId: shopId);
+                            }
                           },
                           child: Container(
                             width: 124,

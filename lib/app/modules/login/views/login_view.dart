@@ -23,9 +23,16 @@ class LoginView extends GetView<LoginController> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.jpg"),
-              fit: BoxFit.cover)),
+        gradient: LinearGradient(
+            begin: Alignment(2, 1.0548897981643677),
+            end: Alignment(-1.0548897981643677, 1.226324439048767),
+            colors: [
+              Color.fromRGBO(239, 221, 214, 1),
+              Color.fromRGBO(220, 222, 242, 1),
+              Color.fromRGBO(250, 227, 243, 1),
+              Color.fromRGBO(228, 249, 254, 1)
+            ]),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: ListView(
@@ -212,7 +219,6 @@ class LoginView extends GetView<LoginController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                    width: 45.w,
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
@@ -232,41 +238,45 @@ class LoginView extends GetView<LoginController> {
                       ],
                     ),
                     child: Obx(() {
-                      return ElevatedButton(
-                        style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(0),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.transparent)),
-                        onPressed: loginController.isLoading.value == true
-                            ? null
-                            : () {
-                                if (formkey.currentState!.validate()) {
-                                  loginController.loginFunct(
-                                      password: passwordEditingController.text,
-                                      email: emailEditingController.text,
-                                      context: context);
-                                }
-                              },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (loginController.isLoading.value == true)
-                              CircularProgressIndicator(
-                                color: Colors.white,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 31.0),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              elevation: MaterialStateProperty.all(0),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.transparent)),
+                          onPressed: loginController.isLoading.value == true
+                              ? null
+                              : () {
+                                  if (formkey.currentState!.validate()) {
+                                    loginController.loginFunct(
+                                        password:
+                                            passwordEditingController.text,
+                                        email: emailEditingController.text,
+                                        context: context);
+                                  }
+                                },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (loginController.isLoading.value == true)
+                                CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              SizedBox(width: 10),
+                              Text(
+                                loginController.isLoading.value == true
+                                    ? 'Processing'
+                                    : 'LOGIN',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.2110513051,
+                                  color: Color(0xffffffff),
+                                ),
                               ),
-                            SizedBox(width: 10),
-                            Text(
-                              loginController.isLoading.value == true
-                                  ? 'Processing'
-                                  : 'LOGIN',
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                height: 1.2110513051,
-                                color: Color(0xffffffff),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     })),

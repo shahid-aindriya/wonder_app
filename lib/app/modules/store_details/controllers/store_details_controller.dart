@@ -58,6 +58,7 @@ class StoreDetailsController extends GetxController {
       final bytes = File(ims.path).readAsBytesSync();
       final compressedImage = testComporessList(bytes);
       shopImage = base64Encode(await compressedImage);
+      update();
     }
     // log(img);
     update();
@@ -79,10 +80,10 @@ class StoreDetailsController extends GetxController {
   testComporessList(Uint8List list) async {
     var result = await FlutterImageCompress.compressWithList(
       list,
-      minHeight: 600,
+      minHeight: 400,
       minWidth: 400,
-      quality: 100,
-      format: CompressFormat.png,
+      quality: 10,
+      format: CompressFormat.jpeg,
       rotate: 0,
     );
     log(list.length.toString());
