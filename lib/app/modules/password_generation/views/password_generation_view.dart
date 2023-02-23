@@ -345,7 +345,41 @@ class PasswordGenerationView extends GetView<PasswordGenerationController> {
                                     animationDuration:
                                         const Duration(milliseconds: 1000),
                                   ).show(context);
-                                } else if (formKey.currentState!.validate()) {
+                                } else if (passwordController.text !=
+                                    confirmPasswordController.text) {
+                                  MotionToast.error(
+                                    position: MotionToastPosition.top,
+                                    title: const Text(
+                                      'Error ',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    description:
+                                        const Text('Password doesnt matches'),
+                                    animationCurve: Curves.bounceIn,
+                                    borderRadius: 0,
+                                    animationDuration:
+                                        const Duration(milliseconds: 1000),
+                                  ).show(context);
+                                } else if (passwordController.text.length < 6 &&
+                                    (controller.isOn.value == false)) {
+                                  MotionToast.error(
+                                    position: MotionToastPosition.top,
+                                    title: const Text(
+                                      'Error ',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    description:
+                                        const Text('Minimum 6 characters'),
+                                    animationCurve: Curves.bounceIn,
+                                    borderRadius: 0,
+                                    animationDuration:
+                                        const Duration(milliseconds: 1000),
+                                  ).show(context);
+                                } else {
                                   await controller.sellerRegister(
                                       adarImag: adhaarimag,
                                       adhaar: adhaarNumber,

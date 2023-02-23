@@ -76,7 +76,7 @@ class ShopGstDetails extends StatelessWidget {
                   ),
                   TextFormField(
                     controller: gstController,
-                    enabled: true,
+                    enabled: false,
                     style: GoogleFonts.roboto(
                         fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                     decoration: InputDecoration(
@@ -89,7 +89,7 @@ class ShopGstDetails extends StatelessWidget {
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 18.0, horizontal: 18),
                         enabled: true,
-                        enabledBorder: OutlineInputBorder(
+                        disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(
                                 width: 0,
@@ -120,7 +120,7 @@ class ShopGstDetails extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          'License Copy',
+                          'Gst Copy',
                           style: GoogleFonts.roboto(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,

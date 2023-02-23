@@ -41,7 +41,7 @@ class RegistrationDetailsController extends GetxController {
       list,
       minHeight: 400,
       minWidth: 400,
-      quality: 10,
+      quality: 100,
       format: CompressFormat.jpeg,
       rotate: 0,
     );

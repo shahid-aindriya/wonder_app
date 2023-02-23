@@ -43,6 +43,8 @@ class InvoiceDatum {
     required this.status,
     required this.myself,
     required this.amountData,
+    required this.vendorImage,
+    required this.userImage,
   });
 
   int id;
@@ -59,6 +61,9 @@ class InvoiceDatum {
   String remark;
   String status;
   bool myself;
+  String vendorImage;
+  String userImage;
+
   AmountData amountData;
 
   factory InvoiceDatum.fromJson(Map<String, dynamic> json) => InvoiceDatum(
@@ -75,6 +80,8 @@ class InvoiceDatum {
         invoiceAmount: json["invoice_amount"],
         remark: json["remark"] ?? "null",
         status: json["status"],
+        vendorImage: json["vendor_image"],
+        userImage: json["user_image"],
         myself: json["myself"],
         amountData:
             AmountData.fromJson(json["amount_data"] ?? {"null": "null"}),

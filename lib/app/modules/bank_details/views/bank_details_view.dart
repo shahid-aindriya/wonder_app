@@ -309,9 +309,6 @@ class BankDetailsView extends GetView<BankDetailsController> {
                     SizedBox(
                       height: 20,
                     ),
-                    SizedBox(
-                      height: 30,
-                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 14.0),
                       child: Row(
@@ -337,6 +334,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
                       style: GoogleFonts.roboto(
                           fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                       decoration: InputDecoration(
+                          hintText: "Savings or credit or Current",
                           hintStyle: GoogleFonts.roboto(
                             fontSize: 18,
                             fontWeight: FontWeight.w300,
@@ -376,66 +374,6 @@ class BankDetailsView extends GetView<BankDetailsController> {
                       child: Row(
                         children: [
                           Text(
-                            'Branch Name',
-                            style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              height: 1.1725,
-                              color: Color(0xff4956b2),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 8,
-                    ),
-                    TextFormField(
-                      controller: branchNameController,
-                      enabled: true,
-                      style: GoogleFonts.roboto(
-                          fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
-                      decoration: InputDecoration(
-                          hintStyle: GoogleFonts.roboto(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w300,
-                            height: 1.1725,
-                            color: Color.fromARGB(93, 0, 0, 0),
-                          ),
-                          hintText: "Enter Branch Name",
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 18.0, horizontal: 18),
-                          enabled: true,
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: BorderSide(
-                                  width: 0,
-                                  color: Color.fromARGB(255, 199, 199, 179))),
-                          filled: true,
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 0,
-                                  color: Color.fromARGB(255, 255, 255, 255)),
-                              borderRadius: BorderRadius.circular(16)),
-                          fillColor: Color.fromARGB(153, 255, 255, 255),
-                          focusColor: Color.fromARGB(255, 231, 231, 231)),
-                      validator: (value) {
-                        if (!RegExp(r'(^[a-zA-Z ]*$)').hasMatch(value!) ||
-                            value.length < 3) {
-                          return 'Incorrect branch name';
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 14.0),
-                      child: Row(
-                        children: [
-                          Text(
                             'Upload Cancelled Check image',
                             style: GoogleFonts.roboto(
                               fontSize: 16,
@@ -450,7 +388,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
                     SizedBox(
                       height: 8,
                     ),
-                    GetBuilder<BankDetailsController>(builder: (context) {
+                    GetBuilder<BankDetailsController>(builder: (consdtext) {
                       return Row(
                         children: [
                           Expanded(
@@ -497,7 +435,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
                           ),
                           InkWell(
                             onTap: () {
-                              bankDetailsController.pickimage();
+                              bankDetailsController.showPopup(context);
                             },
                             child: Container(
                               width: 100,

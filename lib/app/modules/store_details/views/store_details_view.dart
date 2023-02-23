@@ -437,7 +437,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
                         validator: (value) {
-                          if (value == null) {
+                          if (value == null || value == '' || value.isEmpty) {
                             return 'please enter opening time';
                           } else {
                             return null;
@@ -452,11 +452,11 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                           if (picked != null) {
                             selectedOpeningTime = picked;
                             openTimeController.text =
-                                "${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
+                                selectedOpeningTime.format(context).toString();
                           } else {
                             var current = TimeOfDay.now();
                             openTimeController.text =
-                                "${current.hour}:${current.minute}";
+                                current.format(context).toString();
                           }
                         },
                       ),
@@ -513,7 +513,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
                         validator: (value) {
-                          if (value == null) {
+                          if (value == null || value == '' || value.isEmpty) {
                             return 'please enter closing time';
                           } else {
                             return null;
@@ -528,11 +528,11 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                           if (picked != null) {
                             selectedOpeningTime = picked;
                             closeTimeController.text =
-                                "${selectedOpeningTime.hour}:${selectedOpeningTime.minute}";
+                                selectedOpeningTime.format(context).toString();
                           } else {
                             var current = TimeOfDay.now();
                             closeTimeController.text =
-                                "${current.hour}:${current.minute}";
+                                current.format(context).toString();
                           }
                         },
                       ),
@@ -798,6 +798,8 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                   shopName: shopNameController.text,
                                   closingTime: closeTimeController.text,
                                   openingTime: openTimeController.text,
+                                  lat: latController.text,
+                                  long: longController.text,
                                 ));
                               }
                             },

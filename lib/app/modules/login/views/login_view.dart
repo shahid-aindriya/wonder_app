@@ -38,18 +38,25 @@ class LoginView extends GetView<LoginController> {
         body: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 10.h, bottom: 5.h),
+              padding: EdgeInsets.only(
+                  top: 10.h, bottom: 5.h, right: 5.w, left: 5.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Wonder App',
-                    style: GoogleFonts.jost(
-                        fontSize: 26.sp,
-                        fontWeight: FontWeight.w700,
-                        height: 0.5,
-                        foreground: Paint()..shader = linearGradient),
-                  ),
+                  // Text(
+                  //   'Wonder App',
+                  //   style: GoogleFonts.jost(
+                  //       fontSize: 26.sp,
+                  //       fontWeight: FontWeight.w700,
+                  //       height: 0.5,
+                  //       foreground: Paint()..shader = linearGradient),
+                  // ),
+                  Flexible(
+                    child: Image.asset(
+                      "assets/images/Wonderpoints (1).png",
+                      width: 60.w,
+                    ),
+                  )
                 ],
               ),
             ),

@@ -77,7 +77,7 @@ class ShopLicenseDetails extends StatelessWidget {
                   ),
                   TextFormField(
                     controller: licenseController,
-                    enabled: true,
+                    enabled: false,
                     style: GoogleFonts.roboto(
                         fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                     decoration: InputDecoration(
@@ -90,7 +90,7 @@ class ShopLicenseDetails extends StatelessWidget {
                         contentPadding: const EdgeInsets.symmetric(
                             vertical: 18.0, horizontal: 18),
                         enabled: true,
-                        enabledBorder: OutlineInputBorder(
+                        disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(16),
                             borderSide: BorderSide(
                                 width: 0,

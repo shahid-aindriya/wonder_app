@@ -392,7 +392,7 @@ class BankDetailsOfShop extends StatelessWidget {
                         child: Row(
                           children: [
                             Text(
-                              'License Copy',
+                              'Cheque Copy',
                               style: GoogleFonts.roboto(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -417,11 +417,11 @@ class BankDetailsOfShop extends StatelessWidget {
                                   const EdgeInsets.only(top: 10.0, bottom: 20),
                               child: Container(
                                   width: 100.w,
-                                  child: (image == "null" || image == null)
+                                  child: (image == null || image == "null")
                                       ? Image.asset(
                                           "assets/images/invoice_image.png")
                                       : Image.network(
-                                          "$baseUrlForImage$image")),
+                                          "$baseUrlForImage${data.chequeCopy}")),
                             ),
                           ),
                         );

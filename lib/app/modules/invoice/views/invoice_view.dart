@@ -19,10 +19,10 @@ import '../controllers/invoice_controller.dart';
 import '../widgets/invoices_tab.dart';
 import '../widgets/notification_icon.dart';
 import '../widgets/wallet_tab.dart';
-
+  final InvoiceController invoiceController = Get.put(InvoiceController());
 class InvoiceView extends GetView<InvoiceController> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final InvoiceController invoiceController = Get.put(InvoiceController());
+
   final AddInvoiceController addInvoiceController =
       Get.put(AddInvoiceController());
 

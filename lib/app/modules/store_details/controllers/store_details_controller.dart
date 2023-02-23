@@ -82,7 +82,7 @@ class StoreDetailsController extends GetxController {
       list,
       minHeight: 400,
       minWidth: 400,
-      quality: 10,
+      quality: 80,
       format: CompressFormat.jpeg,
       rotate: 0,
     );

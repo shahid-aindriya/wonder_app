@@ -322,6 +322,7 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                             border: Border.all(color: Colors.white)),
                         child: ListTile(
                           onTap: () {
+                            log("sdf${data!.bankData.chequeCopy.toString()}");
                             Get.to(() => BankDetailsOfShop(
                                   shopId: data!.id,
                                   data: data!.bankData,

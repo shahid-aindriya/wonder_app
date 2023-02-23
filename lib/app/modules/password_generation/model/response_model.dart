@@ -18,14 +18,14 @@ class SellerRegistrationResponse {
     required this.message,
   });
 
-  int userId;
+  dynamic userId;
   bool success;
-  bool isApproved;
+  dynamic isApproved;
   String message;
 
   factory SellerRegistrationResponse.fromJson(Map<String, dynamic> json) =>
       SellerRegistrationResponse(
-        userId: json["user_id"],
+        userId: json["user_id"] ?? "",
         success: json["success"],
         isApproved: json["is_approved"],
         message: json["message"],

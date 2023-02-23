@@ -41,7 +41,7 @@ class UsersDatum {
 
   factory UsersDatum.fromJson(Map<String, dynamic> json) => UsersDatum(
         id: json["id"],
-        name: json["name"],
+        name: json["name"] ?? "",
         phone: json["phone"],
         image: json["image"],
       );

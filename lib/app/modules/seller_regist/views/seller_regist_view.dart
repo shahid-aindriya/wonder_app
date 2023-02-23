@@ -23,10 +23,17 @@ class SellerRegistView extends GetView<SellerRegistController> {
         TextEditingController();
     final formKey = GlobalKey<FormState>();
     return Container(
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.jpg"),
-              fit: BoxFit.cover)),
+     decoration: BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment(2, 1.0548897981643677),
+            end: Alignment(-1.0548897981643677, 1.226324439048767),
+            colors: [
+              Color.fromRGBO(239, 221, 214, 1),
+              Color.fromRGBO(220, 222, 242, 1),
+              Color.fromRGBO(250, 227, 243, 1),
+              Color.fromRGBO(228, 249, 254, 1)
+            ]),
+      ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
           body: ListView(

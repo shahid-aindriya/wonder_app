@@ -158,6 +158,8 @@ class WalletTab extends StatelessWidget {
                         itemCount:
                             invoiceController.walletTransactionLists.length,
                         itemBuilder: (context, index) {
+                          var data =
+                              invoiceController.walletTransactionLists[index];
                           return Padding(
                             padding:
                                 EdgeInsets.only(top: 15, right: 5.w, left: 5.w),
@@ -188,7 +190,7 @@ class WalletTab extends StatelessWidget {
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600)),
                                   subtitle: Text(
-                                    "Redeemed Wonder Points",
+                                    data.entryType,
                                     style: GoogleFonts.roboto(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w300),
@@ -198,25 +200,22 @@ class WalletTab extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        invoiceController
-                                                    .walletTransactionLists[
-                                                        index]
-                                                    .amount ==
-                                                "0"
-                                            ? invoiceController
-                                                .walletTransactionLists[index]
-                                                .amount
-                                            : "-${invoiceController.walletTransactionLists[index].amount}",
+                                        (data.amount == "0" ||
+                                                data.entryType == 'Credit')
+                                            ? "+${data.amount}"
+                                            : "-${data.amount}",
                                         style: GoogleFonts.roboto(
-                                            color: Color.fromARGB(
-                                                255, 243, 106, 106),
+                                            color: data.entryType == "Debit"
+                                                ? Color.fromARGB(
+                                                    255, 243, 106, 106)
+                                                : Colors.green,
                                             fontSize: 22,
                                             fontWeight: FontWeight.w600),
                                       ),
-                                      Text("2 Minutes Ago",
-                                          style: GoogleFonts.roboto(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w300))
+                                      // Text("2 Minutes Ago",
+                                      //     style: GoogleFonts.roboto(
+                                      //         fontSize: 10,
+                                      //         fontWeight: FontWeight.w300))
                                     ],
                                   ),
                                 ),

@@ -88,7 +88,7 @@ class EditShopDetails extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Figma Flutter Generator Rectangle55Widget - RECTANGLE
-                GetBuilder<ShopDetailsController>(builder: (context) {
+                GetBuilder<ShopDetailsController>(builder: (contsdext) {
                   return Visibility(
                     visible:
                         shopDetailsController.shopImage == '' ? true : false,
@@ -117,7 +117,13 @@ class EditShopDetails extends StatelessWidget {
                                     topLeft: Radius.circular(10))),
                             child: IconButton(
                                 onPressed: () {
-                                  shopDetailsController.pickShopImage();
+                                  shopDetailsController.showPopup(
+                                    context,
+                                    (value) {
+                                      shopDetailsController
+                                          .pickShopImage(value);
+                                    },
+                                  );
                                 },
                                 icon: Icon(
                                   Icons.camera_alt_rounded,
@@ -158,7 +164,10 @@ class EditShopDetails extends StatelessWidget {
                                     topLeft: Radius.circular(10))),
                             child: IconButton(
                                 onPressed: () {
-                                  shopDetailsController.pickShopImage();
+                                  shopDetailsController.showPopup(context,
+                                      (value) {
+                                    shopDetailsController.pickShopImage(value);
+                                  });
                                 },
                                 icon: Icon(
                                   Icons.camera_alt_rounded,
@@ -558,7 +567,12 @@ class EditShopDetails extends StatelessWidget {
                             ),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              shopDetailsController.showPopup(
+                                  context,
+                                  (value) => shopDetailsController
+                                      .pickGstImage(value));
+                            },
                             child: Container(
                               width: 100,
                               height: 56,
@@ -604,7 +618,7 @@ class EditShopDetails extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0),
                       child: Text(
-                        "Licence Image",
+                        "License Image",
                         style: GoogleFonts.roboto(
                             fontSize: 14.sp, fontWeight: FontWeight.w300),
                       ),
@@ -622,9 +636,10 @@ class EditShopDetails extends StatelessWidget {
                                   fontSize: 18,
                                   color: Color.fromRGBO(0, 0, 0, 1)),
                               decoration: InputDecoration(
-                                hintText: shopDetailsController.gstImage == ''
-                                    ? "Browse Document"
-                                    : "Uploaded",
+                                hintText:
+                                    shopDetailsController.licenceImage == ''
+                                        ? "Browse Document"
+                                        : "Uploaded",
                                 disabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         color: Colors.white, width: 1.3),
@@ -652,7 +667,12 @@ class EditShopDetails extends StatelessWidget {
                             ),
                           ),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              shopDetailsController.showPopup(
+                                  context,
+                                  (value) => shopDetailsController
+                                      .pickLicenceImage(value));
+                            },
                             child: Container(
                               width: 100,
                               height: 56,
@@ -766,7 +786,7 @@ class EditShopDetails extends StatelessWidget {
                       if (formkey.currentState!.validate()) {
                         shopDetailsController.editShopDetails(
                             context: context,
-                            address: shopLocationController.text,
+                            address: shopAdressController.text,
                             lat: lat,
                             long: long,
                             contorller: shopController,

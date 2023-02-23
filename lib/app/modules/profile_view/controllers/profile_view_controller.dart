@@ -11,13 +11,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wonder_app/app/modules/seller_regist/controllers/seller_regist_controller.dart';
 
 import '../../../data/urls.dart';
 import '../model/userdata_response.dart';
 
 class ProfileViewController extends GetxController {
   //TODO: Implement ProfileViewController
-
+  final SellerRegistController sellerRegistController =
+      Get.put(SellerRegistController());
   final count = 0.obs;
 
   @override
@@ -56,8 +58,8 @@ class ProfileViewController extends GetxController {
       return;
     } else {
       image = File(pimage.path);
-
-      final bytes = File(pimage.path).readAsBytesSync();
+      final ims = await sellerRegistController.cropsImage(pimage.path);
+      final bytes = File(ims.path).readAsBytesSync();
       compressedImage = testComporessList(bytes);
       profileImage = base64Encode(await compressedImage);
       update();

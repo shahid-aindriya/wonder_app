@@ -21,10 +21,13 @@ class GstDetailsView extends GetView<GstDetailsController> {
   final featured;
   final closingTime;
   final openingTime;
+  final lat, long;
   GstDetailsView(
       {this.shopName,
       this.closingTime,
       this.openingTime,
+      this.lat,
+      this.long,
       this.shopAdress,
       this.shopLocation,
       this.categoryId,
@@ -298,6 +301,8 @@ class GstDetailsView extends GetView<GstDetailsController> {
                           licenseImage: licenceImage,
                           shopImage: shopImage,
                           closingTime: closingTime,
+                          lat: lat,
+                          long: long,
                           openingTime: openingTime,
                           licenceNumber: licenceNumber,
                           shopName: shopName);

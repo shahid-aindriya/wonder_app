@@ -318,12 +318,16 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                               ],
                             ),
                             ListTile(
-                                leading: CircleAvatar(
-                                    child: Image.asset(
-                                        "assets/images/Ellipse 21.png")),
+                                leading: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: data!.userImage == ''
+                                        ? Image.asset("assets/images/User.png")
+                                        : Image.network(
+                                            "$baseUrlForImage${data!.userImage}")),
                                 title: Text(data!.customerName!,
                                     style: GoogleFonts.roboto(
                                         fontSize: 18,
+                                        color: Colors.black,
                                         fontWeight: FontWeight.w500)),
                                 subtitle: Text(
                                   data!.phone.toString(),
@@ -360,6 +364,42 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                             invoiceController: invoiceController,
                             invoiceDetailsController: invoiceDetailsController,
                             data: data)),
+
+                    Obx(() {
+                      return Visibility(
+                        visible:
+                            invoiceDetailsController.isLoading.value == false
+                                ? false
+                                : true,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton.icon(
+                                style: ButtonStyle(
+                                    fixedSize: MaterialStateProperty.all(
+                                        Size(44.w, 53)),
+                                    shape: MaterialStateProperty.all(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(7),
+                                            side: BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 162, 173, 163)))),
+                                    elevation: MaterialStateProperty.all(0),
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Color.fromARGB(134, 255, 255, 255))),
+                                onPressed: null,
+                                icon: CircularProgressIndicator(),
+                                label: Text("Processing",
+                                    style: GoogleFonts.roboto(
+                                        color:
+                                            Color.fromARGB(255, 99, 104, 100),
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500))),
+                          ],
+                        ),
+                      );
+                    }),
 
                     Visibility(
                       visible: data!.status == "Pending" ? false : true,
@@ -449,64 +489,84 @@ class ApproveAndDecline extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ElevatedButton.icon(
-            style: ButtonStyle(
-                fixedSize: MaterialStateProperty.all(Size(44.w, 53)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                    side: BorderSide(color: Color.fromARGB(255, 0, 158, 16)))),
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(
-                    Color.fromARGB(134, 255, 255, 255))),
-            onPressed: data!.amountData.additionalAmount > 0
-                ? () {
-                    invoiceDetailsController.openCheckout(
-                        amount: data!.amountData.additionalAmount + 00,
-                        razorKey: data!.amountData.razorKey,
-                        invoiceId: data!.id);
-                    // invoiceDetailsController.openCheckout(
-                    //     invoiceId: data!.id,
-                    //     amount: data!.amountData.additionalAmount + 00,
-                    //     razorKey: data!.amountData.razorKey);
-                  }
-                : () async {
-                    await invoiceDetailsController.approveOrDeclineInvoice(
-                        inoviceController: invoiceController,
-                        context: context,
-                        choice: "Approve",
-                        invoiceId: data!.id);
-                  },
-            icon: Icon(Icons.check, color: Color.fromARGB(255, 0, 158, 16)),
-            label: Text(
-                data!.amountData.additionalAmount > 0
-                    ? "Pay & Approve"
-                    : "Approve",
-                style: GoogleFonts.roboto(
-                    color: Color.fromARGB(255, 0, 158, 16),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500))),
-        ElevatedButton.icon(
-            style: ButtonStyle(
-                fixedSize: MaterialStateProperty.all(Size(44.w, 53)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(7),
-                    side: BorderSide(color: Color.fromARGB(255, 255, 80, 80)))),
-                elevation: MaterialStateProperty.all(0),
-                backgroundColor: MaterialStateProperty.all(
-                    Color.fromARGB(134, 255, 255, 255))),
-            onPressed: () async {
-              await invoiceDetailsController.approveOrDeclineInvoice(
-                  inoviceController: invoiceController,
-                  context: context,
-                  choice: "Reject",
-                  invoiceId: data!.id);
-            },
-            icon: Icon(Icons.close, color: Color.fromARGB(255, 255, 80, 80)),
-            label: Text("Decline",
-                style: GoogleFonts.roboto(
-                    color: Color.fromARGB(255, 255, 80, 80),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500)))
+        Obx(() {
+          return Visibility(
+            visible: invoiceDetailsController.isLoading.value == false
+                ? true
+                : false,
+            child: ElevatedButton.icon(
+                style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(Size(44.w, 53)),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 0, 158, 16)))),
+                    elevation: MaterialStateProperty.all(0),
+                    backgroundColor: MaterialStateProperty.all(
+                        Color.fromARGB(134, 255, 255, 255))),
+                onPressed: data!.amountData.additionalAmount > 0
+                    ? () {
+                        invoiceDetailsController.openCheckout(
+                            email: data!.amountData.email,
+                            name: data!.amountData.name,
+                            amount: data!.amountData.additionalAmount + 00,
+                            razorKey: data!.amountData.razorKey,
+                            invoiceId: data!.id);
+
+                        // invoiceDetailsController.openCheckout(
+                        //     invoiceId: data!.id,
+                        //     amount: data!.amountData.additionalAmount + 00,
+                        //     razorKey: data!.amountData.razorKey);
+                      }
+                    : () async {
+                        await invoiceDetailsController.approveOrDeclineInvoice(
+                            inoviceController: invoiceController,
+                            context: context,
+                            choice: "Approve",
+                            invoiceId: data!.id);
+                      },
+                icon: Icon(Icons.check, color: Color.fromARGB(255, 0, 158, 16)),
+                label: Text(
+                    data!.amountData.additionalAmount > 0
+                        ? "Pay & Approve"
+                        : "Approve",
+                    style: GoogleFonts.roboto(
+                        color: Color.fromARGB(255, 0, 158, 16),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500))),
+          );
+        }),
+        Obx(() {
+          return Visibility(
+            visible: invoiceDetailsController.isLoading.value == false
+                ? true
+                : false,
+            child: ElevatedButton.icon(
+                style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(Size(44.w, 53)),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(7),
+                        side: BorderSide(
+                            color: Color.fromARGB(255, 255, 80, 80)))),
+                    elevation: MaterialStateProperty.all(0),
+                    backgroundColor: MaterialStateProperty.all(
+                        Color.fromARGB(134, 255, 255, 255))),
+                onPressed: () async {
+                  await invoiceDetailsController.approveOrDeclineInvoice(
+                      inoviceController: invoiceController,
+                      context: context,
+                      choice: "Reject",
+                      invoiceId: data!.id);
+                },
+                icon:
+                    Icon(Icons.close, color: Color.fromARGB(255, 255, 80, 80)),
+                label: Text("Decline",
+                    style: GoogleFonts.roboto(
+                        color: Color.fromARGB(255, 255, 80, 80),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500))),
+          );
+        }),
       ],
     );
   }

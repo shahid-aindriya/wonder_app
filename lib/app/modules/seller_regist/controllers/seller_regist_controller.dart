@@ -74,7 +74,7 @@ class SellerRegistController extends GetxController {
       list,
       minHeight: 600,
       minWidth: 400,
-      quality: 100,
+      quality: 80,
       format: CompressFormat.png,
       rotate: 0,
     );
@@ -126,7 +126,7 @@ class SellerRegistController extends GetxController {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: path,
       compressFormat: ImageCompressFormat.jpg,
-      compressQuality: 100,
+      compressQuality: 80,
       uiSettings: [
         AndroidUiSettings(
             toolbarTitle: 'Cropper',

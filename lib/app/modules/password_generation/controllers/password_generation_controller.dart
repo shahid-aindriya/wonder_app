@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/request_pending/views/request_pending_view.dart';
 import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
 
@@ -53,9 +54,10 @@ class PasswordGenerationController extends GetxController {
     };
 
     final request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-register/"),
+        Uri.parse("https://wonderpoints.com/vendor-register/"),
         headers: headers,
         body: jsonEncode(body));
+    log(request.body.toString());
     if (request.statusCode == 201) {
       final sellerRegistrationResponse =
           sellerRegistrationResponseFromJson(request.body);
@@ -78,6 +80,8 @@ class PasswordGenerationController extends GetxController {
       } else if (sellerRegistrationResponse.isApproved == false) {
         Get.to(RequestPendingView());
       } else {
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setInt("userId", sellerRegistrationResponse.userId);
         Get.to(StoreDetailsView());
       }
     }

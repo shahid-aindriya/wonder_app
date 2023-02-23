@@ -70,6 +70,7 @@ class AddInvoiceController extends GetxController {
     if (request.statusCode == 201) {
       final allUsersList = allUsersListFromJson(request.body);
       userLists.value.assignAll(allUsersList.usersData);
+      searchUserList.assignAll(allUsersList.usersData);
     }
   }
 
@@ -77,8 +78,9 @@ class AddInvoiceController extends GetxController {
   File? image;
   dynamic compressedImage;
 
-  pickimage() async {
-    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+  pickimage(value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
     } else {
@@ -198,5 +200,39 @@ class AddInvoiceController extends GetxController {
         searchUserList.add(data);
       }
     }
+  }
+
+  showPopup(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.camera_alt),
+                  title: Text('Take a photo'),
+                  onTap: () {
+                    pickimage(true);
+                    // Handle the 'Take a photo' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.image),
+                  title: Text('Choose from gallery'),
+                  onTap: () {
+                    pickimage(false);
+                    // Handle the 'Choose from gallery' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

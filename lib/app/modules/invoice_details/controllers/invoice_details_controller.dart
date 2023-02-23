@@ -8,15 +8,15 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
 import '../../../data/urls.dart';
 import '../../invoice/controllers/invoice_controller.dart';
+import '../../invoice/views/invoice_view.dart';
 import '../models/invoice_approval_model.dart';
 
 class InvoiceDetailsController extends GetxController {
   //TODO: Implement InvoiceDetailsController
-  final InvoiceController invoiceControllers = Get.put(InvoiceController());
+
   final count = 0.obs;
   @override
   void onInit() {
@@ -58,11 +58,14 @@ class InvoiceDetailsController extends GetxController {
     _showSnackBar("EXTERNAL_WALLET: ${response.walletName!}");
   }
 
-  void _showSnackBar(String message, {id}) {
-    Get.snackbar("Info ", message, backgroundColor: Colors.amber);
+  var isLoading = false.obs;
+  void _showSnackBar(String message, {id}) async {
+    // Get.snackbar("Info ", message, backgroundColor: Colors.amber);
     log(message);
     if (id != null) {
-      paymentSuccess(razorId: id);
+      isLoading.value = true;
+      await paymentSuccess(razorId: id);
+      isLoading.value = false;
     }
   }
 
@@ -75,28 +78,37 @@ class InvoiceDetailsController extends GetxController {
       "razorpay_transaction_id": razorId,
       "razorpay_status": "completed"
     };
-    final requests = await http.post(
-        Uri.parse("${baseUrl.value}vendor-invoice-payment-success/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(requests.statusCode.toString());
-    if (requests.statusCode == 201) {
-      Get.snackbar("Info ", "Payment completed succesfully",
-          backgroundColor: Colors.green);
-      await invoiceControllers.onPullRefreshInWallet();
-      Get.offAll(InvoiceView());
+    try {
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}vendor-invoice-payment-success/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(requests.body.toString());
+      if (requests.statusCode == 201) {
+        Get.snackbar("Info ", "Payment completed succesfully",
+            backgroundColor: Colors.green);
+        await invoiceController.onPullRefreshInWallet();
+        Get.offAll(InvoiceView());
+      } else if (requests.statusCode == 500) {
+        Get.snackbar("Error ", "Something went wrong",
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar("Error ", "Something went wrong",
+          backgroundColor: Colors.red);
+      isLoading.value = false;
     }
   }
 
-  void openCheckout({razorKey, amount, invoiceId}) async {
+  void openCheckout({razorKey, amount, invoiceId, name, email}) async {
     log(amount.toString());
     String amt = "${amount}00";
     var options = {
       "key": razorKey,
       "amount": int.tryParse(amt),
-      "name": "Acme Corp",
+      "name": name,
       "description": "Test Transaction",
-      "prefill": {"contact": "9123456789", "email": "test@razorpay.com"},
+      "prefill": {"contact": "9123456789", "email": email},
       "external": {
         "wallets": ["paytm", "googlepay"]
       },

@@ -181,8 +181,8 @@ class ShopDetailsController extends GetxController {
       list,
       minHeight: 600,
       minWidth: 400,
-      quality: 100,
-      format: CompressFormat.png,
+      quality: 10,
+      format: CompressFormat.jpeg,
       rotate: 0,
     );
     log(list.length.toString());
@@ -302,8 +302,9 @@ class ShopDetailsController extends GetxController {
   File? image2;
   dynamic compressedShopImage;
 
-  pickShopImage() async {
-    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+  pickShopImage(bool value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
     } else {
@@ -323,8 +324,9 @@ class ShopDetailsController extends GetxController {
   File? image3;
   dynamic compressedLicenceImage;
 
-  pickLicenceImage() async {
-    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+  pickLicenceImage(bool value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
     } else {
@@ -344,8 +346,9 @@ class ShopDetailsController extends GetxController {
   File? image4;
   dynamic compressedGstImage;
 
-  pickGstImage() async {
-    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+  pickGstImage(bool value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
     } else {
@@ -457,5 +460,39 @@ class ShopDetailsController extends GetxController {
         Get.to(SuccessView());
       }
     }
+  }
+
+  showPopup(context, Function(bool value) pickShopImage) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.camera_alt),
+                  title: Text('Take a photo'),
+                  onTap: () {
+                    pickShopImage(true);
+                    // Handle the 'Take a photo' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.image),
+                  title: Text('Choose from gallery'),
+                  onTap: () {
+                    pickShopImage(false);
+                    // Handle the 'Choose from gallery' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

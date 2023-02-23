@@ -128,6 +128,7 @@ class InvoiceController extends GetxController {
         Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
         headers: headers,
         body: jsonEncode(body));
+    log(request.body);
     if (request.statusCode == 201) {
       invoiceLists.value.clear();
       final invoiceData = invoiceDataFromJson(request.body);
@@ -188,6 +189,8 @@ class InvoiceController extends GetxController {
             phone: index.phone,
             userId: index.userId,
             shopId: index.shopId,
+            userImage: index.userImage,
+            vendorImage: index.vendorImage,
             invoiceImage: index.invoiceImage,
             invoiceNumber: index.invoiceNumber,
             invoiceDate: index.invoiceDate,

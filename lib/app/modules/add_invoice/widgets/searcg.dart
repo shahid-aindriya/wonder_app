@@ -103,6 +103,7 @@ class SearchUser extends GetView<AddInvoiceController> {
                     child: ListView.separated(
                         itemBuilder: (context, index) {
                           var data = _controller.searchUserList[index];
+
                           if (data.phone
                               .toLowerCase()
                               .contains(searchController.text.toLowerCase())) {
@@ -158,14 +159,65 @@ class SearchUser extends GetView<AddInvoiceController> {
                                 ),
                               ),
                             );
-                          } else {
-                            return Container();
                           }
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14)),
+                              elevation: 10,
+                              child: ListTile(
+                                onTap: (() {
+                                  phone.number.text = data.phone;
+                                  phone.id.text = data.id.toString();
+                                  Get.back();
+                                }),
+                                leading: Padding(
+                                  padding: const EdgeInsets.all(1.0),
+                                  child: Image.asset(
+                                    'assets/images/User.png',
+                                  ),
+                                ),
+                                title: Row(
+                                  children: [
+                                    Text(
+                                      "Number:",
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                    Text(
+                                      " ${data.phone}",
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                                subtitle: Row(
+                                  children: [
+                                    // SizedBox(
+                                    //   width: 10.w,
+                                    // ),
+                                    Text(
+                                      "Id: ",
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                    Text(data.id.toString(),
+                                        style: GoogleFonts.roboto(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
                         },
                         separatorBuilder: (context, index) {
                           return const Divider();
                         },
-                        itemCount: _controller.searchUserList.length),
+                        itemCount: _controller.searchUserList == []
+                            ? _controller.userLists.value.length
+                            : _controller.searchUserList.length),
                   );
                 },
               ),

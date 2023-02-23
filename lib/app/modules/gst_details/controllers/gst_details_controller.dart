@@ -14,13 +14,15 @@ import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/bank_details/views/bank_details_view.dart';
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
+import 'package:wonder_app/app/modules/store_details/controllers/store_details_controller.dart';
 
 import '../../../data/urls.dart';
 import '../model/shop_add_response.dart';
 
 class GstDetailsController extends GetxController {
   //TODO: Implement GstDetailsController
-
+  final StoreDetailsController storeDetailsController =
+      Get.put(StoreDetailsController());
   final count = 0.obs;
 
   @override
@@ -60,31 +62,37 @@ class GstDetailsController extends GetxController {
       gstNumber,
       gstPercentage,
       featured,
+      lat,
+      long,
       context}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
+    log(closingTime.toString());
+    log(openingTime.toString());
     var body = {
       "name": shopName,
       "user_id": userId,
       "category_id": categoryId,
       "gst_number": gstNumber,
       "address": address,
-      "latitude": "9.9816358",
-      "longitude": "76.2998842",
+      "latitude": lat,
+      "longitude": long,
       "opening_time": openingTime,
       "closing_time": closingTime,
       "location": location,
       "is_featured": featured,
       "commission": commission,
-      "image": gstImage,
+      "image": shopImage,
       "gst_pct": gstPercentage,
       "license_number": licenceNumber,
       "gst_image": gstImage,
-      "license_image": gstImage
+      "license_image": licenseImage
     };
-    var request = await http.post(Uri.parse("${baseUrl.value}vendor-add-shop/"),
-        headers: headers, body: jsonEncode(body));
-    log(request.body.toString());
+    var request = await http.post(
+        Uri.parse("https://wonderpoints.com/vendor-add-shop/"),
+        headers: headers,
+        body: jsonEncode(body));
+    log(request.statusCode.toString());
 
     if (request.statusCode == 201) {
       final addshopresponse = addshopresponseFromJson(request.body);
@@ -108,6 +116,7 @@ class GstDetailsController extends GetxController {
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
+        storeDetailsController.shopImage = '';
       } else {
         Get.offAll(InvoiceView());
         MotionToast.error(
@@ -135,7 +144,7 @@ class GstDetailsController extends GetxController {
       list,
       minHeight: 400,
       minWidth: 400,
-      quality: 10,
+      quality: 100,
       format: CompressFormat.jpeg,
       rotate: 0,
     );
