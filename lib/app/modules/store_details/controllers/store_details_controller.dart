@@ -65,15 +65,21 @@ class StoreDetailsController extends GetxController {
   }
 
   Future<dynamic> getShopCategories() async {
-    var request = await http.get(
-      Uri.parse("${baseUrl.value}get-all-categories/"),
-      headers: headers,
-    );
+    try {
+      var request = await http.get(
+        Uri.parse("${baseUrl.value}get-all-categories/"),
+        headers: headers,
+      );
 
-    log(request.body);
-    if (request.statusCode == 201) {
-      final shopShopCategoryModel = shopShopCategoryModelFromJson(request.body);
-      categoryLists.value.assignAll(shopShopCategoryModel.categories);
+      log(request.body);
+      if (request.statusCode == 201) {
+        final shopShopCategoryModel =
+            shopShopCategoryModelFromJson(request.body);
+        categoryLists.value.assignAll(shopShopCategoryModel.categories);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 

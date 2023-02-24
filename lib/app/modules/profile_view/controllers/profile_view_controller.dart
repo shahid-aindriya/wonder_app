@@ -59,11 +59,15 @@ class ProfileViewController extends GetxController {
     } else {
       image = File(pimage.path);
       final ims = await sellerRegistController.cropsImage(pimage.path);
-      final bytes = File(ims.path).readAsBytesSync();
-      compressedImage = testComporessList(bytes);
-      profileImage = base64Encode(await compressedImage);
-      update();
-      return;
+      if (ims != null) {
+        final bytes = File(ims.path).readAsBytesSync();
+        compressedImage = testComporessList(bytes);
+        profileImage = base64Encode(await compressedImage);
+        update();
+        return;
+      } else {
+        return null;
+      }
     }
     // log(img);
   }
@@ -93,33 +97,38 @@ class ProfileViewController extends GetxController {
       "phone": numberController.text,
       "image": profileimage
     };
-    final request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-profile-edit/"),
-        headers: headers,
-        body: jsonEncode(body));
+    try {
+      final request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-profile-edit/"),
+          headers: headers,
+          body: jsonEncode(body));
 
-    if (request.statusCode == 201) {
-      final data = jsonDecode(request.body);
-      if (data['success'] == true) {
-        getUserData();
-        // log(request.body);
-        update();
-        MotionToast.success(
-          dismissable: true,
-          enableAnimation: false,
-          position: MotionToastPosition.top,
-          title: const Text(
-            'Success ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+      if (request.statusCode == 201) {
+        final data = jsonDecode(request.body);
+        if (data['success'] == true) {
+          getUserData();
+          // log(request.body);
+          update();
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Success ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          description: const Text('profile updated Succesfully'),
-          animationCurve: Curves.bounceIn,
-          borderRadius: 0,
-          animationDuration: const Duration(milliseconds: 1000),
-        ).show(context);
+            description: const Text('profile updated Succesfully'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 

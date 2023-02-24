@@ -70,15 +70,22 @@ class BankDetailsController extends GetxController {
       "ifsc_code": ifscCode,
       "cheque_copy": chequeImage
     };
-    var request = await http.post(Uri.parse("${baseUrl.value}vendor-add-bank/"),
-        headers: headers, body: jsonEncode(body));
-    log(request.body.toString());
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-add-bank/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body.toString());
 
-    if (request.statusCode == 201) {
-      final bankaddresponse = bankaddresponseFromJson(request.body);
-      if (bankaddresponse.success == true) {
-        Get.to(SuccessView());
+      if (request.statusCode == 201) {
+        final bankaddresponse = bankaddresponseFromJson(request.body);
+        if (bankaddresponse.success == true) {
+          Get.to(SuccessView());
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 

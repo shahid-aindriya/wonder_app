@@ -308,7 +308,10 @@ class AddOffers extends GetView<ShopDetailsController> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  shopDetailsController.pickimage();
+                                  shopDetailsController.showPopup(
+                                      context,
+                                      (value) => shopDetailsController
+                                          .pickimage(value));
                                 },
                                 child: Container(
                                   width: 100,

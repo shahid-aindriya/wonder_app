@@ -53,37 +53,42 @@ class PasswordGenerationController extends GetxController {
       "pan_image": panImag
     };
 
-    final request = await http.post(
-        Uri.parse("https://wonderpoints.com/vendor-register/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body.toString());
-    if (request.statusCode == 201) {
-      final sellerRegistrationResponse =
-          sellerRegistrationResponseFromJson(request.body);
+    try {
+      final request = await http.post(
+          Uri.parse("https://wonderpoints.com/vendor-register/"),
+          headers: headers,
+          body: jsonEncode(body));
       log(request.body.toString());
-      if (sellerRegistrationResponse.success == false &&
-          sellerRegistrationResponse.message == "Email already exist") {
-        MotionToast.warning(
-          position: MotionToastPosition.top,
-          title: const Text(
-            'Warning ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+      if (request.statusCode == 201) {
+        final sellerRegistrationResponse =
+            sellerRegistrationResponseFromJson(request.body);
+        log(request.body.toString());
+        if (sellerRegistrationResponse.success == false &&
+            sellerRegistrationResponse.message == "Email already exist") {
+          MotionToast.warning(
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Warning ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          description: const Text('Email already exist'),
-          animationCurve: Curves.bounceIn,
-          borderRadius: 0,
-          animationDuration: const Duration(milliseconds: 1000),
-        ).show(context);
-      } else if (sellerRegistrationResponse.isApproved == false) {
-        Get.to(RequestPendingView());
-      } else {
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setInt("userId", sellerRegistrationResponse.userId);
-        Get.to(StoreDetailsView());
+            description: const Text('Email already exist'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        } else if (sellerRegistrationResponse.isApproved == false) {
+          Get.to(RequestPendingView());
+        } else {
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setInt("userId", sellerRegistrationResponse.userId);
+          Get.to(StoreDetailsView());
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 }

@@ -507,6 +507,7 @@ class ApproveAndDecline extends StatelessWidget {
                 onPressed: data!.amountData.additionalAmount > 0
                     ? () {
                         invoiceDetailsController.openCheckout(
+                            data: data!,
                             email: data!.amountData.email,
                             name: data!.amountData.name,
                             amount: data!.amountData.additionalAmount + 00,

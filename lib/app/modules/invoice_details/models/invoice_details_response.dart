@@ -40,6 +40,7 @@ class AmountData {
     required this.email,
     required this.razorKey,
     required this.razorSecret,
+    required this.haveBank,
   });
 
   String currentAmount;
@@ -48,6 +49,7 @@ class AmountData {
   String name;
   String email;
   dynamic razorKey;
+  dynamic haveBank;
   dynamic razorSecret;
 
   factory AmountData.fromJson(Map<String, dynamic> json) => AmountData(
@@ -58,6 +60,7 @@ class AmountData {
         email: json["email"],
         razorKey: json["razor_key"] ?? "null",
         razorSecret: json["razor_secret"],
+        haveBank: json["have_bank"],
       );
 
   Map<String, dynamic> toJson() => {

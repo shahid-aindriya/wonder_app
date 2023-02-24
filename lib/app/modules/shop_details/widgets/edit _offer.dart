@@ -315,7 +315,10 @@ class EditOffer extends StatelessWidget {
                               ),
                               InkWell(
                                 onTap: () {
-                                  shopDetailsController.pickimage();
+                                  shopDetailsController.showPopup(
+                                      context,
+                                      (value) => shopDetailsController
+                                          .pickimage(value));
                                 },
                                 child: Container(
                                   width: 100,
@@ -372,6 +375,22 @@ class EditOffer extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      ElevatedButton(
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
+                              fixedSize:
+                                  MaterialStateProperty.all(Size(120, 50)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Color.fromARGB(255, 196, 38, 27))),
+                          onPressed: () {
+                            shopDetailsController.deleteOffer(data.id, context);
+                          },
+                          child: Text("Delete Offer")),
+                      SizedBox(
+                        width: 10,
+                      ),
                       Container(
                           height: 50,
                           decoration: BoxDecoration(

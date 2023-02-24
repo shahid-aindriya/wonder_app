@@ -88,53 +88,58 @@ class GstDetailsController extends GetxController {
       "gst_image": gstImage,
       "license_image": licenseImage
     };
-    var request = await http.post(
-        Uri.parse("https://wonderpoints.com/vendor-add-shop/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.statusCode.toString());
+    try {
+      var request = await http.post(
+          Uri.parse("https://wonderpoints.com/vendor-add-shop/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.statusCode.toString());
 
-    if (request.statusCode == 201) {
-      final addshopresponse = addshopresponseFromJson(request.body);
-      final shopId = addshopresponse.shopId;
-      if (addshopresponse.success == true) {
-        Get.off(BankDetailsView(
-          shopId: shopId,
-        ));
-        MotionToast.success(
-          dismissable: true,
-          enableAnimation: false,
-          position: MotionToastPosition.top,
-          title: const Text(
-            'Success ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+      if (request.statusCode == 201) {
+        final addshopresponse = addshopresponseFromJson(request.body);
+        final shopId = addshopresponse.shopId;
+        if (addshopresponse.success == true) {
+          Get.off(BankDetailsView(
+            shopId: shopId,
+          ));
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Success ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          description: const Text('Shop Added Succesfully'),
-          animationCurve: Curves.bounceIn,
-          borderRadius: 0,
-          animationDuration: const Duration(milliseconds: 1000),
-        ).show(context);
-        storeDetailsController.shopImage = '';
-      } else {
-        Get.offAll(InvoiceView());
-        MotionToast.error(
-          dismissable: true,
-          enableAnimation: false,
-          position: MotionToastPosition.top,
-          title: const Text(
-            'Error ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+            description: const Text('Shop Added Succesfully'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+          storeDetailsController.shopImage = '';
+        } else {
+          Get.offAll(InvoiceView());
+          MotionToast.error(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Error ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          description: const Text('Something went wrong'),
-          animationCurve: Curves.bounceIn,
-          borderRadius: 0,
-          animationDuration: const Duration(milliseconds: 1000),
-        ).show(context);
+            description: const Text('Something went wrong'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 

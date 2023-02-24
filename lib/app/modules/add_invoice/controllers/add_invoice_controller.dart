@@ -61,16 +61,21 @@ class AddInvoiceController extends GetxController {
 
   var userLists = RxList<UsersDatum>().obs;
   Future<dynamic> getAllUsers() async {
-    var request = await http.get(
-      Uri.parse("${baseUrl.value}get-all-users/"),
-      headers: headers,
-    );
+    try {
+      var request = await http.get(
+        Uri.parse("${baseUrl.value}get-all-users/"),
+        headers: headers,
+      );
 
-    log(request.body);
-    if (request.statusCode == 201) {
-      final allUsersList = allUsersListFromJson(request.body);
-      userLists.value.assignAll(allUsersList.usersData);
-      searchUserList.assignAll(allUsersList.usersData);
+      log(request.body);
+      if (request.statusCode == 201) {
+        final allUsersList = allUsersListFromJson(request.body);
+        userLists.value.assignAll(allUsersList.usersData);
+        searchUserList.assignAll(allUsersList.usersData);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
@@ -114,41 +119,46 @@ class AddInvoiceController extends GetxController {
       "invoice_amount": invoiceAmountController.text,
       "remark": remarksController.text
     };
-    var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-add-invoice/"),
-        headers: headers,
-        body: json.encode(body));
-    log(selectShopId);
-    // log(request.body.toString());
-    if (request.statusCode == 201) {
-      selectUserId = null;
-      invoiceImg = '';
-      selectShopId = null;
-      invoiceAmountController.clear();
-      invoiceDAte.clear();
-      invoiceNumber.clear();
-      preTaxController.clear();
-      remarksController.clear();
-      invoiceDAte.clear();
-      await controller.onPullRefreshInWallet();
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-add-invoice/"),
+          headers: headers,
+          body: json.encode(body));
+      log(selectShopId);
+      // log(request.body.toString());
+      if (request.statusCode == 201) {
+        selectUserId = null;
+        invoiceImg = '';
+        selectShopId = null;
+        invoiceAmountController.clear();
+        invoiceDAte.clear();
+        invoiceNumber.clear();
+        preTaxController.clear();
+        remarksController.clear();
+        invoiceDAte.clear();
+        await controller.onPullRefreshInWallet();
 
-      update();
+        update();
 
-      MotionToast.success(
-        dismissable: true,
-        enableAnimation: false,
-        position: MotionToastPosition.top,
-        title: const Text(
-          'Success ',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+        MotionToast.success(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Success ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        description: const Text('Invoice added Succesfully'),
-        animationCurve: Curves.bounceIn,
-        borderRadius: 0,
-        animationDuration: const Duration(milliseconds: 1000),
-      ).show(context);
+          description: const Text('Invoice added Succesfully'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      }
+    } catch (e) {
+      // Get.snackbar("Error", "Something went wrong",
+      //     backgroundColor: Colors.red);
     }
 
     isLoading.value = false;
@@ -158,16 +168,24 @@ class AddInvoiceController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
     var body = {"user_id": userId.toString()};
-    var request = await http.post(Uri.parse("${baseUrl.value}vendor-all-shop/"),
-        headers: headers, body: jsonEncode(body));
-    // log(request.statusCode.toString());
-    if (request.statusCode == 201) {
-      final shopsListModel = shopsListModelFromJson(request.body);
-      // log(shopsListModel.shopData[0].licenseImage.toString());
-      shopLists.value.assignAll(shopsListModel.shopData);
 
-      update();
-      return shopsListModel.shopData;
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-all-shop/"),
+          headers: headers,
+          body: jsonEncode(body));
+      // log(request.statusCode.toString());
+      if (request.statusCode == 201) {
+        final shopsListModel = shopsListModelFromJson(request.body);
+        // log(shopsListModel.shopData[0].licenseImage.toString());
+        shopLists.value.assignAll(shopsListModel.shopData);
+
+        update();
+        return shopsListModel.shopData;
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 

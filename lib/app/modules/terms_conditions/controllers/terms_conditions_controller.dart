@@ -14,21 +14,21 @@ class TermsConditionsController extends GetxController {
   void increment() => count.value++;
   RxList<Terms> termsList = <Terms>[].obs;
   Future<RxList<Terms>?> getTermsAndCondtions() async {
-    // try {
+    try {
+      var request = await http.get(
+          Uri.parse("${baseUrl.value}terms-and-conditions/"),
+          headers: headers);
 
-    var request = await http.get(
-        Uri.parse("${baseUrl.value}terms-and-conditions/"),
-        headers: headers);
-
-    log(request.statusCode.toString());
-    if (request.statusCode == 201) {
-      final termsConditions = termsConditionsFromJson(request.body);
-      termsList.assign(termsConditions.terms);
-      return termsList;
+      log(request.statusCode.toString());
+      if (request.statusCode == 201) {
+        final termsConditions = termsConditionsFromJson(request.body);
+        termsList.assign(termsConditions.terms);
+        return termsList;
+      }
+      return null;
+    } catch (e) {
+      log(e.toString());
     }
     return null;
-    // } catch (e) {
-    //   log(e.toString());
-    // }
   }
 }

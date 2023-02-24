@@ -26,12 +26,12 @@ class RequestCoinsController extends GetxController {
   }
 
   requestCoins({int? userId, int? amount, context}) async {
-    {
-      var body = {
-        "shop_id": selectShopId,
-        "user_id": userId,
-        "amount": amount,
-      };
+    var body = {
+      "shop_id": selectShopId,
+      "user_id": userId,
+      "amount": amount,
+    };
+    try {
       var request = await http.post(
           Uri.parse("${baseUrl.value}vendor-request-coin/"),
           headers: headers,
@@ -92,6 +92,8 @@ class RequestCoinsController extends GetxController {
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong");
     }
   }
 }

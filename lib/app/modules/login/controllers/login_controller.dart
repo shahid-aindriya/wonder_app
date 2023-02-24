@@ -28,39 +28,58 @@ class LoginController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     var body = {"email": email, "password": password};
     isLoading.value = true;
-    var request = await http.post(Uri.parse("${baseUrl.value}vendor-login/"),
-        headers: headers, body: jsonEncode(body));
-    log(request.body);
+    try {
+      var request = await http.post(Uri.parse("${baseUrl.value}vendor-login/"),
+          headers: headers, body: jsonEncode(body));
+      log(request.body);
 
-    if (request.statusCode == 201) {
-      final loginResponseModel = loginResponseModelFromJson(request.body);
+      if (request.statusCode == 201) {
+        final loginResponseModel = loginResponseModelFromJson(request.body);
 
-      if (loginResponseModel.isApproved == true &&
-          loginResponseModel.haveShop == true) {
-        prefs.setInt("userId", loginResponseModel.userId!);
-        Get.offAll(InvoiceView());
-        MotionToast.success(
-          dismissable: true,
-          enableAnimation: false,
-          position: MotionToastPosition.top,
-          title: const Text(
-            'Welcome ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+        if (loginResponseModel.isApproved == true &&
+            loginResponseModel.haveShop == true) {
+          prefs.setInt("userId", loginResponseModel.userId!);
+          Get.offAll(InvoiceView());
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Welcome ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          description: const Text('Succesfully logged in'),
-          animationCurve: Curves.bounceIn,
-          borderRadius: 0,
-          animationDuration: const Duration(milliseconds: 1000),
-        ).show(context);
-      } else if (loginResponseModel.isApproved == true &&
-          loginResponseModel.haveShop == false) {
-        prefs.setInt("userId", loginResponseModel.userId!);
-        Get.to(StoreDetailsView());
-      } else if (loginResponseModel.isApproved == false) {
-        Get.to(RequestPendingView());
-      } else if (loginResponseModel.message == "Invalid username or password") {
+            description: const Text('Succesfully logged in'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        } else if (loginResponseModel.isApproved == true &&
+            loginResponseModel.haveShop == false) {
+          prefs.setInt("userId", loginResponseModel.userId!);
+          Get.to(StoreDetailsView());
+        } else if (loginResponseModel.isApproved == false) {
+          Get.to(RequestPendingView());
+        } else if (loginResponseModel.message ==
+            "Invalid username or password") {
+          MotionToast.error(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Error ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            description: const Text('Invalid username or password'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        }
+      } else {
         MotionToast.error(
           dismissable: true,
           enableAnimation: false,
@@ -71,29 +90,19 @@ class LoginController extends GetxController {
               fontWeight: FontWeight.bold,
             ),
           ),
-          description: const Text('Invalid username or password'),
+          description: const Text('Something went wrong'),
           animationCurve: Curves.bounceIn,
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
+        isLoading.value = false;
+        return;
       }
-    } else {
-      MotionToast.error(
-        dismissable: true,
-        enableAnimation: false,
-        position: MotionToastPosition.top,
-        title: const Text(
-          'Error ',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        description: const Text('Something went wrong'),
-        animationCurve: Curves.bounceIn,
-        borderRadius: 0,
-        animationDuration: const Duration(milliseconds: 1000),
-      ).show(context);
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
+
     isLoading.value = false;
   }
 

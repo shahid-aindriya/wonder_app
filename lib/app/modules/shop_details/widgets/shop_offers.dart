@@ -1,8 +1,10 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/add_offer.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/edit%20_offer.dart';
@@ -95,155 +97,102 @@ class ShopOffers extends GetView<ShopDetailsController> {
                         itemBuilder: (context, index) {
                           var data = controller.offerdatas[index];
                           return InkWell(
-                            onTap: () {
-                              Get.to(EditOffer(
-                                data: data,
-                              ));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.white, width: 2),
-                                borderRadius: BorderRadius.circular(19),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Color.fromRGBO(
-                                          0, 0, 0, 0.15000000596046448),
-                                      offset: Offset(0, 2),
-                                      blurRadius: 7)
-                                ],
-                                gradient: LinearGradient(
-                                    begin: Alignment(1, 0),
-                                    end: Alignment(0, 1),
-                                    colors: [
-                                      Color.fromRGBO(200, 78, 137, 1),
-                                      Color.fromRGBO(241, 95, 121, 1)
-                                    ]),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 2.h, bottom: 2.h),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 3.w),
-                                      child: Text(
-                                        "₹${data.discount} OFF",
-                                        style: GoogleFonts.montserrat(
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 21.4.sp),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 1.h,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 3.w),
-                                      child: Container(
-                                        child: Text(
-                                          data.description,
-                                          style: GoogleFonts.montserrat(
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 255),
-                                            fontWeight: FontWeight.w500,
+                              onTap: () {
+                                Get.to(EditOffer(data: data));
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(19),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Color.fromRGBO(
+                                            0, 0, 0, 0.15000000596046448),
+                                        offset: Offset(0, 2),
+                                        blurRadius: 7)
+                                  ],
+                                  gradient: LinearGradient(
+                                      begin: Alignment(1, 0),
+                                      end: Alignment(0, 1),
+                                      colors: [
+                                        Color.fromRGBO(71, 118, 230, 1),
+                                        Color.fromRGBO(142, 84, 233, 1)
+                                      ]),
+                                ),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                            width: 100.w,
+                                            height: 18.h,
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(16),
+                                                    topRight:
+                                                        Radius.circular(16)),
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                    "$baseUrlForImage${data.image}",
+                                                  ),
+                                                  fit: BoxFit.fitWidth,
+                                                )),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(0.0),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  // Figma Flutter Generator Rectangle33Widget - RECTANGLE
+                                                  // IconButton(
+                                                  //     onPressed: () {},
+                                                  //     icon: Icon(
+                                                  //       Icons.favorite,
+                                                  //       color: Colors.grey,
+                                                  //     ))
+                                                ],
+                                              ),
+                                            )),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 3.w),
+                                          child: Text(
+                                            "${data.title} ",
+                                            style: GoogleFonts.montserrat(
+                                                color: Color.fromARGB(
+                                                    255, 255, 255, 255),
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 18),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 3.h,
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: 2.w,
-                                        right: 3.w,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Wrap(
-                                            children: [
-                                              Container(
-                                                child: Image.asset(
-                                                  "assets/images/HourglassSimpleMedium.png",
-                                                  fit: BoxFit.cover,
-                                                ),
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 3.w),
+                                          child: Container(
+                                            child: AutoSizeText(
+                                              "₹${data.discount} Off",
+                                              maxLines: 2,
+                                              minFontSize: 24,
+                                              maxFontSize: 26,
+                                              style: GoogleFonts.montserrat(
+                                                color: Color.fromARGB(
+                                                    255, 255, 255, 255),
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                              SizedBox(
-                                                width: 1.w,
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 2),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Offer Valid Till",
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        255,
-                                                                        255,
-                                                                        255),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w300,
-                                                                fontSize:
-                                                                    13.sp)),
-                                                    Text("Dec 22",
-                                                        style: GoogleFonts
-                                                            .montserrat(
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        255,
-                                                                        255,
-                                                                        255),
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                fontSize:
-                                                                    13.sp))
-                                                  ],
-                                                ),
-                                              )
-                                            ],
+                                            ),
                                           ),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0),
-                                                child: Container(
-                                                  height: 14,
-                                                  child: Image.asset(
-                                                    "assets/images/info-vector.png",
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                                        ),
+                                        SizedBox(
+                                          height: 3.h,
+                                        ),
+                                      ]),
                                 ),
-                              ),
-                            ),
-                          );
+                              ));
                         },
                       ),
                     );

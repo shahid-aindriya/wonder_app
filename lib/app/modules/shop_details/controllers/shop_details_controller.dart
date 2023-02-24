@@ -13,6 +13,7 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/my_shops/controllers/my_shops_controller.dart';
+import 'package:wonder_app/app/modules/seller_regist/controllers/seller_regist_controller.dart';
 
 import '../../../data/urls.dart';
 import '../../bank_details/models/bank_add_response.dart';
@@ -79,34 +80,39 @@ class ShopDetailsController extends GetxController {
       "license_image": licenceimage,
       "is_featured": isChecked
     };
-    var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-edit-shop/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body.toString());
-    if (request.statusCode == 201) {
-      await contorller!.getListOfShops();
-      shopImage = '';
-      gstImage = '';
-      licenceImage = '';
+    try {
+      var request = await http.post(
+          Uri.parse("https://wonderpoints.com/vendor-edit-shop/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body.toString());
+      if (request.statusCode == 201) {
+        await contorller!.getListOfShops();
+        shopImage = '';
+        gstImage = '';
+        licenceImage = '';
 
-      Get.back();
-      Get.back();
-      MotionToast.success(
-        dismissable: true,
-        enableAnimation: false,
-        position: MotionToastPosition.top,
-        title: const Text(
-          'Success ',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+        Get.back();
+        Get.back();
+        MotionToast.success(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Success ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        description: const Text('Shop edited Succesfully'),
-        animationCurve: Curves.bounceIn,
-        borderRadius: 0,
-        animationDuration: const Duration(milliseconds: 1000),
-      ).show(context);
+          description: const Text('Shop edited Succesfully'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
@@ -141,17 +147,55 @@ class ShopDetailsController extends GetxController {
     }
   }
 
+  deleteOffer(offerId, context) async {
+    var body = {"offer_id": offerId};
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-delete-shop-offer/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.statusCode.toString());
+      if (request.statusCode == 201) {
+        await getOffers();
+        Get.back();
+        MotionToast.success(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Success ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: const Text('Deleted Succesfully'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
+    }
+  }
+
   RxList<OfferDatum> offerdatas = <OfferDatum>[].obs;
   getOffers() async {
     var body = {"shop_id": shopId};
-    var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-get-all-shop-offers/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body);
-    if (request.statusCode == 201) {
-      final offerDataResponse = offerDataResponseFromJson(request.body);
-      offerdatas.assignAll(offerDataResponse.offerData);
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-get-all-shop-offers/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body);
+      if (request.statusCode == 201) {
+        final offerDataResponse = offerDataResponseFromJson(request.body);
+        offerdatas.assignAll(offerDataResponse.offerData);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
@@ -159,17 +203,24 @@ class ShopDetailsController extends GetxController {
   File? image;
   dynamic compressedImage;
 
-  pickimage() async {
-    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+  pickimage(value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
     } else {
       image = File(pimage.path);
+      final ims = await SellerRegistController().cropsImage(pimage.path);
+      if (ims != null) {
+        final bytes = File(ims.path).readAsBytesSync();
 
-      final bytes = File(pimage.path).readAsBytesSync();
-
-      compressedImage = testComporessList(bytes);
-      offerImage = base64Encode(await compressedImage);
+        compressedImage = testComporessList(bytes);
+        offerImage = base64Encode(await compressedImage);
+        update();
+        return;
+      } else {
+        return;
+      }
       // log(invoiceImg);
     }
     // log(img);
@@ -181,7 +232,7 @@ class ShopDetailsController extends GetxController {
       list,
       minHeight: 600,
       minWidth: 400,
-      quality: 10,
+      quality: 70,
       format: CompressFormat.jpeg,
       rotate: 0,
     );
@@ -218,32 +269,37 @@ class ShopDetailsController extends GetxController {
       "description": descpition,
       "image": offerImage
     };
-    var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-add-shop-offer/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body.toString());
-    if (request.statusCode == 201) {
-      final datas = jsonDecode(request.body);
-      if (datas['success'] == true) {
-        await getOffers();
-        offerImage = '';
-        MotionToast.success(
-          dismissable: true,
-          enableAnimation: false,
-          position: MotionToastPosition.top,
-          title: const Text(
-            'Success ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-add-shop-offer/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body.toString());
+      if (request.statusCode == 201) {
+        final datas = jsonDecode(request.body);
+        if (datas['success'] == true) {
+          await getOffers();
+          offerImage = '';
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Success ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          description: const Text('offer added Succesfully'),
-          animationCurve: Curves.bounceIn,
-          borderRadius: 0,
-          animationDuration: const Duration(milliseconds: 1000),
-        ).show(context);
+            description: const Text('offer added Succesfully'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
@@ -258,43 +314,54 @@ class ShopDetailsController extends GetxController {
       "description": description,
       "image": checkimage
     };
-    var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-edit-shop-offer/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body);
-    if (request.statusCode == 201) {
-      await getOffers();
-      offerImage = '';
-      MotionToast.success(
-        dismissable: true,
-        enableAnimation: false,
-        position: MotionToastPosition.top,
-        title: const Text(
-          'Success ',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-edit-shop-offer/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body);
+      if (request.statusCode == 201) {
+        await getOffers();
+        offerImage = '';
+        MotionToast.success(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Success ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        description: const Text('offer edited Succesfully'),
-        animationCurve: Curves.bounceIn,
-        borderRadius: 0,
-        animationDuration: const Duration(milliseconds: 1000),
-      ).show(context);
+          description: const Text('offer edited Succesfully'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
   var categoryLists = RxList<ShopCategory>().obs;
   Future<dynamic> getShopCategories() async {
-    var request = await http.get(
-      Uri.parse("${baseUrl.value}get-all-categories/"),
-      headers: headers,
-    );
+    try {
+      var request = await http.get(
+        Uri.parse("${baseUrl.value}get-all-categories/"),
+        headers: headers,
+      );
 
-    log(request.body);
-    if (request.statusCode == 201) {
-      final shopShopCategoryModel = shopShopCategoryModelFromJson(request.body);
-      categoryLists.value.assignAll(shopShopCategoryModel.categories);
+      log(request.body);
+      if (request.statusCode == 201) {
+        final shopShopCategoryModel =
+            shopShopCategoryModelFromJson(request.body);
+        categoryLists.value.assignAll(shopShopCategoryModel.categories);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
@@ -368,8 +435,9 @@ class ShopDetailsController extends GetxController {
   File? image5;
   dynamic compressedcheckImage;
 
-  pickCheckImage() async {
-    final pimage = await ImagePicker().pickImage(source: ImageSource.camera);
+  pickCheckImage(value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
     } else {
@@ -400,16 +468,21 @@ class ShopDetailsController extends GetxController {
       "ifsc_code": ifsc,
       "cheque_copy": check
     };
-    var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-edit-bank-details/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body);
-    if (request.statusCode == 201) {
-      final bankaddresponse = jsonDecode(request.body);
-      if (bankaddresponse['success'] == true) {
-        Get.to(SuccessView());
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-edit-bank-details/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body);
+      if (request.statusCode == 201) {
+        final bankaddresponse = jsonDecode(request.body);
+        if (bankaddresponse['success'] == true) {
+          Get.to(SuccessView());
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
@@ -450,15 +523,22 @@ class ShopDetailsController extends GetxController {
       "ifsc_code": ifscCode,
       "cheque_copy": checkImage
     };
-    var request = await http.post(Uri.parse("${baseUrl.value}vendor-add-bank/"),
-        headers: headers, body: jsonEncode(body));
-    log(request.body.toString());
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-add-bank/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body.toString());
 
-    if (request.statusCode == 201) {
-      final bankaddresponse = bankaddresponseFromJson(request.body);
-      if (bankaddresponse.success == true) {
-        Get.to(SuccessView());
+      if (request.statusCode == 201) {
+        final bankaddresponse = bankaddresponseFromJson(request.body);
+        if (bankaddresponse.success == true) {
+          Get.to(SuccessView());
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 

@@ -410,7 +410,10 @@ class BankDetailsOfShop extends StatelessWidget {
                               : false,
                           child: InkWell(
                             onTap: () {
-                              shopDetailsController.pickCheckImage();
+                              shopDetailsController.showPopup(
+                                  context,
+                                  (value) => shopDetailsController
+                                      .pickCheckImage(value));
                             },
                             child: Padding(
                               padding:
@@ -433,7 +436,10 @@ class BankDetailsOfShop extends StatelessWidget {
                               : true,
                           child: InkWell(
                             onTap: () {
-                              shopDetailsController.pickCheckImage();
+                              shopDetailsController.showPopup(
+                                  context,
+                                  (value) => shopDetailsController
+                                      .pickCheckImage(value));
                             },
                             child: Padding(
                               padding:

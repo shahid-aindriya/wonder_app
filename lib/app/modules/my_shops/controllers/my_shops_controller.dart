@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,21 +27,26 @@ class MyShopsController extends GetxController {
   Future<dynamic> getListOfShops() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
-    if (userId == null) {
-      log("message");
-    } else {
-      var body = {"user_id": userId.toString()};
-      var request = await http.post(
-          Uri.parse("${baseUrl.value}vendor-all-shop/"),
-          headers: headers,
-          body: jsonEncode(body));
-      log(request.body.toString());
-      if (request.statusCode == 201) {
-        final shopsListModel = shopsListModelFromJson(request.body);
-        // log(shopsListModel.shopData[0].licenseImage.toString());
-        shopLists.assignAll(shopsListModel.shopData);
-        return shopsListModel.shopData;
+    try {
+      if (userId == null) {
+        log("message");
+      } else {
+        var body = {"user_id": userId.toString()};
+        var request = await http.post(
+            Uri.parse("${baseUrl.value}vendor-all-shop/"),
+            headers: headers,
+            body: jsonEncode(body));
+        log(request.body.toString());
+        if (request.statusCode == 201) {
+          final shopsListModel = shopsListModelFromJson(request.body);
+          // log(shopsListModel.shopData[0].licenseImage.toString());
+          shopLists.assignAll(shopsListModel.shopData);
+          return shopsListModel.shopData;
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 }

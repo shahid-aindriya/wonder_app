@@ -115,12 +115,14 @@ class AmountData {
     required this.email,
     this.razorKey,
     this.razorSecret,
+    required this.haveBank,
   });
 
   dynamic currentAmount;
   dynamic commissionAmount;
   dynamic additionalAmount;
   String name;
+  dynamic haveBank;
   String email;
   dynamic razorKey;
   dynamic razorSecret;
@@ -133,6 +135,7 @@ class AmountData {
         email: json["email"] ?? "null",
         razorKey: json["razor_key"] ?? "null",
         razorSecret: json["razor_secret"] ?? "null",
+        haveBank: json["have_bank"],
       );
 
   Map<String, dynamic> toJson() => {

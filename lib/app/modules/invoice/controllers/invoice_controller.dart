@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,28 +37,28 @@ class InvoiceController extends GetxController {
 
   dynamic selectShopId;
   getInvoiceLists() async {
-    // try {
-    final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getInt("userId");
-    var body = {
-      "user_id": userId,
-    };
-    var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-invoice-list/"),
-        headers: headers,
-        body: jsonEncode(body));
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userId = prefs.getInt("userId");
+      var body = {
+        "user_id": userId,
+      };
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-invoice-list/"),
+          headers: headers,
+          body: jsonEncode(body));
 
-    log(request.statusCode.toString());
-    if (request.statusCode == 201) {
-      invoiceLists.value.clear();
-      final invoiceData = invoiceDataFromJson(request.body);
-      // invoiceLists.value.addAll(invoiceData.invoiceData);
-      invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
-      // selectShopId = invoiceLists.value.first.id;
+      log(request.statusCode.toString());
+      if (request.statusCode == 201) {
+        invoiceLists.value.clear();
+        final invoiceData = invoiceDataFromJson(request.body);
+        // invoiceLists.value.addAll(invoiceData.invoiceData);
+        invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
+        // selectShopId = invoiceLists.value.first.id;
+      }
+    } catch (e) {
+      log(e.toString());
     }
-    // } catch (e) {
-    //   log(e.toString());
-    // }
   }
 
   changeShop({dynamic value, id}) {
@@ -92,69 +93,84 @@ class InvoiceController extends GetxController {
     // invoiceLists.value
     //     .addAll(invoiceListsForDropDown.value.where((p0) => p0.shopId = int.tryParse(id)!));
     // update();
-    final request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
-        headers: headers,
-        body: jsonEncode(body));
+    try {
+      final request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
+          headers: headers,
+          body: jsonEncode(body));
 
-    final requests = await http.post(
-        Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
-        headers: headers,
-        body: jsonEncode(body));
-    if (request.statusCode == 201) {
-      final invoiceData = invoiceDataFromJson(request.body);
-      invoiceLists.value.assignAll(invoiceData.invoiceData);
-      invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
-      filterListValue.value = "All";
-      searchInvoiceList.clear();
-      update();
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
+          headers: headers,
+          body: jsonEncode(body));
+      if (request.statusCode == 201) {
+        final invoiceData = invoiceDataFromJson(request.body);
+        invoiceLists.value.assignAll(invoiceData.invoiceData);
+        invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
+        filterListValue.value = "All";
+        searchInvoiceList.clear();
+        update();
+      }
+      if (requests.statusCode == 201) {
+        final walletScreenModel = walletScreenModelFromJson(requests.body);
+        walletTransactionLists.assignAll(walletScreenModel.transactionData);
+        walletAmount.value = walletScreenModel.shopWalletAmount;
+        update();
+      }
+      log(request.body);
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
-    if (requests.statusCode == 201) {
-      final walletScreenModel = walletScreenModelFromJson(requests.body);
-      walletTransactionLists.assignAll(walletScreenModel.transactionData);
-      walletAmount.value = walletScreenModel.shopWalletAmount;
-      update();
-    }
-    log(request.body);
   }
 
   onPullRefreshInWallet() async {
     var body = {"shop_id": selectShopId};
-    final request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
-        headers: headers,
-        body: jsonEncode(body));
-    final requests = await http.post(
-        Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body);
-    if (request.statusCode == 201) {
-      invoiceLists.value.clear();
-      final invoiceData = invoiceDataFromJson(request.body);
-      invoiceLists.value.addAll(invoiceData.invoiceData);
-      invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
-      filterListValue.value = "All";
-      searchInvoiceList.clear();
-      update();
-    }
-    if (requests.statusCode == 201) {
-      final walletScreenModel = walletScreenModelFromJson(requests.body);
-      walletTransactionLists.assignAll(walletScreenModel.transactionData);
-      walletAmount.value = walletScreenModel.shopWalletAmount;
-      update();
+    try {
+      final request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
+          headers: headers,
+          body: jsonEncode(body));
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body);
+      if (request.statusCode == 201) {
+        invoiceLists.value.clear();
+        final invoiceData = invoiceDataFromJson(request.body);
+        invoiceLists.value.addAll(invoiceData.invoiceData);
+        invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
+        filterListValue.value = "All";
+        searchInvoiceList.clear();
+        update();
+      }
+      if (requests.statusCode == 201) {
+        final walletScreenModel = walletScreenModelFromJson(requests.body);
+        walletTransactionLists.assignAll(walletScreenModel.transactionData);
+        walletAmount.value = walletScreenModel.shopWalletAmount;
+        update();
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
   notifications() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
-    var body = {"user_id": userId};
-    final request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-notifications/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body);
+    try {
+      var body = {"user_id": userId};
+      final request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-notifications/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body);
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
+    }
   }
 
   RxList<dynamic> filterList = ['All', 'Approved', 'Pending', 'Rejected'].obs;
@@ -211,47 +227,62 @@ class InvoiceController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
     var body = {"user_id": userId};
-    final request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-profile-view/"),
-        headers: headers,
-        body: jsonEncode(body));
-    // log("sdfgsdfgs${request.body}");
-    if (request.statusCode == 201) {
-      final userDataResponse = userDataResponseFromJson(request.body);
-      userDetailLists.assign(userDataResponse.userData);
+    try {
+      final request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-profile-view/"),
+          headers: headers,
+          body: jsonEncode(body));
+      // log("sdfgsdfgs${request.body}");
+      if (request.statusCode == 201) {
+        final userDataResponse = userDataResponseFromJson(request.body);
+        userDetailLists.assign(userDataResponse.userData);
 
-      update();
+        update();
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   void pushFCMtoken() async {
-    String? token = await messaging.getToken();
+    try {
+      String? token = await messaging.getToken();
 
-    log("token:$token");
-    print("hello");
-    await sendDeviceToken(token!);
+      log("token:$token");
+      print("hello");
+      await sendDeviceToken(token!);
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
+    }
   }
 
   Future<void> sendDeviceToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
 
-    var response = await post(
-      Uri.parse('${baseUrl.value}vendor-update-device-token/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-          <String, dynamic>{"user_id": userId, "device_token": token}),
-    );
-    log('status${response.statusCode}');
+    try {
+      var response = await post(
+        Uri.parse('${baseUrl.value}vendor-update-device-token/'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+            <String, dynamic>{"user_id": userId, "device_token": token}),
+      );
+      log('status${response.statusCode}');
 
-    if (response.statusCode == 201) {
-      print("got token");
-      print(response.statusCode);
-    } else {
-      throw Exception("failed to send token");
+      if (response.statusCode == 201) {
+        print("got token");
+        print(response.statusCode);
+      } else {
+        throw Exception("failed to send token");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 }

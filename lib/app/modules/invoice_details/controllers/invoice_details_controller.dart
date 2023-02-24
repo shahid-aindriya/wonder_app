@@ -8,6 +8,7 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 
 import '../../../data/urls.dart';
 import '../../invoice/controllers/invoice_controller.dart';
@@ -100,24 +101,35 @@ class InvoiceDetailsController extends GetxController {
     }
   }
 
-  void openCheckout({razorKey, amount, invoiceId, name, email}) async {
-    log(amount.toString());
-    String amt = "${amount}00";
-    var options = {
-      "key": razorKey,
-      "amount": int.tryParse(amt),
-      "name": name,
-      "description": "Test Transaction",
-      "prefill": {"contact": "9123456789", "email": email},
-      "external": {
-        "wallets": ["paytm", "googlepay"]
-      },
-    };
+  openCheckout(
+      {razorKey,
+      amount,
+      invoiceId,
+      name,
+      email,
+      required InvoiceDatum data}) async {
+    if (data.amountData.haveBank == false) {
+      Get.snackbar("Error", "No bank Account Found to current shop ");
+      return;
+    } else {
+      log(amount.toString());
+      String amt = "${amount}00";
+      var options = {
+        "key": razorKey,
+        "amount": int.tryParse(amt),
+        "name": name,
+        "description": "Test Transaction",
+        "prefill": {"contact": "9123456789", "email": email},
+        "external": {
+          "wallets": ["paytm", "googlepay"]
+        },
+      };
 
-    try {
-      razorpay.open(options);
-    } catch (e) {
-      log(e.toString());
+      try {
+        razorpay.open(options);
+      } catch (e) {
+        log(e.toString());
+      }
     }
   }
 
@@ -158,51 +170,55 @@ class InvoiceDetailsController extends GetxController {
       InvoiceController? inoviceController}) async {
     log(invoiceId.toString());
     var body = {"invoice_id": invoiceId, "status": choice};
-
-    var request = await http.post(
-        Uri.parse("${baseUrl.value}vendor-invoice-status-change/"),
-        headers: headers,
-        body: jsonEncode(body));
-    log(request.body.toString());
-    if (request.statusCode == 201) {
-      final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
-      if (invoiceApprovalModel.success == true) {
-        await inoviceController!.onPullRefreshInWallet();
-        MotionToast.success(
-          dismissable: true,
-          enableAnimation: false,
-          position: MotionToastPosition.top,
-          title: const Text(
-            'Succes ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-invoice-status-change/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body.toString());
+      if (request.statusCode == 201) {
+        final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
+        if (invoiceApprovalModel.success == true) {
+          await inoviceController!.onPullRefreshInWallet();
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Succes ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          description: Text('Invoice ${choice}d successfully'),
-          animationCurve: Curves.bounceIn,
-          borderRadius: 0,
-          animationDuration: const Duration(milliseconds: 1000),
-        ).show(context);
+            description: Text('Invoice ${choice}d successfully'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
 
-        Get.back();
-        Get.back();
-      } else {
-        MotionToast.error(
-          dismissable: true,
-          enableAnimation: false,
-          position: MotionToastPosition.top,
-          title: const Text(
-            'Error ',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          Get.back();
+          Get.back();
+        } else {
+          MotionToast.error(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Error ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          description: Text('Something went wrong or No sufficient balance'),
-          animationCurve: Curves.bounceIn,
-          borderRadius: 0,
-          animationDuration: const Duration(milliseconds: 1000),
-        ).show(context);
+            description: Text('Something went wrong or No sufficient balance'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        }
       }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
     }
   }
 
