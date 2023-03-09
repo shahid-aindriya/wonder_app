@@ -31,6 +31,7 @@ class PasswordGenerationController extends GetxController {
     update();
   }
 
+  var isLoading = false.obs;
   sellerRegister(
       {name,
       phone,
@@ -54,8 +55,9 @@ class PasswordGenerationController extends GetxController {
     };
 
     try {
+      isLoading.value = true;
       final request = await http.post(
-          Uri.parse("https://wonderpoints.com/vendor-register/"),
+          Uri.parse("${baseUrl.value}vendor-register/"),
           headers: headers,
           body: jsonEncode(body));
       log(request.body.toString());
@@ -78,17 +80,41 @@ class PasswordGenerationController extends GetxController {
             borderRadius: 0,
             animationDuration: const Duration(milliseconds: 1000),
           ).show(context);
+          isLoading.value = false;
         } else if (sellerRegistrationResponse.isApproved == false) {
           Get.to(RequestPendingView());
+          isLoading.value = false;
         } else {
           final prefs = await SharedPreferences.getInstance();
           prefs.setInt("userId", sellerRegistrationResponse.userId);
           Get.to(StoreDetailsView());
+          isLoading.value = false;
         }
+      } else if (request.statusCode == 403) {
+        MotionToast.warning(
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Warning ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: const Text('Image Size too big '),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+        isLoading.value = false;
+      } else if (request.statusCode == 500) {
+        Get.snackbar("Error", "Something went wrong",
+            backgroundColor: Colors.red);
+        isLoading.value = false;
       }
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);
+      isLoading.value = false;
     }
+    isLoading.value = false;
   }
 }

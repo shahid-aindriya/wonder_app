@@ -90,8 +90,10 @@ class EditShopDetails extends StatelessWidget {
                 // Figma Flutter Generator Rectangle55Widget - RECTANGLE
                 GetBuilder<ShopDetailsController>(builder: (contsdext) {
                   return Visibility(
-                    visible:
-                        shopDetailsController.shopImage == '' ? true : false,
+                    visible: (shopDetailsController.shopImage == '' &&
+                            data!.featuredImage.isNotEmpty)
+                        ? true
+                        : false,
                     child: Container(
                       width: 45.w,
                       height: 45.w,
@@ -135,6 +137,53 @@ class EditShopDetails extends StatelessWidget {
                     ),
                   );
                 }),
+
+                GetBuilder<ShopDetailsController>(builder: (conqwertesxt) {
+                  return Visibility(
+                    visible: (shopDetailsController.shopImage == '' &&
+                            data!.featuredImage.isEmpty)
+                        ? true
+                        : false,
+                    child: Container(
+                      width: 45.w,
+                      height: 45.w,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 4),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(36),
+                        image: DecorationImage(
+                            image: AssetImage("assets/images/User.png"),
+                            fit: BoxFit.none),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            width: 45,
+                            height: 34,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    topLeft: Radius.circular(10))),
+                            child: IconButton(
+                                onPressed: () {
+                                  shopDetailsController.showPopup(context,
+                                      (value) {
+                                    shopDetailsController.pickShopImage(value);
+                                  });
+                                },
+                                icon: Icon(
+                                  Icons.camera_alt_rounded,
+                                  color: Color.fromARGB(255, 144, 149, 255),
+                                )),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+
                 GetBuilder<ShopDetailsController>(builder: (contesxt) {
                   return Visibility(
                     visible:
@@ -435,13 +484,13 @@ class EditShopDetails extends StatelessWidget {
                                 BorderSide(color: Colors.white, width: 1.3),
                             borderRadius: BorderRadius.circular(16)),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please enter valid gst';
-                        } else {
-                          return null;
-                        }
-                      },
+                      // validator: (value) {
+                      //   if (value!.isEmpty) {
+                      //     return 'please enter valid gst';
+                      //   } else {
+                      //     return null;
+                      //   }
+                      // },
                     ),
                     SizedBox(height: 30),
                     Padding(
@@ -471,13 +520,13 @@ class EditShopDetails extends StatelessWidget {
                                 BorderSide(color: Colors.white, width: 1.3),
                             borderRadius: BorderRadius.circular(16)),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please enter valid licence number';
-                        } else {
-                          return null;
-                        }
-                      },
+                      // validator: (value) {
+                      //   if (value!.isEmpty) {
+                      //     return 'please enter valid licence number';
+                      //   } else {
+                      //     return null;
+                      //   }
+                      // },
                     ),
                     SizedBox(height: 30),
                     Padding(
@@ -507,13 +556,13 @@ class EditShopDetails extends StatelessWidget {
                                 BorderSide(color: Colors.white, width: 1.3),
                             borderRadius: BorderRadius.circular(16)),
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'please enter valid gst number';
-                        } else {
-                          return null;
-                        }
-                      },
+                      // validator: (value) {
+                      //   if (value!.isEmpty) {
+                      //     return 'please enter valid gst number';
+                      //   } else {
+                      //     return null;
+                      //   }
+                      // },
                     ),
                     SizedBox(height: 30),
                     Padding(

@@ -49,19 +49,21 @@ class StoreDetailsController extends GetxController {
   String shopImage = '';
   File? image;
   pickimage(bool value) async {
-    final pimage = await ImagePicker().pickImage(
-        source: value == true ? ImageSource.camera : ImageSource.gallery);
-    if (pimage == null) {
-      return;
-    } else {
-      final ims = await sellerRegistController.cropsImage(pimage.path);
-      final bytes = File(ims.path).readAsBytesSync();
-      final compressedImage = testComporessList(bytes);
-      shopImage = base64Encode(await compressedImage);
-      update();
+    try {
+      final pimage = await ImagePicker().pickImage(
+          source: value == true ? ImageSource.camera : ImageSource.gallery);
+      if (pimage == null) {
+        return;
+      } else {
+        final ims = await sellerRegistController.cropsImage(pimage.path);
+        final bytes = File(ims.path).readAsBytesSync();
+        final compressedImage = testComporessList(bytes);
+        shopImage = base64Encode(await compressedImage);
+        update();
+      }
+    } catch (e) {
+      log(e.toString());
     }
-    // log(img);
-    update();
   }
 
   Future<dynamic> getShopCategories() async {

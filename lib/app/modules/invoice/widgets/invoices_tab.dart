@@ -10,22 +10,15 @@ import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice_details/views/invoice_details_view.dart';
 
-class InvoiceTab extends StatelessWidget {
-  const InvoiceTab({
-    super.key,
-    required this.invoiceController,
-  });
+import '../views/invoice_view.dart';
 
-  final InvoiceController invoiceController;
-
+class InvoiceTab extends GetView<InvoiceController> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: invoiceController.selectShopId == null
-          ? () async {}
-          : () async {
-              await invoiceController.onPullRefreshInWallet();
-            },
+      onRefresh: () async {
+        await invoiceController.onPullRefreshInWallet();
+      },
       child: Obx(() {
         return invoiceController.invoiceLists.value.isEmpty
             ? ListView(
@@ -58,8 +51,7 @@ class InvoiceTab extends StatelessWidget {
                       // await invoiceController.invoiceDetails(
                       //     invoiceId: datas.id);
                       Get.to(InvoiceDetailsView(
-                        invoiceController: invoiceController,
-                        data: datas,
+                        id: datas.id,
                       ));
                     },
                     child: Padding(
@@ -96,7 +88,8 @@ class InvoiceTab extends StatelessWidget {
                                 height: 8,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    color: datas.status == "Pending"
+                                    color: (datas.status == "Pending" ||
+                                            datas.status == "Verified")
                                         ? Color.fromARGB(255, 144, 149, 255)
                                         : greyColor),
                               ),
@@ -114,11 +107,12 @@ class InvoiceTab extends StatelessWidget {
                                       padding: const EdgeInsets.all(8.0),
                                       child: AutoSizeText(
                                         maxLines: 2,
-                                        "₹${datas.invoiceAmount}",
+                                        "₹${datas.preTaxAmount}",
                                         maxFontSize: 18,
                                         minFontSize: 12,
                                         style: GoogleFonts.roboto(
-                                            color: datas.status == "Pending"
+                                            color: datas.status == "Pending" ||
+                                                    datas.status == "Verified"
                                                 ? Color.fromARGB(
                                                     255, 73, 117, 231)
                                                 : greyColor,
@@ -134,7 +128,8 @@ class InvoiceTab extends StatelessWidget {
                                     child: Text(
                                       formattedDate,
                                       style: GoogleFonts.roboto(
-                                          color: datas.status == "Pending"
+                                          color: datas.status == "Pending" ||
+                                                  datas.status == "Verified"
                                               ? Colors.black
                                               : greyColor,
                                           fontSize: 12,
@@ -165,7 +160,9 @@ class InvoiceTab extends StatelessWidget {
                                                 style: GoogleFonts.roboto(
                                                     fontSize: 16,
                                                     color: datas.status ==
-                                                            "Pending"
+                                                                "Pending" ||
+                                                            datas.status ==
+                                                                "Verified"
                                                         ? Colors.black
                                                         : greyColor,
                                                     fontWeight:
@@ -176,7 +173,9 @@ class InvoiceTab extends StatelessWidget {
                                                 style: GoogleFonts.roboto(
                                                     fontSize: 14,
                                                     color: datas.status ==
-                                                            "Pending"
+                                                                "Pending" ||
+                                                            datas.status ==
+                                                                "Verified"
                                                         ? Colors.black
                                                         : greyColor,
                                                     fontWeight:
@@ -191,9 +190,12 @@ class InvoiceTab extends StatelessWidget {
                                         Text(
                                             " Invoice No: ${datas.invoiceNumber}",
                                             style: GoogleFonts.roboto(
-                                                color: datas.status == "Pending"
-                                                    ? Colors.black
-                                                    : greyColor,
+                                                color:
+                                                    datas.status == "Pending" ||
+                                                            datas.status ==
+                                                                "Verified"
+                                                        ? Colors.black
+                                                        : greyColor,
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w300))
                                       ],
@@ -219,7 +221,9 @@ class InvoiceTab extends StatelessWidget {
                                             ? "assets/images/pending.svg"
                                             : datas.status == "Reject"
                                                 ? "assets/images/rejected.svg"
-                                                : "assets/images/aporved.svg"),
+                                                : datas.status == "Verified"
+                                                    ? "assets/images/verified.svg"
+                                                    : "assets/images/aporved.svg"),
                                       ),
                                     ),
                                   ),

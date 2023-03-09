@@ -124,39 +124,49 @@ class MyShopsView extends GetView<MyShopsController> {
                                               width: 100.w,
                                               height: 18.h,
                                               decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  16),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                  16)),
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                      "$baseUrlForImage${data.featuredImage}",
-                                                    ),
-                                                    fit: BoxFit.fitWidth,
-                                                  )),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(0.0),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    // Figma Flutter Generator Rectangle33Widget - RECTANGLE
-                                                    // IconButton(
-                                                    //     onPressed: () {},
-                                                    //     icon: Icon(
-                                                    //       Icons.favorite,
-                                                    //       color: Colors.grey,
-                                                    //     ))
-                                                  ],
-                                                ),
-                                              )),
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(16),
+                                                    topRight:
+                                                        Radius.circular(16)),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(16),
+                                                    topRight:
+                                                        Radius.circular(16)),
+                                                child: data
+                                                        .featuredImage.isEmpty
+                                                    ? Image.asset(
+                                                        "assets/images/User.png")
+                                                    : Image.network(
+                                                        "$baseUrlForImage${data.featuredImage}",
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                              )
+
+                                              // Padding(
+                                              //   padding:
+                                              //       const EdgeInsets.all(0.0),
+                                              //   child: Row(
+                                              //     crossAxisAlignment:
+                                              //         CrossAxisAlignment.start,
+                                              //     mainAxisAlignment:
+                                              //         MainAxisAlignment.end,
+                                              //     children: [
+                                              //       // Figma Flutter Generator Rectangle33Widget - RECTANGLE
+                                              //       // IconButton(
+                                              //       //     onPressed: () {},
+                                              //       //     icon: Icon(
+                                              //       //       Icons.favorite,
+                                              //       //       color: Colors.grey,
+                                              //       //     ))
+                                              //     ],
+                                              //   ),
+                                              // )
+
+                                              ),
                                         ),
                                       ),
                                       Text(

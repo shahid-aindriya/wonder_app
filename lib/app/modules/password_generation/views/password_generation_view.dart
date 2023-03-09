@@ -36,9 +36,16 @@ class PasswordGenerationView extends GetView<PasswordGenerationController> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.jpg"),
-              fit: BoxFit.cover)),
+        gradient: LinearGradient(
+            begin: Alignment(2, 1.0548897981643677),
+            end: Alignment(-1.0548897981643677, 1.226324439048767),
+            colors: [
+              Color.fromRGBO(239, 221, 214, 1),
+              Color.fromRGBO(220, 222, 242, 1),
+              Color.fromRGBO(250, 227, 243, 1),
+              Color.fromRGBO(228, 249, 254, 1)
+            ]),
+      ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -300,8 +307,6 @@ class PasswordGenerationView extends GetView<PasswordGenerationController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: 124,
-                            height: 50,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               border: Border(),
@@ -322,85 +327,118 @@ class PasswordGenerationView extends GetView<PasswordGenerationController> {
                                 ),
                               ],
                             ),
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Colors.transparent),
-                                  elevation: MaterialStateProperty.all(0)),
-                              onPressed: () async {
-                                if (passwordController.text.isEmpty &&
-                                    controller.isOn.value == false) {
-                                  MotionToast.error(
-                                    position: MotionToastPosition.top,
-                                    title: const Text(
-                                      'Error ',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    description:
-                                        const Text('Please Enter Password'),
-                                    animationCurve: Curves.bounceIn,
-                                    borderRadius: 0,
-                                    animationDuration:
-                                        const Duration(milliseconds: 1000),
-                                  ).show(context);
-                                } else if (passwordController.text !=
-                                    confirmPasswordController.text) {
-                                  MotionToast.error(
-                                    position: MotionToastPosition.top,
-                                    title: const Text(
-                                      'Error ',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    description:
-                                        const Text('Password doesnt matches'),
-                                    animationCurve: Curves.bounceIn,
-                                    borderRadius: 0,
-                                    animationDuration:
-                                        const Duration(milliseconds: 1000),
-                                  ).show(context);
-                                } else if (passwordController.text.length < 6 &&
-                                    (controller.isOn.value == false)) {
-                                  MotionToast.error(
-                                    position: MotionToastPosition.top,
-                                    title: const Text(
-                                      'Error ',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    description:
-                                        const Text('Minimum 6 characters'),
-                                    animationCurve: Curves.bounceIn,
-                                    borderRadius: 0,
-                                    animationDuration:
-                                        const Duration(milliseconds: 1000),
-                                  ).show(context);
-                                } else {
-                                  await controller.sellerRegister(
-                                      adarImag: adhaarimag,
-                                      adhaar: adhaarNumber,
-                                      email: email,
-                                      name: name,
-                                      pan: panNumber,
-                                      panImag: panImag,
-                                      password: passwordController.text,
-                                      phone: phoneNmber,
-                                      context: context);
-                                }
-                              },
-                              child: Text(
-                                'Save',
-                                style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.2110513051,
-                                  color: Color(0xffffffff),
-                                ),
-                              ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 14.0, right: 14),
+                              child: Obx(() {
+                                return ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.transparent),
+                                      elevation: MaterialStateProperty.all(0)),
+                                  onPressed: controller.isLoading.value == true
+                                      ? null
+                                      : () async {
+                                          if (passwordController.text.isEmpty &&
+                                              controller.isOn.value == false) {
+                                            MotionToast.error(
+                                              position: MotionToastPosition.top,
+                                              title: const Text(
+                                                'Error ',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              description: const Text(
+                                                  'Please Enter Password'),
+                                              animationCurve: Curves.bounceIn,
+                                              borderRadius: 0,
+                                              animationDuration: const Duration(
+                                                  milliseconds: 1000),
+                                            ).show(context);
+                                          } else if (passwordController.text !=
+                                              confirmPasswordController.text) {
+                                            MotionToast.error(
+                                              position: MotionToastPosition.top,
+                                              title: const Text(
+                                                'Error ',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              description: const Text(
+                                                  'Password doesnt matches'),
+                                              animationCurve: Curves.bounceIn,
+                                              borderRadius: 0,
+                                              animationDuration: const Duration(
+                                                  milliseconds: 1000),
+                                            ).show(context);
+                                          } else if (passwordController
+                                                      .text.length <
+                                                  6 &&
+                                              (controller.isOn.value ==
+                                                  false)) {
+                                            MotionToast.error(
+                                              position: MotionToastPosition.top,
+                                              title: const Text(
+                                                'Error ',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              description: const Text(
+                                                  'Minimum 6 characters'),
+                                              animationCurve: Curves.bounceIn,
+                                              borderRadius: 0,
+                                              animationDuration: const Duration(
+                                                  milliseconds: 1000),
+                                            ).show(context);
+                                          } else {
+                                            await controller.sellerRegister(
+                                                adarImag: adhaarimag,
+                                                adhaar: adhaarNumber,
+                                                email: email,
+                                                name: name,
+                                                pan: panNumber,
+                                                panImag: panImag,
+                                                password:
+                                                    passwordController.text,
+                                                phone: phoneNmber,
+                                                context: context);
+                                          }
+                                        },
+                                  child: controller.isLoading.value == false
+                                      ? Text(
+                                          'Save',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.2110513051,
+                                            color: Color(0xffffffff),
+                                          ),
+                                        )
+                                      : Row(
+                                          children: [
+                                            CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              "Processing",
+                                              style: GoogleFonts.roboto(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.2110513051,
+                                                color: Color(0xffffffff),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                );
+                              }),
                             ),
                           ),
                         ],

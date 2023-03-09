@@ -6,21 +6,16 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 import 'package:wonder_app/app/modules/request_coins/views/request_coins_view.dart';
 
-class WalletTab extends StatelessWidget {
-  final InvoiceController invoiceController;
+import '../views/invoice_view.dart';
 
-  WalletTab({
-    required this.invoiceController,
-    Key? key,
-  }) : super(key: key);
-
+class WalletTab extends GetView<InvoiceController> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
         await invoiceController.onPullRefreshInWallet();
       },
-      child: Column(
+      child: ListView(
         children: [
           SizedBox(
             height: 18,
@@ -56,12 +51,12 @@ class WalletTab extends StatelessWidget {
                               fontWeight: FontWeight.w400),
                         ),
                       ),
-                      Obx(() {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: Text(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: Obx(() {
+                              return Text(
                                 invoiceController.walletAmount.value == ''
                                     ? '0'
                                     : invoiceController.walletAmount.value,
@@ -70,21 +65,21 @@ class WalletTab extends StatelessWidget {
                                     fontSize: 24.sp,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Container(
-                                  height: 24,
-                                  width: 24,
-                                  child: Image.asset(
-                                    "assets/images/gold.png",
-                                    fit: BoxFit.contain,
-                                  )),
-                            )
-                          ],
-                        );
-                      }),
+                              );
+                            }),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Container(
+                                height: 24,
+                                width: 24,
+                                child: Image.asset(
+                                  "assets/images/gold.png",
+                                  fit: BoxFit.contain,
+                                )),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -93,22 +88,28 @@ class WalletTab extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 15),
-            child: ElevatedButton(
-                onPressed: () {
-                  Get.to(RequestCoinsView());
-                },
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7))),
-                    elevation: MaterialStateProperty.all(12),
-                    backgroundColor: MaterialStateProperty.all(Colors.white)),
-                child: Text(
-                  "Request coins",
-                  style: GoogleFonts.roboto(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromARGB(255, 63, 72, 191)),
-                )),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      Get.to(RequestCoinsView());
+                    },
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7))),
+                        elevation: MaterialStateProperty.all(12),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white)),
+                    child: Text(
+                      "Request coins",
+                      style: GoogleFonts.roboto(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 63, 72, 191)),
+                    )),
+              ],
+            ),
           ),
           Container(
             width: 100.w,
@@ -153,8 +154,10 @@ class WalletTab extends StatelessWidget {
                       ),
                     ],
                   )
-                : Expanded(
-                    child: ListView.builder(
+                : Obx(() {
+                    return ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
                         itemCount:
                             invoiceController.walletTransactionLists.length,
                         itemBuilder: (context, index) {
@@ -222,8 +225,8 @@ class WalletTab extends StatelessWidget {
                               ),
                             ),
                           );
-                        }),
-                  );
+                        });
+                  });
           })
         ],
       ),

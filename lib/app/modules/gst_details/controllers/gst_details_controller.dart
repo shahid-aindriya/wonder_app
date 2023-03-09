@@ -47,6 +47,7 @@ class GstDetailsController extends GetxController {
     update();
   }
 
+  var isLoading = false.obs;
   addShopToServer(
       {shopName,
       closingTime,
@@ -64,11 +65,14 @@ class GstDetailsController extends GetxController {
       featured,
       lat,
       long,
+      webSiteUrls,
       context}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
     log(closingTime.toString());
     log(openingTime.toString());
+    final gstImg = gstImage == '' ? null : gstImage;
+    final licenceImg = licenseImage == '' ? null : licenseImage;
     var body = {
       "name": shopName,
       "user_id": userId,
@@ -85,12 +89,14 @@ class GstDetailsController extends GetxController {
       "image": shopImage,
       "gst_pct": gstPercentage,
       "license_number": licenceNumber,
-      "gst_image": gstImage,
-      "license_image": licenseImage
+      "gst_image": gstImg,
+      "license_image": licenceImg,
+      "website_url": webSiteUrls
     };
     try {
+      isLoading.value = true;
       var request = await http.post(
-          Uri.parse("https://wonderpoints.com/vendor-add-shop/"),
+          Uri.parse("${baseUrl.value}vendor-add-shop/"),
           headers: headers,
           body: jsonEncode(body));
       log(request.statusCode.toString());
@@ -118,6 +124,7 @@ class GstDetailsController extends GetxController {
             animationDuration: const Duration(milliseconds: 1000),
           ).show(context);
           storeDetailsController.shopImage = '';
+          isLoading.value = false;
         } else {
           Get.offAll(InvoiceView());
           MotionToast.error(
@@ -135,12 +142,15 @@ class GstDetailsController extends GetxController {
             borderRadius: 0,
             animationDuration: const Duration(milliseconds: 1000),
           ).show(context);
+          isLoading.value = false;
         }
       }
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);
+      isLoading.value = false;
     }
+    isLoading.value = false;
   }
 
   testComporessList(Uint8List list) async {

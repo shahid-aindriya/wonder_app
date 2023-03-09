@@ -18,6 +18,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
   final TextEditingController openTimeController = TextEditingController();
   final TextEditingController latController = TextEditingController();
   final TextEditingController longController = TextEditingController();
+  final TextEditingController websiteController = TextEditingController();
   @override
   final StoreDetailsController controller = Get.put(StoreDetailsController());
 
@@ -32,9 +33,16 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
     controller.getShopCategories();
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assets/images/wonder_app_background.jpg"),
-              fit: BoxFit.cover)),
+        gradient: LinearGradient(
+            begin: Alignment(2, 1.0548897981643677),
+            end: Alignment(-1.0548897981643677, 1.226324439048767),
+            colors: [
+              Color.fromRGBO(239, 221, 214, 1),
+              Color.fromRGBO(220, 222, 242, 1),
+              Color.fromRGBO(250, 227, 243, 1),
+              Color.fromRGBO(228, 249, 254, 1)
+            ]),
+      ),
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -125,8 +133,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
                         validator: (value) {
-                          if (!RegExp(r"^[a-zA-Z ]+$").hasMatch(value!) ||
-                              value.length < 3) {
+                          if (value!.isEmpty) {
                             return 'please enter valid name';
                           } else {
                             return null;
@@ -376,13 +383,13 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                 borderRadius: BorderRadius.circular(16)),
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'please enter valid amount';
-                          } else {
-                            return null;
-                          }
-                        },
+                        // validator: (value) {
+                        //   if (value!.isEmpty) {
+                        //     return 'please enter valid amount';
+                        //   } else {
+                        //     return null;
+                        //   }
+                        // },
                       ),
                       SizedBox(
                         height: 30,
@@ -436,13 +443,13 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                 borderRadius: BorderRadius.circular(16)),
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
-                        validator: (value) {
-                          if (value == null || value == '' || value.isEmpty) {
-                            return 'please enter opening time';
-                          } else {
-                            return null;
-                          }
-                        },
+                        // validator: (value) {
+                        //   if (value == null || value == '' || value.isEmpty) {
+                        //     return 'please enter opening time';
+                        //   } else {
+                        //     return null;
+                        //   }
+                        // },
                         onTap: () async {
                           TimeOfDay? selectedOpeningTime;
                           final TimeOfDay? picked = await showTimePicker(
@@ -512,13 +519,13 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                 borderRadius: BorderRadius.circular(16)),
                             fillColor: Color.fromARGB(153, 255, 255, 255),
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
-                        validator: (value) {
-                          if (value == null || value == '' || value.isEmpty) {
-                            return 'please enter closing time';
-                          } else {
-                            return null;
-                          }
-                        },
+                        // validator: (value) {
+                        //   if (value == null || value == '' || value.isEmpty) {
+                        //     return 'please enter closing time';
+                        //   } else {
+                        //     return null;
+                        //   }
+                        // },
                         onTap: () async {
                           TimeOfDay? selectedOpeningTime;
                           final TimeOfDay? picked = await showTimePicker(
@@ -614,6 +621,65 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                           },
                         );
                       }),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 14.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Website URL',
+                              style: GoogleFonts.roboto(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                height: 1.1725,
+                                color: Color(0xff4956b2),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextFormField(
+                        controller: websiteController,
+                        enabled: true,
+                        style: GoogleFonts.roboto(
+                            fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                        decoration: InputDecoration(
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              height: 1.1725,
+                              color: Color.fromARGB(93, 0, 0, 0),
+                            ),
+                            hintText: "Enter website url",
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18.0, horizontal: 18),
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(16)),
+                            fillColor: Color.fromARGB(153, 255, 255, 255),
+                            focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'please enter valid name';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                       SizedBox(
                         height: 30,
                       ),
@@ -782,11 +848,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                         children: [
                           InkWell(
                             onTap: () {
-                              if (controller.shopImage == '') {
-                                controller.alertPopu(
-                                    context: context,
-                                    data: "Please Enter All Fields");
-                              } else if (formKey.currentState!.validate()) {
+                              if (formKey.currentState!.validate()) {
                                 Get.off(RegistrationDetailsView(
                                   featured: controller.isChecked,
                                   commission: commissionController.text,
@@ -800,6 +862,7 @@ class StoreDetailsView extends GetView<StoreDetailsController> {
                                   openingTime: openTimeController.text,
                                   lat: latController.text,
                                   long: longController.text,
+                                  webSite: websiteController.text,
                                 ));
                               }
                             },

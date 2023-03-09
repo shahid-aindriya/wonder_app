@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:motion_toast/motion_toast.dart';
-import 'package:motion_toast/resources/arrays.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../controllers/gst_details_controller.dart';
@@ -21,12 +19,13 @@ class GstDetailsView extends GetView<GstDetailsController> {
   final featured;
   final closingTime;
   final openingTime;
-  final lat, long;
+  final lat, long, webSite;
   GstDetailsView(
       {this.shopName,
       this.closingTime,
       this.openingTime,
       this.lat,
+      this.webSite,
       this.long,
       this.shopAdress,
       this.shopLocation,
@@ -270,76 +269,85 @@ class GstDetailsView extends GetView<GstDetailsController> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InkWell(
-                  onTap: () {
-                    if (controller.gstImage == '') {
-                      MotionToast.warning(
-                        dismissable: true,
-                        enableAnimation: false,
-                        position: MotionToastPosition.top,
-                        title: const Text(
-                          'Warning ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        description: Text("Please upload documents"),
-                        animationCurve: Curves.bounceIn,
-                        borderRadius: 0,
-                        animationDuration: const Duration(milliseconds: 1000),
-                      ).show(context);
-                    } else if (formKey.currentState!.validate()) {
-                      controller.addShopToServer(
-                          address: shopAdress,
-                          context: context,
-                          commission: commission,
-                          featured: featured,
-                          gstNumber: gstNumberController.text,
-                          gstPercentage: gstPercentage,
-                          location: shopLocation,
-                          categoryId: categoryId,
-                          licenseImage: licenceImage,
-                          shopImage: shopImage,
-                          closingTime: closingTime,
-                          lat: lat,
-                          long: long,
-                          openingTime: openingTime,
-                          licenceNumber: licenceNumber,
-                          shopName: shopName);
-                    }
-                    // Get.to(BankDetailsView());
-                  },
-                  child: Container(
-                    width: 124,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border(),
-                      gradient: LinearGradient(
-                        begin: Alignment(-0.934, -1),
-                        end: Alignment(1.125, 1.333),
-                        colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
-                        stops: <double>[0, 1],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0x3f000000),
-                          offset: Offset(0, 0.7870440483),
-                          blurRadius: 2.7546541691,
-                        ),
-                      ],
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border(),
+                    gradient: LinearGradient(
+                      begin: Alignment(-0.934, -1),
+                      end: Alignment(1.125, 1.333),
+                      colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+                      stops: <double>[0, 1],
                     ),
-                    child: Center(
-                      child: Text(
-                        'Next',
-                        style: GoogleFonts.roboto(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          height: 1.2110513051,
-                          color: Color(0xffffffff),
-                        ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0x3f000000),
+                        offset: Offset(0, 0.7870440483),
+                        blurRadius: 2.7546541691,
                       ),
-                    ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 14.0, right: 14),
+                    child: Obx(() {
+                      return ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.transparent),
+                            elevation: MaterialStateProperty.all(0)),
+                        onPressed: controller.isLoading.value == true
+                            ? null
+                            : () async {
+                                controller.addShopToServer(
+                                    webSiteUrls: webSite,
+                                    address: shopAdress,
+                                    context: context,
+                                    commission: commission,
+                                    featured: featured,
+                                    gstNumber: gstNumberController.text,
+                                    gstPercentage: gstPercentage,
+                                    location: shopLocation,
+                                    categoryId: categoryId,
+                                    licenseImage: licenceImage,
+                                    shopImage: shopImage,
+                                    closingTime: closingTime,
+                                    lat: lat,
+                                    long: long,
+                                    openingTime: openingTime,
+                                    licenceNumber: licenceNumber,
+                                    shopName: shopName);
+                              },
+                        child: controller.isLoading.value == false
+                            ? Text(
+                                'Save',
+                                style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.2110513051,
+                                  color: Color(0xffffffff),
+                                ),
+                              )
+                            : Row(
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    "Processing",
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.2110513051,
+                                      color: Color(0xffffffff),
+                                    ),
+                                  )
+                                ],
+                              ),
+                      );
+                    }),
                   ),
                 ),
               ],

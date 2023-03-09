@@ -95,7 +95,7 @@ class AddInvoiceController extends GetxController {
 
       compressedImage = testComporessList(bytes);
       invoiceImg = base64Encode(await compressedImage);
-      log(invoiceImg);
+      // log(invoiceImg);
     }
     // log(img);
     update();
@@ -117,7 +117,6 @@ class AddInvoiceController extends GetxController {
       "invoice_date": invoiceDAte.text,
       "pre_tax_amount": preTaxController.text,
       "invoice_amount": invoiceAmountController.text,
-      "remark": remarksController.text
     };
     try {
       var request = await http.post(

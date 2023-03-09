@@ -45,7 +45,9 @@ class ProfileViewController extends GetxController {
       numberController.text = userDetailLists.first.phone;
       emailController.text = userDetailLists.first.email;
       update();
+      return true;
     }
+    return false;
   }
 
   dynamic compressedImage;

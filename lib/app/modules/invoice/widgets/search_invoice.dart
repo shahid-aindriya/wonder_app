@@ -106,7 +106,7 @@ class SearchInvoice extends StatelessWidget {
                           // await invoiceController.invoiceDetails(
                           //     invoiceId: datas.id);
                           Get.off(InvoiceDetailsView(
-                            data: datas,
+                            id: datas.id,
                           ));
                         },
                         child: Slidable(

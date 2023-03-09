@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +13,7 @@ class ShopGstDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log(image.toString());
     final TextEditingController gstController =
         TextEditingController(text: gst);
     return Container(
@@ -135,9 +138,9 @@ class ShopGstDetails extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 10.0, bottom: 20),
                     child: Container(
                         width: 100.w,
-                        child: image != null
-                            ? Image.network("$baseUrlForImage$image")
-                            : Image.asset("assets/images/invoice_image.png")),
+                        child: (image == null || image == "")
+                            ? Image.asset("assets/images/invoice_image.png")
+                            : Image.network("$baseUrlForImage$image")),
                   )
                 ],
               ),

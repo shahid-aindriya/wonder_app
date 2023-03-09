@@ -52,7 +52,7 @@ class RequestCoinsController extends GetxController {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            description: const Text('offer added Succesfully'),
+            description: const Text('Coin requested Succesfully'),
             animationCurve: Curves.bounceIn,
             borderRadius: 0,
             animationDuration: const Duration(milliseconds: 1000),

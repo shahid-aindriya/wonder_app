@@ -429,7 +429,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                             focusColor: Color.fromARGB(255, 231, 231, 231)),
                         validator: (value) {
                           if (!RegExp((r'^-?[0-9]+$')).hasMatch(value!) ||
-                              value.length < 3) {
+                              value.isEmpty) {
                             return 'please enter valid Number';
                           } else {
                             return null;
@@ -457,7 +457,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                       ),
                       TextFormField(
                         controller: addInvoiceController.invoiceDAte,
-                        enabled: true,
+                        enabled: true, keyboardType: TextInputType.none,
                         style: GoogleFonts.roboto(
                             fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                         decoration: InputDecoration(
@@ -645,62 +645,62 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                           }
                         },
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 14.0, top: 20),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Remarks',
-                              style: GoogleFonts.roboto(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                height: 1.1725,
-                                color: Color(0xff4956b2),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      TextFormField(
-                        controller: addInvoiceController.remarksController,
-                        enabled: true,
-                        style: GoogleFonts.roboto(
-                            fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
-                        decoration: InputDecoration(
-                            hintStyle: GoogleFonts.roboto(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w300,
-                              height: 1.1725,
-                              color: Color.fromARGB(93, 0, 0, 0),
-                            ),
-                            hintText: "Type here..",
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 18.0, horizontal: 18),
-                            enabled: true,
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                    width: 0,
-                                    color: Color.fromARGB(255, 199, 199, 179))),
-                            filled: true,
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 0,
-                                    color: Color.fromARGB(255, 255, 255, 255)),
-                                borderRadius: BorderRadius.circular(16)),
-                            fillColor: Color.fromARGB(153, 255, 255, 255),
-                            focusColor: Color.fromARGB(255, 231, 231, 231)),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'please enter remarks';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 14.0, top: 20),
+                      //   child: Row(
+                      //     children: [
+                      //       Text(
+                      //         'Remarks',
+                      //         style: GoogleFonts.roboto(
+                      //           fontSize: 16,
+                      //           fontWeight: FontWeight.w400,
+                      //           height: 1.1725,
+                      //           color: Color(0xff4956b2),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   height: 8,
+                      // ),
+                      // TextFormField(
+                      //   controller: addInvoiceController.remarksController,
+                      //   enabled: true,
+                      //   style: GoogleFonts.roboto(
+                      //       fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                      //   decoration: InputDecoration(
+                      //       hintStyle: GoogleFonts.roboto(
+                      //         fontSize: 18,
+                      //         fontWeight: FontWeight.w300,
+                      //         height: 1.1725,
+                      //         color: Color.fromARGB(93, 0, 0, 0),
+                      //       ),
+                      //       hintText: "Type here..",
+                      //       contentPadding: const EdgeInsets.symmetric(
+                      //           vertical: 18.0, horizontal: 18),
+                      //       enabled: true,
+                      //       enabledBorder: OutlineInputBorder(
+                      //           borderRadius: BorderRadius.circular(16),
+                      //           borderSide: BorderSide(
+                      //               width: 0,
+                      //               color: Color.fromARGB(255, 199, 199, 179))),
+                      //       filled: true,
+                      //       focusedBorder: OutlineInputBorder(
+                      //           borderSide: BorderSide(
+                      //               width: 0,
+                      //               color: Color.fromARGB(255, 255, 255, 255)),
+                      //           borderRadius: BorderRadius.circular(16)),
+                      //       fillColor: Color.fromARGB(153, 255, 255, 255),
+                      //       focusColor: Color.fromARGB(255, 231, 231, 231)),
+                      //   validator: (value) {
+                      //     if (value!.isEmpty) {
+                      //       return 'please enter remarks';
+                      //     } else {
+                      //       return null;
+                      //     }
+                      //   },
+                      // ),
                       SizedBox(
                         height: 30,
                       ),

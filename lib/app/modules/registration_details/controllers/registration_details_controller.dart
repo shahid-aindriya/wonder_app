@@ -20,19 +20,23 @@ class RegistrationDetailsController extends GetxController {
   String licenceImage = '';
   File? image;
   pickimage(bool value) async {
-    final pimage = await ImagePicker().pickImage(
-        source: value == true ? ImageSource.camera : ImageSource.gallery);
-    if (pimage == null) {
-      return;
-    } else {
-      image = File(pimage.path);
+    try {
+      final pimage = await ImagePicker().pickImage(
+          source: value == true ? ImageSource.camera : ImageSource.gallery);
+      if (pimage == null) {
+        return;
+      } else {
+        image = File(pimage.path);
 
-      final bytes = File(pimage.path).readAsBytesSync();
-      final compressedImage = testComporessList(bytes);
-      licenceImage = base64Encode(await compressedImage);
+        final bytes = File(pimage.path).readAsBytesSync();
+        final compressedImage = testComporessList(bytes);
+        licenceImage = base64Encode(await compressedImage);
+      }
+      // log(img);
+      update();
+    } catch (e) {
+      log(e.toString());
     }
-    // log(img);
-    update();
   }
 
   testComporessList(Uint8List list) async {

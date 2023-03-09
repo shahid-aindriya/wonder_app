@@ -5,16 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/my_shops/controllers/my_shops_controller.dart';
 import 'package:wonder_app/app/modules/my_shops/model/shops_list_model.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/edit_shop_details.dart';
-import 'package:wonder_app/app/modules/shop_details/widgets/shop_gst_details.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/shop_license_details.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/shop_offers.dart';
 
 import '../controllers/shop_details_controller.dart';
 import '../widgets/bank_details.dart';
+import '../widgets/shop_gst_details.dart';
 
 class ShopDetailsView extends GetView<ShopDetailsController> {
   final MyShopsController? shopController;
@@ -35,6 +36,25 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
       child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: InkWell(
+                  onTap: () async {
+                    if (!await launchUrl(
+                      Uri.parse(
+                          "https://qr.wonderpoints.com/?data=${data!.upiId}&name=${data!.name}"),
+                      mode: LaunchMode.externalApplication,
+                    )) {
+                      throw Exception(
+                          'https://qr.wonderpoints.com/?data=${data!.upiId}&name=${data!.name}');
+                    }
+                  },
+                  child: Icon(Icons.qr_code_scanner_rounded,
+                      size: 30, color: Color.fromARGB(255, 64, 95, 209)),
+                ),
+              )
+            ],
             leading: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -70,17 +90,23 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                 children: [
                   // Figma Flutter Generator Rectangle55Widget - RECTANGLE
                   Container(
-                      width: 45.w,
-                      height: 45.w,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 4),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(36),
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                "$baseUrlForImage${data!.featuredImage}"),
-                            fit: BoxFit.cover),
-                      ))
+                    width: 45.w,
+                    height: 45.w,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 4),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(36),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(36),
+                      child: data!.featuredImage.isEmpty
+                          ? Image.asset("assets/images/User.png")
+                          : Image.network(
+                              "$baseUrlForImage${data!.featuredImage}",
+                              fit: BoxFit.fill,
+                            ),
+                    ),
+                  )
                 ],
               ), // Figma Flutter Generator Rectangle17Widget - RECTANGLE
               Padding(
@@ -261,7 +287,9 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                         child: ListTile(
                           onTap: () {
                             Get.to(ShopLicenseDetails(
-                              image: data!.licenseImage,
+                              image: data!.licenseImage.isEmpty
+                                  ? null
+                                  : data!.licenseImage,
                               licence: data!.licenseNumber,
                             ));
                           },
@@ -274,7 +302,9 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                           trailing: IconButton(
                               onPressed: () {
                                 Get.to(ShopLicenseDetails(
-                                  image: data!.licenseImage,
+                                  image: data!.licenseImage.isEmpty
+                                      ? null
+                                      : data!.licenseImage,
                                   licence: data!.licenseNumber,
                                 ));
                               },
@@ -293,7 +323,9 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                           onTap: () {
                             Get.to(ShopGstDetails(
                               gst: data!.gstNumber,
-                              image: data!.gstImage,
+                              image: data!.gstImage.isEmpty
+                                  ? null
+                                  : data!.gstImage,
                             ));
                           },
                           shape: RoundedRectangleBorder(
@@ -306,7 +338,9 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                               onPressed: () {
                                 Get.to(ShopGstDetails(
                                   gst: data!.gstNumber,
-                                  image: data!.gstImage,
+                                  image: data!.gstImage.isEmpty
+                                      ? null
+                                      : data!.gstImage,
                                 ));
                               },
                               icon: Icon(Icons.arrow_forward_ios_rounded)),

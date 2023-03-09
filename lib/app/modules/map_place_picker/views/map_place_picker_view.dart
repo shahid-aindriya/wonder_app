@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -84,16 +86,21 @@ class MapPlacePickerView extends GetView<MapPlacePickerController> {
                                             //       .shortName);
                                             //   s = "$s${selectedPlace.addressComponents![i].shortName} ,";
                                             // }
-                                            datas.location!.text = selectedPlace
-                                                .formattedAddress!
-                                                .toString();
-                                            datas.lat!.text = selectedPlace
-                                                .geometry!.location.lat
-                                                .toString();
-                                            datas.long!.text = selectedPlace
-                                                .geometry!.location.lat
-                                                .toString();
-                                            Get.back();
+                                            try {
+                                              datas.location!.text =
+                                                  selectedPlace
+                                                      .formattedAddress!
+                                                      .toString();
+                                              datas.lat!.text = selectedPlace
+                                                  .geometry!.location.lat
+                                                  .toString();
+                                              datas.long!.text = selectedPlace
+                                                  .geometry!.location.lng
+                                                  .toString();
+                                              Get.back();
+                                            } catch (e) {
+                                              log(e.toString());
+                                            }
                                           },
                                           // ignore: sort_child_properties_last
                                           child: Text("Select Place"),

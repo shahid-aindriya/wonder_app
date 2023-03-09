@@ -5,6 +5,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:motion_toast/resources/arrays.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/add_invoice/controllers/add_invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
@@ -12,7 +15,9 @@ import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 import '../../../data/urls.dart';
 import 'package:http/http.dart' as http;
 
+import '../../invoice_details/models/invoice_approval_model.dart';
 import '../../profile_view/model/userdata_response.dart';
+import '../model/verified_model.dart';
 import '../model/wallet_screen_model.dart';
 
 class InvoiceController extends GetxController {
@@ -24,12 +29,40 @@ class InvoiceController extends GetxController {
   @override
   void onInit() {
     pushFCMtoken();
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+    razorpay2.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
+    razorpay2.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
+    razorpay2.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
+    razorpay3.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess3);
+    razorpay3.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError3);
+    razorpay3.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet3);
     // TODO: implement onInit
     super.onInit();
   }
 
+  final razorpay2 = Razorpay();
+  final razorpay3 = Razorpay();
   @override
-  void onClose() {}
+  void dispose() {
+    razorpay.clear();
+    razorpay2.clear();
+    razorpay3.clear();
+    checkButton.value = false;
+    selecteddCommission.value = 0;
+    selecteddCommissionCount.value = 0;
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  void onClose() {
+    checkButton.value = false;
+    selecteddCommission.value = 0;
+    selecteddCommissionCount.value = 0;
+  }
+
   void increment() => count.value++;
   var invoiceLists = RxList<InvoiceDatum>().obs;
   var invoiceListsFilter = RxList<InvoiceDatum>().obs;
@@ -89,6 +122,8 @@ class InvoiceController extends GetxController {
   var walletAmount = "".obs;
   onDropDownChanged(id) async {
     var body = {"shop_id": id};
+    log("haii $id");
+    walletAmount.value = '';
     // invoiceLists.value.clear();
     // invoiceLists.value
     //     .addAll(invoiceListsForDropDown.value.where((p0) => p0.shopId = int.tryParse(id)!));
@@ -103,6 +138,7 @@ class InvoiceController extends GetxController {
           Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
           headers: headers,
           body: jsonEncode(body));
+      log(requests.body);
       if (request.statusCode == 201) {
         final invoiceData = invoiceDataFromJson(request.body);
         invoiceLists.value.assignAll(invoiceData.invoiceData);
@@ -117,10 +153,10 @@ class InvoiceController extends GetxController {
         walletAmount.value = walletScreenModel.shopWalletAmount;
         update();
       }
-      log(request.body);
+      log(requests.body);
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong",
-          backgroundColor: Colors.red);
+      // Get.snackbar("Error", "Something went wrong",
+      //     backgroundColor: Colors.red);
     }
   }
 
@@ -135,7 +171,7 @@ class InvoiceController extends GetxController {
           Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
           headers: headers,
           body: jsonEncode(body));
-      log(request.body);
+      // log(requests.body);
       if (request.statusCode == 201) {
         invoiceLists.value.clear();
         final invoiceData = invoiceDataFromJson(request.body);
@@ -152,8 +188,8 @@ class InvoiceController extends GetxController {
         update();
       }
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong",
-          backgroundColor: Colors.red);
+      // Get.snackbar("Error", "Something went wrong",
+      //     backgroundColor: Colors.red);
     }
   }
 
@@ -166,7 +202,7 @@ class InvoiceController extends GetxController {
           Uri.parse("${baseUrl.value}vendor-notifications/"),
           headers: headers,
           body: jsonEncode(body));
-      log(request.body);
+      // log(request.body);
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);
@@ -254,8 +290,8 @@ class InvoiceController extends GetxController {
       print("hello");
       await sendDeviceToken(token!);
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong",
-          backgroundColor: Colors.red);
+      // Get.snackbar("Error", "Something went wrong",
+      //     backgroundColor: Colors.red);
     }
   }
 
@@ -283,6 +319,390 @@ class InvoiceController extends GetxController {
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);
+    }
+  }
+
+  RxList<VerifiedInvoiceData> verifiedList = <VerifiedInvoiceData>[].obs;
+  RxList<TotalAmountData> verifiedAmountData = <TotalAmountData>[].obs;
+  RxList<bool> checkBoxedList = <bool>[].obs;
+  var verifiedAmount = ''.obs;
+  Future<bool> verifiedInvoiceList() async {
+    var body = {"shop_id": selectShopId};
+
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-verified-invoice-list/"),
+        body: jsonEncode(body));
+    log(request.body.toString());
+    if (request.statusCode == 201) {
+      final verfiedModel = verfiedModelFromJson(request.body);
+      verifiedList.assignAll(verfiedModel.invoiceData);
+      verifiedAmountData.assign(verfiedModel.totalAmountData);
+      checkBoxedList = RxList.filled(verifiedList.length, false);
+      update();
+      return true;
+    }
+    return false;
+  }
+
+  var isVerifyLoading = false.obs;
+  approveOrDeclineInvoice({
+    choice,
+    invoiceId,
+    context,
+  }) async {
+    log(invoiceId.toString());
+    var body = {"invoice_id": invoiceId, "status": choice};
+    try {
+      isVerifyLoading.value = true;
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-invoice-status-change/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body.toString());
+      if (request.statusCode == 201) {
+        final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
+        if (invoiceApprovalModel.success == true) {
+          await verifiedInvoiceList();
+          await onPullRefreshInWallet();
+          isVerifyLoading.value = false;
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Succes ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            description: Text('Invoice ${choice}d successfully'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Succes ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            description: Text('Invoice ${choice}d successfully'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        } else {
+          isVerifyLoading.value = false;
+          MotionToast.error(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Error ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            description: Text('Something went wrong or No sufficient balance'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(context);
+        }
+      }
+    } catch (e) {
+      isVerifyLoading.value = false;
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
+    }
+  }
+
+  final razorpay = Razorpay();
+  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+    _showSnackBar("SUCCESS: ${response.paymentId}", id: response.paymentId);
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    _showSnackBar(
+      "ERROR: ${response.code} - ${response.message}",
+    );
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    _showSnackBar("EXTERNAL_WALLET: ${response.walletName!}");
+  }
+
+  openCheckout(
+      {razorKey, amount, invoiceId, name, email, required dynamic data}) async {
+    if (data.haveBank == false) {
+      Get.snackbar("Error", "No bank Account Found to current shop ",
+          backgroundColor: Colors.red);
+      return;
+    } else {
+      log(amount.toString());
+      var amt = amount * 100;
+      var options = {
+        "key": razorKey,
+        "amount": amt,
+        "name": name,
+        "description": "Test Transaction",
+        "prefill": {"contact": "9123456789", "email": email},
+        "external": {
+          "wallets": ["paytm", "googlepay"]
+        },
+      };
+
+      try {
+        razorpay.open(options);
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+  }
+
+  var isLoading = false.obs;
+  void _showSnackBar(String message, {id}) async {
+    // Get.snackbar("Info ", message, backgroundColor: Colors.amber);
+    log(message);
+    if (id != null) {
+      isLoading.value = true;
+      await paymentSuccess(razorId: id);
+      isLoading.value = false;
+    }
+  }
+
+  dynamic invoiceId;
+  dynamic amount;
+  paymentSuccess({
+    razorId,
+  }) async {
+    var body = {
+      "invoice_id": invoiceId,
+      "amount": amount,
+      "razorpay_transaction_id": razorId,
+      "razorpay_status": "completed"
+    };
+    try {
+      isVerifyLoading.value = true;
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}vendor-invoice-payment-success/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(requests.body.toString());
+      if (requests.statusCode == 201) {
+        Get.snackbar("Info ", "Payment completed succesfully",
+            backgroundColor: Colors.green);
+        await verifiedInvoiceList();
+        await onPullRefreshInWallet();
+        isVerifyLoading.value = false;
+        return;
+      } else if (requests.statusCode == 500) {
+        Get.snackbar("Error ", "Something went wrong",
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar("Error ", "Something went wrong",
+          backgroundColor: Colors.red);
+      isLoading.value = false;
+    }
+  }
+
+  void handlePaymentSuccess(PaymentSuccessResponse response) {
+    showSnackBar("SUCCESS: ${response.paymentId}", id: response.paymentId);
+  }
+
+  void handlePaymentError(PaymentFailureResponse response) {
+    showSnackBar(
+      "ERROR: ${response.code} - ${response.message}",
+    );
+  }
+
+  void handleExternalWallet(ExternalWalletResponse response) {
+    showSnackBar("EXTERNAL_WALLET: ${response.walletName!}");
+  }
+
+  openCheckoutForAllPay(
+      {razorKey, amounts, name, email, phone, required dynamic data}) async {
+    if (data.haveBank == false) {
+      Get.snackbar("Error", "No bank Account Found to current shop ",
+          backgroundColor: Colors.red);
+      return;
+    } else {
+      log(amount.toString());
+      var amt = amounts * 100;
+      var options = {
+        "key": razorKey,
+        "amount": amt,
+        "name": name,
+        "description": " Transaction",
+        "prefill": {"contact": phone, "email": email},
+        "external": {
+          "wallets": ["paytm", "googlepay"]
+        },
+      };
+
+      try {
+        razorpay2.open(options);
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+  }
+
+  void showSnackBar(String message, {id}) async {
+    // Get.snackbar("Info ", message, backgroundColor: Colors.amber);
+    log(message);
+    if (id != null) {
+      isLoading.value = true;
+      await paymentSuccessForAll(razorId: id);
+      isLoading.value = false;
+    }
+  }
+
+  dynamic shopId;
+  dynamic fullAmount;
+  paymentSuccessForAll({
+    razorId,
+  }) async {
+    var body = {
+      "shop_id": selectShopId,
+      "amount": fullAmount,
+      "razorpay_transaction_id": razorId,
+      "razorpay_status": "completed"
+    };
+    try {
+      isVerifyLoading.value = true;
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}vendor-shop-pay-amount/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(requests.body.toString());
+      if (requests.statusCode == 201) {
+        Get.snackbar("Info ", "Payment completed succesfully",
+            backgroundColor: Colors.green);
+        await verifiedInvoiceList();
+        await onPullRefreshInWallet();
+        isVerifyLoading.value = false;
+        return;
+      } else if (requests.statusCode == 500) {
+        Get.snackbar("Error ", "Something went wrong",
+            backgroundColor: Colors.red);
+        isVerifyLoading.value = false;
+      }
+    } catch (e) {
+      Get.snackbar("Error ", "Something went wrong",
+          backgroundColor: Colors.red);
+      isLoading.value = false;
+    }
+  }
+
+  var checkButton = false.obs;
+  RxDouble selecteddCommission = 0.0.obs;
+  RxInt selecteddCommissionCount = 0.obs;
+  List<double> selectedAmountList = [];
+  checBoxFunct(value, index, commissionAmount) {
+    checkBoxedList[index] = value!;
+    if (value == true) {
+      selecteddCommission.value = selecteddCommission.value + commissionAmount;
+      selecteddCommissionCount.value++;
+      update();
+    } else {
+      selecteddCommission.value = selecteddCommission.value - commissionAmount;
+      selecteddCommissionCount.value--;
+      update();
+    }
+    update();
+  }
+
+  openCheckoutForAllPay3(
+      {razorKey, amounts, name, email, phone, required dynamic data}) async {
+    if (data.haveBank == false) {
+      Get.snackbar("Error", "No bank Account Found to current shop ",
+          backgroundColor: Colors.red);
+      return;
+    } else {
+      log(amount.toString());
+      var amt = amounts * 100;
+      var options = {
+        "key": razorKey,
+        "amount": amt,
+        "name": name,
+        "description": " Transaction",
+        "prefill": {"contact": phone, "email": email},
+        "external": {
+          "wallets": ["paytm", "googlepay"]
+        },
+      };
+
+      try {
+        razorpay2.open(options);
+      } catch (e) {
+        log(e.toString());
+      }
+    }
+  }
+
+  void handlePaymentSuccess3(PaymentSuccessResponse response) {
+    showSnackBar3("SUCCESS: ${response.paymentId}", id: response.paymentId);
+  }
+
+  void handlePaymentError3(PaymentFailureResponse response) {
+    showSnackBar3(
+      "ERROR: ${response.code} - ${response.message}",
+    );
+  }
+
+  void handleExternalWallet3(ExternalWalletResponse response) {
+    showSnackBar3("EXTERNAL_WALLET: ${response.walletName!}");
+  }
+
+  void showSnackBar3(String message, {id}) async {
+    // Get.snackbar("Info ", message, backgroundColor: Colors.amber);
+    log(message);
+    if (id != null) {
+      isLoading.value = true;
+      await paymentSuccessForAll3(razorId: id);
+      isLoading.value = false;
+    }
+  }
+
+  paymentSuccessForAll3({
+    razorId,
+  }) async {
+    var body = {
+      "shop_id": selectShopId,
+      "amount": selecteddCommission.value,
+      "razorpay_transaction_id": razorId,
+      "razorpay_status": "completed"
+    };
+    try {
+      isVerifyLoading.value = true;
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}vendor-shop-pay-amount/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(requests.body.toString());
+      if (requests.statusCode == 201) {
+        Get.snackbar("Info ", "Payment completed succesfully",
+            backgroundColor: Colors.green);
+        await verifiedInvoiceList();
+        await onPullRefreshInWallet();
+        isVerifyLoading.value = false;
+        return;
+      } else if (requests.statusCode == 500) {
+        Get.snackbar("Error ", "Something went wrong",
+            backgroundColor: Colors.red);
+        isVerifyLoading.value = false;
+      }
+    } catch (e) {
+      Get.snackbar("Error ", "Something went wrong",
+          backgroundColor: Colors.red);
+      isLoading.value = false;
     }
   }
 }

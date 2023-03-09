@@ -47,6 +47,10 @@ class ShopDatum {
     required this.walletAmount,
     required this.status,
     required this.gstPct,
+    this.openingTime,
+    this.closingTime,
+    this.websiteUrl,
+    required this.upiId,
     required this.bankData,
   });
 
@@ -68,7 +72,12 @@ class ShopDatum {
   String commission;
   String walletAmount;
   String status;
+  dynamic openingTime;
+  dynamic closingTime;
+  dynamic websiteUrl;
+  String upiId;
   String gstPct;
+
   BankData bankData;
 
   factory ShopDatum.fromJson(Map<String, dynamic> json) => ShopDatum(
@@ -84,13 +93,17 @@ class ShopDatum {
         longitude: json["longitude"],
         radius: json["radius"],
         isFeatured: json["is_featured"],
-        featuredImage: json["featured_image"],
-        gstImage: json["gst_image"],
-        licenseImage: json["license_image"],
+        featuredImage: json["featured_image"] ?? "null",
+        gstImage: json["gst_image"] ?? "null",
+        licenseImage: json["license_image"] ?? "null",
         commission: json["commission"],
         walletAmount: json["wallet_amount"],
         status: json["status"],
         gstPct: json["gst_pct"] ?? "null",
+        openingTime: json["opening_time"] ?? "null",
+        closingTime: json["closing_time"] ?? "null",
+        websiteUrl: json["website_url"],
+        upiId: json["upi_id"],
         bankData: BankData.fromJson(json["bank_data"]),
       );
 

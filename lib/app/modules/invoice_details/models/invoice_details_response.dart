@@ -43,9 +43,9 @@ class AmountData {
     required this.haveBank,
   });
 
-  String currentAmount;
-  int commissionAmount;
-  int additionalAmount;
+  dynamic currentAmount;
+  dynamic commissionAmount;
+  dynamic additionalAmount;
   String name;
   String email;
   dynamic razorKey;
@@ -78,44 +78,65 @@ class InvoiceData {
   InvoiceData({
     required this.id,
     required this.customerId,
+    required this.customerName,
+    required this.phone,
     required this.userId,
+    required this.vendorName,
+    required this.vendorPhone,
     required this.shopId,
+    required this.shopName,
     required this.invoiceImage,
     required this.invoiceNumber,
     required this.invoiceDate,
     required this.preTaxAmount,
     required this.invoiceAmount,
-    this.remark,
+    required this.remark,
     required this.status,
     required this.myself,
+    required this.vendorImage,
+    required this.userImage,
   });
 
   int id;
   int customerId;
+  String customerName;
+  String phone;
   int userId;
+  String vendorName;
+  String vendorPhone;
   int shopId;
+  String shopName;
   String invoiceImage;
   String invoiceNumber;
   DateTime invoiceDate;
   String preTaxAmount;
   String invoiceAmount;
-  dynamic remark;
+  String remark;
   String status;
   bool myself;
+  String vendorImage;
+  String userImage;
 
   factory InvoiceData.fromJson(Map<String, dynamic> json) => InvoiceData(
         id: json["id"],
         customerId: json["customer_id"],
+        customerName: json["customer_name"],
+        phone: json["phone"],
         userId: json["user_id"],
+        vendorName: json["vendor_name"],
+        vendorPhone: json["vendor_phone"],
         shopId: json["shop_id"],
+        shopName: json["shop_name"],
         invoiceImage: json["invoice_image"],
         invoiceNumber: json["invoice_number"],
         invoiceDate: DateTime.parse(json["invoice_date"]),
         preTaxAmount: json["pre_tax_amount"],
         invoiceAmount: json["invoice_amount"],
-        remark: json["remark"],
+        remark: json["remark"] ?? "",
         status: json["status"],
         myself: json["myself"],
+        vendorImage: json["vendor_image"],
+        userImage: json["user_image"],
       );
 
   Map<String, dynamic> toJson() => {

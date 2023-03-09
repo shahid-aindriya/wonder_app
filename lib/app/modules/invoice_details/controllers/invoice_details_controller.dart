@@ -3,17 +3,20 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 
+import '../../../data/colors.dart';
 import '../../../data/urls.dart';
 import '../../invoice/controllers/invoice_controller.dart';
 import '../../invoice/views/invoice_view.dart';
 import '../models/invoice_approval_model.dart';
+import '../models/invoice_details_response.dart';
 
 class InvoiceDetailsController extends GetxController {
   //TODO: Implement InvoiceDetailsController
@@ -102,21 +105,17 @@ class InvoiceDetailsController extends GetxController {
   }
 
   openCheckout(
-      {razorKey,
-      amount,
-      invoiceId,
-      name,
-      email,
-      required InvoiceDatum data}) async {
+      {razorKey, amount, invoiceId, name, email, required dynamic data}) async {
     if (data.amountData.haveBank == false) {
-      Get.snackbar("Error", "No bank Account Found to current shop ");
+      Get.snackbar("Error", "No bank Account Found to current shop ",
+          backgroundColor: Colors.red);
       return;
     } else {
       log(amount.toString());
-      String amt = "${amount}00";
+      var amt = amount * 100;
       var options = {
         "key": razorKey,
-        "amount": int.tryParse(amt),
+        "amount": amt,
         "name": name,
         "description": "Test Transaction",
         "prefill": {"contact": "9123456789", "email": email},
@@ -162,15 +161,18 @@ class InvoiceDetailsController extends GetxController {
   //     print('Failed to create order: ${response.body}');
   //   }
   // }
-
+  var isButtonLoad = false.obs;
   approveOrDeclineInvoice(
       {choice,
       invoiceId,
       context,
+      remarks,
       InvoiceController? inoviceController}) async {
     log(invoiceId.toString());
-    var body = {"invoice_id": invoiceId, "status": choice};
+    var body = {"invoice_id": invoiceId, "status": choice, "remark": remarks};
     try {
+      isLoading.value = true;
+
       var request = await http.post(
           Uri.parse("${baseUrl.value}vendor-invoice-status-change/"),
           headers: headers,
@@ -180,24 +182,25 @@ class InvoiceDetailsController extends GetxController {
         final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
         if (invoiceApprovalModel.success == true) {
           await inoviceController!.onPullRefreshInWallet();
+          await inoviceController.verifiedInvoiceList();
           MotionToast.success(
             dismissable: true,
             enableAnimation: false,
             position: MotionToastPosition.top,
             title: const Text(
-              'Succes ',
+              'Success ',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
             ),
-            description: Text('Invoice ${choice}d successfully'),
+            description: Text('Invoice $choice successfully'),
             animationCurve: Curves.bounceIn,
             borderRadius: 0,
             animationDuration: const Duration(milliseconds: 1000),
           ).show(context);
 
-          Get.back();
-          Get.back();
+          await getInvoiceDetails(invoiceId: invoiceId);
+          isLoading.value = false;
         } else {
           MotionToast.error(
             dismissable: true,
@@ -214,12 +217,15 @@ class InvoiceDetailsController extends GetxController {
             borderRadius: 0,
             animationDuration: const Duration(milliseconds: 1000),
           ).show(context);
+          isLoading.value = false;
         }
       }
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);
+      isLoading.value = false;
     }
+    isLoading.value = false;
   }
 
   Future<void> makePhoneCall(String phoneNumber) async {
@@ -228,5 +234,176 @@ class InvoiceDetailsController extends GetxController {
       path: phoneNumber,
     );
     await launchUrl(launchUri);
+  }
+
+  RxList<InvoiceDetailsResponse> invoiceDetailsList =
+      <InvoiceDetailsResponse>[].obs;
+
+  getInvoiceDetails({invoiceId}) async {
+    var body = {"invoice_id": invoiceId};
+    final requests = await http.post(
+        Uri.parse("${baseUrl.value}vendor-invoice-details/"),
+        body: jsonEncode(body));
+    log(requests.body);
+    if (requests.statusCode == 201) {
+      final invoiceDetailsResponse =
+          invoiceDetailsResponseFromJson(requests.body);
+      invoiceDetailsList.assign(invoiceDetailsResponse);
+    }
+  }
+
+  final TextEditingController taxAmountController = TextEditingController();
+  final taxFormKey = GlobalKey<FormState>();
+  showPopupTax(context, id) {
+    Alert(
+      context: context,
+      title: "Edit Tax Amount",
+      style: AlertStyle(
+          overlayColor: Color.fromARGB(120, 0, 0, 0),
+          titleStyle: GoogleFonts.jost(
+              color: textGradientBlue, fontWeight: FontWeight.w500)),
+      content: Column(
+        children: <Widget>[
+          Form(
+            key: taxFormKey,
+            child: TextFormField(
+              keyboardType: TextInputType.number,
+              controller: taxAmountController,
+              decoration: InputDecoration(
+                icon: Icon(Icons.currency_rupee),
+                labelText: 'Enter Tax amount',
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Please Enter Amount";
+                }
+                return null;
+              },
+            ),
+          ),
+        ],
+      ),
+      buttons: [
+        DialogButton(
+          gradient: LinearGradient(
+            begin: Alignment(-0.934, -1),
+            end: Alignment(1.125, 1.333),
+            colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+            stops: <double>[0, 1],
+          ),
+          radius: BorderRadius.circular(10),
+          onPressed: () {
+            if (taxFormKey.currentState!.validate()) {
+              editTaxAmount(id, int.tryParse(taxAmountController.text));
+            }
+          },
+          child: Obx(() {
+            return editButton.value == true
+                ? CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : Text(
+                    "Update",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  );
+          }),
+        )
+      ],
+    ).show();
+  }
+
+  var editButton = false.obs;
+  editTaxAmount(invoiceId, amount) async {
+    var body = {"invoice_id": invoiceId, "pretax_amount": amount};
+    try {
+      editButton.value = true;
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}vendor-update-pretax_amount/"),
+          body: jsonEncode(body),
+          headers: headers);
+      log(requests.body);
+      if (requests.statusCode == 201) {
+        await invoiceController.getInvoiceLists();
+        await invoiceController.verifiedInvoiceList();
+        await getInvoiceDetails(invoiceId: invoiceId);
+        await invoiceController.onPullRefreshInWallet();
+
+        taxAmountController.clear();
+        final response = jsonDecode(requests.body);
+        if (response["success"] == true) {
+          Get.snackbar("Info ", "Edited Succesfully",
+              backgroundColor: Colors.green);
+        }
+        editButton.value = false;
+      } else {
+        Get.snackbar("Error", "Something went wrong",
+            backgroundColor: Colors.red);
+        editButton.value = false;
+      }
+      editButton.value = false;
+    } catch (e) {
+      editButton.value = false;
+    }
+  }
+
+  final TextEditingController remarksController = TextEditingController();
+  final remarksKey = GlobalKey<FormState>();
+  deletePopup({context, invoiceId}) {
+    Alert(
+      context: context,
+      title: "Enter Remarks",
+      style: AlertStyle(
+          overlayColor: Color.fromARGB(120, 0, 0, 0),
+          titleStyle: GoogleFonts.jost(
+              color: textGradientBlue, fontWeight: FontWeight.w500)),
+      content: Column(
+        children: <Widget>[
+          TextFormField(
+            keyboardType: TextInputType.text,
+            controller: remarksController,
+            decoration: InputDecoration(
+              icon: Icon(Icons.edit_document),
+              labelText: 'Enter remarks',
+            ),
+            // validator: (value) {
+            //   if (value!.isEmpty) {
+            //     return "Please Enter Remarks";
+            //   }
+            //   return null;
+            // },
+          ),
+        ],
+      ),
+      buttons: [
+        DialogButton(
+          gradient: LinearGradient(
+            begin: Alignment(-0.934, -1),
+            end: Alignment(1.125, 1.333),
+            colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+            stops: <double>[0, 1],
+          ),
+          radius: BorderRadius.circular(10),
+          onPressed: () async {
+            Get.back();
+            await approveOrDeclineInvoice(
+                inoviceController: invoiceController,
+                context: context,
+                choice: "Reject",
+                remarks: remarksController.text,
+                invoiceId: invoiceId);
+          },
+          child: Obx(() {
+            return editButton.value == true
+                ? CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : Text(
+                    "Decline",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  );
+          }),
+        )
+      ],
+    ).show();
   }
 }
