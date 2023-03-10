@@ -50,19 +50,19 @@ class TransactionDatum {
     required this.status,
   });
 
-  int id;
-  int customerId;
-  String customerName;
-  String phone;
-  int userId;
-  int shopId;
+  dynamic id;
+  dynamic customerId;
+  dynamic customerName;
+  dynamic phone;
+  dynamic userId;
+  dynamic shopId;
   String invoiceNumber;
-  String amount;
+  dynamic amount;
   dynamic bankTransactionId;
-  String walletType;
-  String entryType;
-  String remark;
-  String status;
+  dynamic walletType;
+  dynamic entryType;
+  dynamic remark;
+  dynamic status;
 
   factory TransactionDatum.fromJson(Map<String, dynamic> json) =>
       TransactionDatum(

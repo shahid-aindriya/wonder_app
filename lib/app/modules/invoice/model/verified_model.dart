@@ -175,7 +175,7 @@ class TotalAmountData {
     required this.shopId,
   });
 
-  int totalAmount;
+  num totalAmount;
   String name;
   String email;
   String razorKey;

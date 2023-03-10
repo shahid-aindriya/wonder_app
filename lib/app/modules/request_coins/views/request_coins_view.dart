@@ -287,8 +287,8 @@ class RequestCoinsView extends GetView<RequestCoinsController> {
                         elevation: MaterialStateProperty.all(0),
                         backgroundColor:
                             MaterialStateProperty.all(Colors.transparent)),
-                    onPressed: () {
-                      requestCoinsController.requestCoins(
+                    onPressed: () async {
+                      await requestCoinsController.requestCoins(
                           context: context,
                           userId: int.tryParse(selectUserId.text),
                           amount: int.tryParse(amountController.text));

@@ -620,7 +620,7 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                                       index,
                                                                       datas
                                                                           .amountData
-                                                                          .commissionAmount);
+                                                                          .additionalAmount);
                                                             },
                                                           ),
                                                         );

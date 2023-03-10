@@ -121,6 +121,7 @@ class InvoiceController extends GetxController {
   RxList<TransactionDatum> walletTransactionLists = <TransactionDatum>[].obs;
   var walletAmount = "".obs;
   onDropDownChanged(id) async {
+    walletTransactionLists.clear();
     var body = {"shop_id": id};
     log("haii $id");
     walletAmount.value = '';
@@ -640,7 +641,11 @@ class InvoiceController extends GetxController {
       };
 
       try {
-        razorpay2.open(options);
+        razorpay3.open(options);
+
+        checkButton.value = false;
+        checkBoxedList = RxList.filled(checkBoxedList.length, false);
+        update();
       } catch (e) {
         log(e.toString());
       }
@@ -674,6 +679,7 @@ class InvoiceController extends GetxController {
   paymentSuccessForAll3({
     razorId,
   }) async {
+    log(selecteddCommission.value.toString());
     var body = {
       "shop_id": selectShopId,
       "amount": selecteddCommission.value,
@@ -686,10 +692,11 @@ class InvoiceController extends GetxController {
           Uri.parse("${baseUrl.value}vendor-shop-pay-amount/"),
           headers: headers,
           body: jsonEncode(body));
-      log(requests.body.toString());
+      log(requests.statusCode.toString());
       if (requests.statusCode == 201) {
         Get.snackbar("Info ", "Payment completed succesfully",
             backgroundColor: Colors.green);
+        selecteddCommission.value = 0;
         await verifiedInvoiceList();
         await onPullRefreshInWallet();
         isVerifyLoading.value = false;
@@ -698,11 +705,13 @@ class InvoiceController extends GetxController {
         Get.snackbar("Error ", "Something went wrong",
             backgroundColor: Colors.red);
         isVerifyLoading.value = false;
+        selecteddCommission.value = 0;
       }
     } catch (e) {
       Get.snackbar("Error ", "Something went wrong",
           backgroundColor: Colors.red);
       isLoading.value = false;
+      selecteddCommission.value = 0;
     }
   }
 }
