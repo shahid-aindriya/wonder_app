@@ -47,7 +47,7 @@ class StoreDetailsController extends GetxController {
   }
 
   String shopImage = '';
-  File? image;
+  String bannerImage = '';
   pickimage(bool value) async {
     try {
       final pimage = await ImagePicker().pickImage(
@@ -56,10 +56,36 @@ class StoreDetailsController extends GetxController {
         return;
       } else {
         final ims = await sellerRegistController.cropsImage(pimage.path);
-        final bytes = File(ims.path).readAsBytesSync();
-        final compressedImage = testComporessList(bytes);
-        shopImage = base64Encode(await compressedImage);
-        update();
+        if (ims != null) {
+          final bytes = File(ims.path).readAsBytesSync();
+          final compressedImage = testComporessList(bytes);
+          shopImage = base64Encode(await compressedImage);
+          update();
+        } else {
+          return;
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  pickimage2(bool value) async {
+    try {
+      final pimage = await ImagePicker().pickImage(
+          source: value == true ? ImageSource.camera : ImageSource.gallery);
+      if (pimage == null) {
+        return;
+      } else {
+        final ims = await sellerRegistController.cropsImage(pimage.path);
+        if (ims != null) {
+          final bytes = File(ims.path).readAsBytesSync();
+          final compressedImage = testComporessList(bytes);
+          bannerImage = base64Encode(await compressedImage);
+          update();
+        } else {
+          return;
+        }
       }
     } catch (e) {
       log(e.toString());
@@ -121,6 +147,40 @@ class StoreDetailsController extends GetxController {
                   title: Text('Choose from gallery'),
                   onTap: () {
                     pickimage(false);
+                    // Handle the 'Choose from gallery' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  showPopup2(context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.camera_alt),
+                  title: Text('Take a photo'),
+                  onTap: () {
+                    pickimage2(true);
+                    // Handle the 'Take a photo' option
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.image),
+                  title: Text('Choose from gallery'),
+                  onTap: () {
+                    pickimage2(false);
                     // Handle the 'Choose from gallery' option
                     Navigator.of(context).pop();
                   },

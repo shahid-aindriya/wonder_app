@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
@@ -40,20 +41,20 @@ class InvoiceView extends GetView<InvoiceController> {
     invoiceController.onPullRefreshInWallet();
     return DefaultTabController(
       length: 2,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment(2, 1.0548897981643677),
-              end: Alignment(-1.0548897981643677, 1.226324439048767),
-              colors: [
-                Color.fromRGBO(239, 221, 214, 1),
-                Color.fromRGBO(220, 222, 242, 1),
-                Color.fromRGBO(250, 227, 243, 1),
-                Color.fromRGBO(228, 249, 254, 1)
-              ]),
-        ),
-        child: UpgradeAlert(
-          upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.material),
+      child: UpgradeAlert(
+        upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.material),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment(2, 1.0548897981643677),
+                end: Alignment(-1.0548897981643677, 1.226324439048767),
+                colors: [
+                  Color.fromRGBO(239, 221, 214, 1),
+                  Color.fromRGBO(220, 222, 242, 1),
+                  Color.fromRGBO(250, 227, 243, 1),
+                  Color.fromRGBO(228, 249, 254, 1)
+                ]),
+          ),
           child: Scaffold(
             drawer: Drawer(
               backgroundColor: Color.fromARGB(
@@ -253,6 +254,7 @@ class InvoiceView extends GetView<InvoiceController> {
                       onTap: () async {
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.clear();
+                        await DefaultCacheManager().emptyCache();
                         Get.offAll(LoginView());
                       },
                       leading: Image.asset(

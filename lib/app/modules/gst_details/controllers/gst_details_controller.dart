@@ -50,6 +50,7 @@ class GstDetailsController extends GetxController {
   var isLoading = false.obs;
   addShopToServer(
       {shopName,
+      bannerImage,
       closingTime,
       openingTime,
       userId,
@@ -65,6 +66,8 @@ class GstDetailsController extends GetxController {
       featured,
       lat,
       long,
+      phone1,
+      phone2,
       webSiteUrls,
       context}) async {
     final prefs = await SharedPreferences.getInstance();
@@ -91,7 +94,10 @@ class GstDetailsController extends GetxController {
       "license_number": licenceNumber,
       "gst_image": gstImg,
       "license_image": licenceImg,
-      "website_url": webSiteUrls
+      "website_url": webSiteUrls,
+      "banner_image": bannerImage,
+      'phone1': phone1,
+      'phone2': phone2
     };
     try {
       isLoading.value = true;
@@ -144,6 +150,27 @@ class GstDetailsController extends GetxController {
           ).show(context);
           isLoading.value = false;
         }
+      } else if (request.statusCode == 413) {
+        MotionToast.error(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Error ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: const Text('Image size too large'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+        isLoading.value = false;
+      } else {
+        Get.snackbar("Error", "Status code ${request.statusCode.toString()}",
+            backgroundColor: Colors.red);
+        isLoading.value = false;
       }
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",

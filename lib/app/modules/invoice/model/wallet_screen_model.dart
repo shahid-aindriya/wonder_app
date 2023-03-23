@@ -16,7 +16,7 @@ class WalletScreenModel {
     required this.transactionData,
   });
 
-  String shopWalletAmount;
+  double shopWalletAmount;
   List<TransactionDatum> transactionData;
 
   factory WalletScreenModel.fromJson(Map<String, dynamic> json) =>
@@ -56,7 +56,7 @@ class TransactionDatum {
   dynamic phone;
   dynamic userId;
   dynamic shopId;
-  String invoiceNumber;
+  dynamic invoiceNumber;
   dynamic amount;
   dynamic bankTransactionId;
   dynamic walletType;

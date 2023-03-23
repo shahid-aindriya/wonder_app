@@ -52,6 +52,8 @@ class ShopDatum {
     this.websiteUrl,
     required this.upiId,
     required this.bankData,
+    required this.phone1,
+    required this.phone2,
   });
 
   int id;
@@ -77,7 +79,8 @@ class ShopDatum {
   dynamic websiteUrl;
   String upiId;
   String gstPct;
-
+  String phone1;
+  String phone2;
   BankData bankData;
 
   factory ShopDatum.fromJson(Map<String, dynamic> json) => ShopDatum(
@@ -104,6 +107,8 @@ class ShopDatum {
         closingTime: json["closing_time"] ?? "null",
         websiteUrl: json["website_url"],
         upiId: json["upi_id"],
+        phone1: json["phone1"] ?? "",
+        phone2: json["phone2"] ?? "",
         bankData: BankData.fromJson(json["bank_data"]),
       );
 

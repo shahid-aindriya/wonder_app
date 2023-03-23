@@ -35,49 +35,43 @@ class WalletTab extends GetView<InvoiceController> {
                       ]),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 20.0, left: 26, right: 26, bottom: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 26),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 8.0,
-                        ),
-                        child: Text(
-                          "Total Balance",
-                          style: GoogleFonts.roboto(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400),
-                        ),
+                      Text(
+                        "Total Balance",
+                        style: GoogleFonts.roboto(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400),
                       ),
+                      SizedBox(height: 8),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Container(
-                            child: Obx(() {
-                              return Text(
+                          Obx(() => Text(
                                 invoiceController.walletAmount.value == ''
                                     ? '0'
                                     : invoiceController.walletAmount.value,
                                 overflow: TextOverflow.clip,
                                 style: GoogleFonts.roboto(
-                                    fontSize: 24.sp,
+                                    fontSize: 24,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
-                              );
-                            }),
+                              )),
+                          SizedBox(width: 10),
+                          Container(
+                            height: 24,
+                            width: 24,
+                            child: Image.asset(
+                              "assets/images/gold.png",
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Container(
-                                height: 24,
-                                width: 24,
-                                child: Image.asset(
-                                  "assets/images/gold.png",
-                                  fit: BoxFit.contain,
-                                )),
-                          )
                         ],
                       ),
                     ],

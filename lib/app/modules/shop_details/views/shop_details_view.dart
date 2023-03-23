@@ -161,10 +161,12 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                         SizedBox(
                                           width: 24.w,
                                         ),
-                                        Text(data!.name,
-                                            style: GoogleFonts.roboto(
-                                                fontSize: 18.sp,
-                                                fontWeight: FontWeight.w400))
+                                        Flexible(
+                                          child: Text(data!.name,
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 18.sp,
+                                                  fontWeight: FontWeight.w400)),
+                                        )
                                       ],
                                     ),
                                   ),

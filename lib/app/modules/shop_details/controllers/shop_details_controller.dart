@@ -51,17 +51,24 @@ class ShopDetailsController extends GetxController {
       location,
       address,
       shopName,
+      phone1,
+      phone2,
       context,
+      webSiteUrls,
+      openingTime,
+      closingTime,
+      isFeatured,
       MyShopsController? contorller}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
 
     int catId = int.tryParse(categoryId!)!;
     // log(catId.toString());
-    log(shopName);
+    log(isFeatured.toString());
     var gstimage = gstImage == '' ? null : gstImage;
     var shopimage = shopImage == '' ? null : shopImage;
     var licenceimage = licenceImage == '' ? null : licenceImage;
+    var bannerImages = bannerImage == '' ? null : bannerImage;
     var body = {
       "shop_id": shopId,
       "name": shopName,
@@ -78,11 +85,17 @@ class ShopDetailsController extends GetxController {
       "featured_image": shopimage,
       "gst_image": gstimage,
       "license_image": licenceimage,
-      "is_featured": isChecked
+      "is_featured": isFeatured,
+      "website_url": webSiteUrls,
+      "banner_image": bannerImages,
+      "opening_time": openingTime,
+      "closing_time": closingTime,
+      'phone1': phone1,
+      'phone2': phone2
     };
     try {
       var request = await http.post(
-          Uri.parse("https://wonderpoints.com/vendor-edit-shop/"),
+          Uri.parse("${baseUrl.value}vendor-edit-shop/"),
           headers: headers,
           body: jsonEncode(body));
       log(request.body.toString());
@@ -109,6 +122,9 @@ class ShopDetailsController extends GetxController {
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
+      } else if (request.statusCode == 500) {
+        Get.snackbar("Error", "Something went wrong or server error",
+            backgroundColor: Colors.red);
       }
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
@@ -574,5 +590,27 @@ class ShopDetailsController extends GetxController {
         );
       },
     );
+  }
+
+  String bannerImage = '';
+  File? image6;
+  dynamic compressedBannerImage;
+
+  pickBannerImage(bool value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
+    if (pimage == null) {
+      return;
+    } else {
+      image6 = File(pimage.path);
+
+      final bytes = File(pimage.path).readAsBytesSync();
+
+      compressedBannerImage = testComporessList(bytes);
+      bannerImage = base64Encode(await compressedBannerImage);
+      // log(invoiceImg);
+    }
+    // log(img);
+    update();
   }
 }

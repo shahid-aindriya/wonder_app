@@ -91,35 +91,37 @@ class MyShopsView extends GetView<MyShopsController> {
                             crossAxisCount: 2, childAspectRatio: .77),
                         itemBuilder: (context, index) {
                           var data = shopController.shopLists[index];
+                          String myString = data.address;
+                          String location = data.address.length > 30
+                              ? myString.substring(0, 30)
+                              : data.address;
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                              child: Card(
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0)),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 5.0, right: 5, top: 5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Flexible(
-                                        child: InkWell(
-                                          onTap: () async {
-                                            final box = FlutterSecureStorage();
-                                            await box.write(
-                                                key: "shopId",
-                                                value: data.id.toString());
+                              child: InkWell(
+                                onTap: () async {
+                                  final box = FlutterSecureStorage();
+                                  await box.write(
+                                      key: "shopId", value: data.id.toString());
 
-                                            Get.to(ShopDetailsView(
-                                              shopController: shopController,
-                                              data: data,
-                                            ));
-
-                                            // log(valuse!.toString());
-                                          },
+                                  Get.to(ShopDetailsView(
+                                    shopController: shopController,
+                                    data: data,
+                                  ));
+                                },
+                                child: Card(
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(15.0)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 5.0, right: 5, top: 5),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Flexible(
                                           child: Container(
                                               width: 100.w,
                                               height: 18.h,
@@ -168,66 +170,80 @@ class MyShopsView extends GetView<MyShopsController> {
 
                                               ),
                                         ),
-                                      ),
-                                      Text(
-                                        "${data.name} ,",
-                                        style: GoogleFonts.roboto(
-                                            fontSize: 17.sp,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Text(
-                                        data.location,
-                                        style: GoogleFonts.roboto(
-                                            fontSize: 17.sp,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      SizedBox(
-                                        height: 3,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Image.asset(
-                                              "assets/images/textile_vector.png"),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                            data.category,
-                                            style: GoogleFonts.roboto(
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.w300),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 4,
-                                      ),
-                                      // GetBuilder<MyShopsController>(
-                                      //     builder: (context1) {
-                                      //   return Row(
-                                      //     children: [
-                                      //       StarRating(
-                                      //           starSize: 18,
-                                      //           color: Color.fromARGB(
-                                      //               255, 240, 188, 3),
-                                      //           length: 5,
-                                      //           rating: shopController
-                                      //               .rating1[index],
-                                      //           onRaitingTap: (rating) {
-                                      //             shopController.starRating(
-                                      //                 index, rating);
-                                      //           }),
-                                      //       Text(
-                                      //         " (125)",
-                                      //         style: GoogleFonts.roboto(
-                                      //             fontSize: 14.sp,
-                                      //             fontWeight:
-                                      //                 FontWeight.w300),
-                                      //       )
-                                      //     ],
-                                      //   );
-                                      // }),
-                                    ],
+                                        Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                "${data.name} ,",
+                                                style: GoogleFonts.roboto(
+                                                    fontSize: 17.sp,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                location,
+                                                style: GoogleFonts.roboto(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                                "assets/images/textile_vector.png"),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              data.category,
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.w300),
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        // GetBuilder<MyShopsController>(
+                                        //     builder: (context1) {
+                                        //   return Row(
+                                        //     children: [
+                                        //       StarRating(
+                                        //           starSize: 18,
+                                        //           color: Color.fromARGB(
+                                        //               255, 240, 188, 3),
+                                        //           length: 5,
+                                        //           rating: shopController
+                                        //               .rating1[index],
+                                        //           onRaitingTap: (rating) {
+                                        //             shopController.starRating(
+                                        //                 index, rating);
+                                        //           }),
+                                        //       Text(
+                                        //         " (125)",
+                                        //         style: GoogleFonts.roboto(
+                                        //             fontSize: 14.sp,
+                                        //             fontWeight:
+                                        //                 FontWeight.w300),
+                                        //       )
+                                        //     ],
+                                        //   );
+                                        // }),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

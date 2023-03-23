@@ -17,13 +17,16 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
   final commission;
   final featured;
   final closingTime;
-  final openingTime;
-  final lat, long, webSite;
+  final openingTime, phone1, phone2;
+  final lat, long, webSite, bannerImage;
   RegistrationDetailsView(
       {this.shopName,
+      this.bannerImage,
       this.closingTime,
       this.lat,
       this.webSite,
+      this.phone1,
+      this.phone2,
       this.long,
       this.openingTime,
       this.gstPercentage,
@@ -285,7 +288,10 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
                             gstPercentage: gstPercentage,
                             lat: lat,
                             long: long,
+                            phone1: phone1,
+                            phone2: phone2,
                             openingTime: openingTime,
+                            bannerImage: bannerImage,
                             shopLocation: shopLocation,
                             shopName: shopName,
                             commission: commission,

@@ -7,6 +7,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'app/routes/app_pages.dart';
 
@@ -103,13 +104,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveSizer(builder: (context, orientation, screenType) {
-      return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "Application",
-        initialRoute: AppPages.INITIAL,
-        getPages: AppPages.routes,
-      );
-    });
+    return UpgradeAlert(
+      upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.material),
+      child: ResponsiveSizer(builder: (context, orientation, screenType) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "Application",
+          initialRoute: AppPages.INITIAL,
+          getPages: AppPages.routes,
+        );
+      }),
+    );
   }
 }

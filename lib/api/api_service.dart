@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ApiService extends GetxController {
-  final _baseUrl = "https://wonderpoints.com/".obs;
+  final _baseUrl = "http://64.227.178.175:8000/".obs;
   final _headers = {"Content-Type": "application/json"}.obs;
 
   Future<dynamic> get(String endpoint) async {

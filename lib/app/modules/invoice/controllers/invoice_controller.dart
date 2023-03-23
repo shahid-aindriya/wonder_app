@@ -151,7 +151,7 @@ class InvoiceController extends GetxController {
       if (requests.statusCode == 201) {
         final walletScreenModel = walletScreenModelFromJson(requests.body);
         walletTransactionLists.assignAll(walletScreenModel.transactionData);
-        walletAmount.value = walletScreenModel.shopWalletAmount;
+        walletAmount.value = walletScreenModel.shopWalletAmount.toString();
         update();
       }
       log(requests.body);
@@ -185,7 +185,7 @@ class InvoiceController extends GetxController {
       if (requests.statusCode == 201) {
         final walletScreenModel = walletScreenModelFromJson(requests.body);
         walletTransactionLists.assignAll(walletScreenModel.transactionData);
-        walletAmount.value = walletScreenModel.shopWalletAmount;
+        walletAmount.value = walletScreenModel.shopWalletAmount.toString();
         update();
       }
     } catch (e) {
@@ -534,11 +534,12 @@ class InvoiceController extends GetxController {
           backgroundColor: Colors.red);
       return;
     } else {
-      log(amount.toString());
-      var amt = amounts * 100;
+      num amt = amounts * 100;
+
+      log("hai${amt.toString()}");
       var options = {
         "key": razorKey,
-        "amount": amt,
+        "amount": amt.toInt(),
         "name": name,
         "description": " Transaction",
         "prefill": {"contact": phone, "email": email},
@@ -606,17 +607,28 @@ class InvoiceController extends GetxController {
   RxDouble selecteddCommission = 0.0.obs;
   RxInt selecteddCommissionCount = 0.obs;
   List<double> selectedAmountList = [];
-  checBoxFunct(value, index, commissionAmount) {
+  RxDouble totalSelectedCommissionAmount = 0.0.obs;
+  checBoxFunct(value, index, commissionAmount, walletAmount) {
     checkBoxedList[index] = value!;
     if (value == true) {
       selecteddCommission.value = selecteddCommission.value + commissionAmount;
+
       selecteddCommissionCount.value++;
       update();
     } else {
       selecteddCommission.value = selecteddCommission.value - commissionAmount;
+
       selecteddCommissionCount.value--;
       update();
     }
+    totalSelectedCommissionAmount.value = 0;
+    if (selecteddCommission.value > walletAmount) {
+      totalSelectedCommissionAmount.value =
+          selecteddCommission.value - walletAmount;
+    }
+
+    log(selecteddCommission.value.toString());
+    log(walletAmount.toString());
     update();
   }
 
@@ -643,8 +655,6 @@ class InvoiceController extends GetxController {
       try {
         razorpay3.open(options);
 
-        checkButton.value = false;
-        checkBoxedList = RxList.filled(checkBoxedList.length, false);
         update();
       } catch (e) {
         log(e.toString());
@@ -682,7 +692,7 @@ class InvoiceController extends GetxController {
     log(selecteddCommission.value.toString());
     var body = {
       "shop_id": selectShopId,
-      "amount": selecteddCommission.value,
+      "amount": totalSelectedCommissionAmount.value,
       "razorpay_transaction_id": razorId,
       "razorpay_status": "completed"
     };
@@ -700,18 +710,28 @@ class InvoiceController extends GetxController {
         await verifiedInvoiceList();
         await onPullRefreshInWallet();
         isVerifyLoading.value = false;
+        selecteddCommission.value = 0;
+        totalSelectedCommissionAmount.value = 0;
+        checkButton.value = false;
+        checkBoxedList = RxList.filled(checkBoxedList.length, false);
         return;
       } else if (requests.statusCode == 500) {
         Get.snackbar("Error ", "Something went wrong",
             backgroundColor: Colors.red);
         isVerifyLoading.value = false;
         selecteddCommission.value = 0;
+        totalSelectedCommissionAmount.value = 0;
+        checkButton.value = false;
+        checkBoxedList = RxList.filled(checkBoxedList.length, false);
       }
     } catch (e) {
       Get.snackbar("Error ", "Something went wrong",
           backgroundColor: Colors.red);
       isLoading.value = false;
       selecteddCommission.value = 0;
+      totalSelectedCommissionAmount.value = 0;
+      checkButton.value = false;
+      checkBoxedList = RxList.filled(checkBoxedList.length, false);
     }
   }
 }

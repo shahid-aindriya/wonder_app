@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -28,6 +30,7 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
     widget.invoiceController.selecteddCommissionCount.value = 0;
     widget.invoiceController.checkBoxedList =
         RxList.filled(widget.invoiceController.checkBoxedList.length, false);
+    widget.invoiceController.totalSelectedCommissionAmount.value = 0;
     Get.back();
     return true;
   }
@@ -70,6 +73,8 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                         widget.invoiceController.checkBoxedList = RxList.filled(
                             widget.invoiceController.checkBoxedList.length,
                             false);
+                        widget.invoiceController.totalSelectedCommissionAmount
+                            .value = 0;
                         Get.back();
                       },
                       icon: Icon(
@@ -98,6 +103,15 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                         } else {
                           widget.invoiceController.checkButton.value = false;
                         }
+                        widget.invoiceController.selecteddCommission.value = 0;
+
+                        widget.invoiceController.selecteddCommissionCount
+                            .value = 0;
+                        widget.invoiceController.checkBoxedList = RxList.filled(
+                            widget.invoiceController.checkBoxedList.length,
+                            false);
+                        widget.invoiceController.totalSelectedCommissionAmount
+                            .value = 0;
                       },
                       icon: Icon(
                         widget.invoiceController.checkButton.value == false
@@ -214,7 +228,7 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                             left: 14,
                                                             right: 14),
                                                     child: AutoSizeText(
-                                                      "₹${widget.invoiceController.selecteddCommission.value}",
+                                                      "₹${widget.invoiceController.totalSelectedCommissionAmount.value}",
                                                       minFontSize: 25,
                                                       maxFontSize: 30,
                                                       maxLines: 2,
@@ -232,69 +246,86 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                 SizedBox(
                                                   height: 10,
                                                 ),
-                                                Container(
-                                                    height: 40,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      border: Border(),
-                                                      gradient: LinearGradient(
-                                                        begin: Alignment(
-                                                            -0.934, -1),
-                                                        end: Alignment(
-                                                            1.125, 1.333),
-                                                        colors: <Color>[
-                                                          Color(0xe53f46bd),
-                                                          Color(0xe5417de8)
-                                                        ],
-                                                        stops: <double>[0, 1],
-                                                      ),
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color:
-                                                              Color(0x3f000000),
-                                                          offset: Offset(
-                                                              0, 0.7870440483),
-                                                          blurRadius:
-                                                              2.7546541691,
+                                                Obx(() {
+                                                  return Visibility(
+                                                    visible: widget
+                                                                .invoiceController
+                                                                .totalSelectedCommissionAmount
+                                                                .value >
+                                                            0
+                                                        ? true
+                                                        : false,
+                                                    child: Container(
+                                                        height: 40,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          border: Border(),
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment(
+                                                                -0.934, -1),
+                                                            end: Alignment(
+                                                                1.125, 1.333),
+                                                            colors: <Color>[
+                                                              Color(0xe53f46bd),
+                                                              Color(0xe5417de8)
+                                                            ],
+                                                            stops: <double>[
+                                                              0,
+                                                              1
+                                                            ],
+                                                          ),
+                                                          boxShadow: [
+                                                            BoxShadow(
+                                                              color: Color(
+                                                                  0x3f000000),
+                                                              offset: Offset(0,
+                                                                  0.7870440483),
+                                                              blurRadius:
+                                                                  2.7546541691,
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ],
-                                                    ),
-                                                    child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 20,
-                                                                right: 20),
-                                                        child: ElevatedButton(
-                                                            style: ButtonStyle(
-                                                                elevation:
-                                                                    MaterialStateProperty
-                                                                        .all(0),
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(Colors
-                                                                            .transparent)),
-                                                            onPressed:
-                                                                () async {
-                                                              widget.invoiceController.openCheckoutForAllPay3(
-                                                                  razorKey: amount
-                                                                      .razorKey,
-                                                                  name: amount
-                                                                      .name,
-                                                                  amounts: widget
-                                                                      .invoiceController
-                                                                      .selecteddCommission
-                                                                      .value,
-                                                                  email: amount
-                                                                      .email,
-                                                                  data: amount,
-                                                                  phone:
-                                                                      phoneData);
-                                                            },
+                                                        child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 20,
+                                                                    right: 20),
                                                             child:
-                                                                Text("Pay")))),
+                                                                ElevatedButton(
+                                                                    style: ButtonStyle(
+                                                                        elevation:
+                                                                            MaterialStateProperty.all(
+                                                                                0),
+                                                                        backgroundColor:
+                                                                            MaterialStateProperty.all(Colors
+                                                                                .transparent)),
+                                                                    onPressed:
+                                                                        () async {
+                                                                      widget.invoiceController.openCheckoutForAllPay3(
+                                                                          razorKey: amount
+                                                                              .razorKey,
+                                                                          name: amount
+                                                                              .name,
+                                                                          amounts: widget
+                                                                              .invoiceController
+                                                                              .selecteddCommission
+                                                                              .value,
+                                                                          email: amount
+                                                                              .email,
+                                                                          data:
+                                                                              amount,
+                                                                          phone:
+                                                                              phoneData);
+                                                                    },
+                                                                    child: Text(
+                                                                        "Pay")))),
+                                                  );
+                                                }),
                                               ],
                                             ),
                                           ),
@@ -362,6 +393,8 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                                     .all(Colors
                                                                         .transparent)),
                                                         onPressed: () async {
+                                                          log(amount.totalAmount
+                                                              .toString());
                                                           widget
                                                               .invoiceController
                                                               .openCheckoutForAllPay(
@@ -613,14 +646,15 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                                 .invoiceController
                                                                 .checkBoxedList[index],
                                                             onChanged: (value) {
-                                                              widget
-                                                                  .invoiceController
-                                                                  .checBoxFunct(
-                                                                      value,
-                                                                      index,
-                                                                      datas
-                                                                          .amountData
-                                                                          .additionalAmount);
+                                                              widget.invoiceController.checBoxFunct(
+                                                                  value,
+                                                                  index,
+                                                                  datas
+                                                                      .amountData
+                                                                      .commissionAmount,
+                                                                  datas
+                                                                      .amountData
+                                                                      .currentAmount);
                                                             },
                                                           ),
                                                         );

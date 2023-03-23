@@ -43,6 +43,17 @@ class EditShopDetails extends StatelessWidget {
         TextEditingController(text: data!.licenseNumber);
     final TextEditingController shopGstNumberController =
         TextEditingController(text: data!.gstNumber);
+    final TextEditingController openingTimeController =
+        TextEditingController(text: data!.openingTime);
+    final TextEditingController closingTimeController =
+        TextEditingController(text: data!.closingTime);
+    final TextEditingController webSiteController =
+        TextEditingController(text: data!.websiteUrl);
+    final TextEditingController phone2Controller =
+        TextEditingController(text: data!.phone2);
+    final TextEditingController phone1Controller =
+        TextEditingController(text: data!.phone1);
+    shopDetailsController.isChecked = data!.isFeatured;
     shopDetailsController.getShopCategories();
 
     shopDetailsController.categoryId = data!.categoryId.toString();
@@ -302,9 +313,7 @@ class EditShopDetails extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16)),
                       ),
                       validator: (value) {
-                        if (!RegExp(r'^[#.0-9a-zA-Z\u00C0-\u00FF ,]+$')
-                                .hasMatch(value!) ||
-                            value.length < 3) {
+                        if (value!.isEmpty) {
                           return 'please enter valid adress';
                         } else {
                           return null;
@@ -364,7 +373,129 @@ class EditShopDetails extends StatelessWidget {
                         }
                       },
                     ),
-                    SizedBox(height: 30),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Enter Phone Number 1',
+                            style: GoogleFonts.roboto(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              height: 1.1725,
+                              color: Color(0xff4956b2),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      controller: phone1Controller,
+                      enabled: true,
+                      keyboardType: TextInputType.phone, maxLength: 10,
+                      style: GoogleFonts.roboto(
+                          fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                      decoration: InputDecoration(
+                        hintStyle: GoogleFonts.roboto(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          height: 1.1725,
+                          color: Color.fromARGB(93, 0, 0, 0),
+                        ),
+                        hintText: "Enter phone number",
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 18.0, horizontal: 18),
+                        enabled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        errorBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
+                      // validator: (value) {
+                      //   if (value!.isEmpty) {
+                      //     return 'please enter valid adress';
+                      //   } else {
+                      //     return null;
+                      //   }
+                      // },
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14.0),
+                      child: Row(
+                        children: [
+                          Text(
+                            'Enter Phone Number 2',
+                            style: GoogleFonts.roboto(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              height: 1.1725,
+                              color: Color(0xff4956b2),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    TextFormField(
+                      controller: phone2Controller,
+                      enabled: true,
+                      keyboardType: TextInputType.phone, maxLength: 10,
+                      style: GoogleFonts.roboto(
+                          fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                      decoration: InputDecoration(
+                        hintStyle: GoogleFonts.roboto(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w300,
+                          height: 1.1725,
+                          color: Color.fromARGB(93, 0, 0, 0),
+                        ),
+                        hintText: "Enter phone number 2",
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 18.0, horizontal: 18),
+                        enabled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        errorBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
+                      // validator: (value) {
+                      //   if (value!.isEmpty) {
+                      //     return 'please enter valid adress';
+                      //   } else {
+                      //     return null;
+                      //   }
+                      // },
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 15.0),
                       child: Text(
@@ -491,6 +622,128 @@ class EditShopDetails extends StatelessWidget {
                       //     return null;
                       //   }
                       // },
+                    ),
+                    SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: Text(
+                        "Opening-Time",
+                        style: GoogleFonts.roboto(
+                            fontSize: 14.sp, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      controller: openingTimeController,
+                      keyboardType: TextInputType.none,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        errorBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
+                      onTap: () async {
+                        TimeOfDay? selectedOpeningTime;
+                        final TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: selectedOpeningTime ?? TimeOfDay.now(),
+                        );
+                        if (picked != null) {
+                          selectedOpeningTime = picked;
+                          openingTimeController.text =
+                              selectedOpeningTime.format(context).toString();
+                        } else {
+                          var current = TimeOfDay.now();
+                          openingTimeController.text =
+                              current.format(context).toString();
+                        }
+                      },
+                    ),
+                    SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: Text(
+                        "Closing-Time",
+                        style: GoogleFonts.roboto(
+                            fontSize: 14.sp, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      controller: closingTimeController,
+                      keyboardType: TextInputType.none,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        errorBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
+                      onTap: () async {
+                        TimeOfDay? selectedOpeningTime;
+                        final TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: selectedOpeningTime ?? TimeOfDay.now(),
+                        );
+                        if (picked != null) {
+                          selectedOpeningTime = picked;
+                          closingTimeController.text =
+                              selectedOpeningTime.format(context).toString();
+                        } else {
+                          var current = TimeOfDay.now();
+                          closingTimeController.text =
+                              current.format(context).toString();
+                        }
+                      },
+                    ),
+                    SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: Text(
+                        "Web-Site URL",
+                        style: GoogleFonts.roboto(
+                            fontSize: 14.sp, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      controller: webSiteController,
+                      keyboardType: TextInputType.url,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        border: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                        errorBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 1.3),
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
                     ),
                     SizedBox(height: 30),
                     Padding(
@@ -763,6 +1016,106 @@ class EditShopDetails extends StatelessWidget {
                         ],
                       );
                     }),
+                    SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15.0),
+                      child: Text(
+                        "Banner Image",
+                        style: GoogleFonts.roboto(
+                            fontSize: 14.sp, fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    GetBuilder<ShopDetailsController>(builder: (sconte435xt) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              enabled: false,
+                              style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  color: Color.fromRGBO(0, 0, 0, 1)),
+                              decoration: InputDecoration(
+                                hintText:
+                                    shopDetailsController.bannerImage == ''
+                                        ? "Browse Document"
+                                        : "Uploaded",
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 1.3),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        bottomLeft: Radius.circular(16))),
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 1.3),
+                                    borderRadius: BorderRadius.circular(16)),
+                                errorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.white, width: 1.3),
+                                    borderRadius: BorderRadius.circular(16)),
+                              ),
+                              // validator: (value) {
+                              //   if (!RegExp(r'^-?[0-9]+$')
+                              //           .hasMatch(value!) ||
+                              //       value.length < 3) {
+                              //     return 'please enter valid email';
+                              //   } else {
+                              //     return null;
+                              //   }
+                              // },
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              shopDetailsController.showPopup(
+                                  context,
+                                  (value) => shopDetailsController
+                                      .pickBannerImage(value));
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    bottomRight: Radius.circular(10)),
+                                border: Border(),
+                                gradient: LinearGradient(
+                                  begin: Alignment(-0.934, -1),
+                                  end: Alignment(1.125, 1.333),
+                                  colors: <Color>[
+                                    Color(0xe53f46bd),
+                                    Color(0xe5417de8)
+                                  ],
+                                  stops: <double>[0, 1],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x3f000000),
+                                    offset: Offset(0, 0.7870440483),
+                                    blurRadius: 2.7546541691,
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Upload',
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                    height: 1.2110513051,
+                                    color: Color(0xffffffff),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                     SizedBox(
                       height: 13,
                     ),
@@ -782,6 +1135,7 @@ class EditShopDetails extends StatelessWidget {
                                   Color.fromARGB(255, 255, 255, 255)),
                               value: shopDetailsController.isChecked,
                               onChanged: (value) {
+                                log(value.toString());
                                 shopDetailsController.checkBox(value);
                               },
                             ),
@@ -840,11 +1194,17 @@ class EditShopDetails extends StatelessWidget {
                             long: long,
                             contorller: shopController,
                             shopId: data!.id,
+                            webSiteUrls: webSiteController.text,
                             commission: shopCommissionController.text,
                             gstNumber: shopGstNumberController.text,
                             gstPct: shopGstPctController.text,
                             licenceNumber: shopLicenceNumberController.text,
                             location: shopLocationController.text,
+                            closingTime: closingTimeController.text,
+                            phone1: phone1Controller.text,
+                            phone2: phone2Controller.text,
+                            isFeatured: shopDetailsController.isChecked,
+                            openingTime: openingTimeController.text,
                             shopName: shopNameController.text);
                       }
                     },

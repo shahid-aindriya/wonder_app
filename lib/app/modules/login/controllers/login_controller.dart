@@ -101,6 +101,7 @@ class LoginController extends GetxController {
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);
+      isLoading.value = false;
     }
 
     isLoading.value = false;
