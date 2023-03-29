@@ -54,7 +54,6 @@ class SearchInvoice extends StatelessWidget {
                   controller: searchController,
                   focusNode: focusNode,
                   enabled: true,
-                  keyboardType: TextInputType.number,
                   style: GoogleFonts.roboto(
                       fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
                   decoration: InputDecoration(
@@ -90,6 +89,11 @@ class SearchInvoice extends StatelessWidget {
               SizedBox(
                 height: 10,
               ),
+              Text(
+                '''NB: Please search date in this "eg: 2023-03-29" format ''',
+                style:
+                    GoogleFonts.roboto(color: Color.fromARGB(255, 50, 50, 50)),
+              ),
               Obx(() {
                 return Expanded(
                     child: ListView.builder(
@@ -100,7 +104,11 @@ class SearchInvoice extends StatelessWidget {
                     String formattedDate = DateFormat("MMM dd, yyyy")
                         .format(DateTime.parse(datas.invoiceDate.toString()));
                     // log(formattedDate);
-                    if (datas.invoiceNumber.contains(searchController.text)) {
+                    if (datas.invoiceNumber.contains(searchController.text) ||
+                        datas.phone.contains(searchController.text) ||
+                        datas.invoiceDate
+                            .toString()
+                            .contains(searchController.text)) {
                       return InkWell(
                         onTap: () async {
                           // await invoiceController.invoiceDetails(

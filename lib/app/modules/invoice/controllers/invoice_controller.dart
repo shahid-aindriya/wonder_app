@@ -233,8 +233,14 @@ class InvoiceController extends GetxController {
     searchInvoiceList.clear();
     for (var index in invoiceListsFilter.value) {
       if (index.invoiceNumber.toString().contains(
-            value.toLowerCase(),
-          )) {
+                value.toLowerCase(),
+              ) ||
+          index.invoiceDate.toString().contains(
+                value.toLowerCase(),
+              ) ||
+          index.phone.toString().contains(
+                value.toLowerCase(),
+              )) {
         InvoiceDatum data = InvoiceDatum(
             id: index.id,
             customerId: index.customerId,

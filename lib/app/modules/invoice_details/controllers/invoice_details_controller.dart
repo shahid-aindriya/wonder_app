@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -37,6 +38,9 @@ class InvoiceDetailsController extends GetxController {
   @override
   void dispose() {
     razorpay.clear();
+    dateController.clear();
+    taxAmountController.clear();
+    invoiceNumberController.clear();
     // TODO: implement dispose
     super.dispose();
   }
@@ -44,6 +48,9 @@ class InvoiceDetailsController extends GetxController {
   @override
   void onClose() {
     razorpay.clear();
+    dateController.clear();
+    taxAmountController.clear();
+    invoiceNumberController.clear();
   }
 
   void increment() => count.value++;
@@ -168,11 +175,10 @@ class InvoiceDetailsController extends GetxController {
       context,
       remarks,
       InvoiceController? inoviceController}) async {
+    isLoading.value = true;
     log(invoiceId.toString());
     var body = {"invoice_id": invoiceId, "status": choice, "remark": remarks};
     try {
-      isLoading.value = true;
-
       var request = await http.post(
           Uri.parse("${baseUrl.value}vendor-invoice-status-change/"),
           headers: headers,
@@ -181,8 +187,10 @@ class InvoiceDetailsController extends GetxController {
       if (request.statusCode == 201) {
         final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
         if (invoiceApprovalModel.success == true) {
+          await getInvoiceDetails(invoiceId: invoiceId);
           await inoviceController!.onPullRefreshInWallet();
           await inoviceController.verifiedInvoiceList();
+
           MotionToast.success(
             dismissable: true,
             enableAnimation: false,
@@ -198,8 +206,6 @@ class InvoiceDetailsController extends GetxController {
             borderRadius: 0,
             animationDuration: const Duration(milliseconds: 1000),
           ).show(context);
-
-          await getInvoiceDetails(invoiceId: invoiceId);
           isLoading.value = false;
         } else {
           MotionToast.error(
@@ -219,10 +225,26 @@ class InvoiceDetailsController extends GetxController {
           ).show(context);
           isLoading.value = false;
         }
+      } else {
+        MotionToast.error(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Error ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: Text('Something went wrong or Server error'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
       }
     } catch (e) {
-      Get.snackbar("Error", "Something went wrong",
-          backgroundColor: Colors.red);
+      // Get.snackbar("Error", "Something went wrong",
+      //     backgroundColor: Colors.red);
       isLoading.value = false;
     }
     isLoading.value = false;
@@ -253,11 +275,15 @@ class InvoiceDetailsController extends GetxController {
   }
 
   final TextEditingController taxAmountController = TextEditingController();
+  final TextEditingController invoiceNumberController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
   final taxFormKey = GlobalKey<FormState>();
-  showPopupTax(context, id) {
+  showPopupTax({context, id, amount, invoiceNumber, date}) {
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
     Alert(
       context: context,
-      title: "Edit Tax Amount",
+      title: "Edit Data",
       style: AlertStyle(
           overlayColor: Color.fromARGB(120, 0, 0, 0),
           titleStyle: GoogleFonts.jost(
@@ -266,19 +292,64 @@ class InvoiceDetailsController extends GetxController {
         children: <Widget>[
           Form(
             key: taxFormKey,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: taxAmountController,
-              decoration: InputDecoration(
-                icon: Icon(Icons.currency_rupee),
-                labelText: 'Enter Tax amount',
-              ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return "Please Enter Amount";
-                }
-                return null;
-              },
+            child: Column(
+              children: [
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: taxAmountController,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.currency_rupee),
+                    labelText: 'Enter Tax amount',
+                  ),
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: invoiceNumberController,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.textsms_sharp),
+                    labelText: 'Enter Invoice Number',
+                  ),
+                ),
+                TextFormField(
+                  controller: dateController,
+                  keyboardType: TextInputType.none,
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.date_range_outlined),
+                    labelText: 'Enter Invoice Date',
+                  ),
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                        builder: (context, child) {
+                          return Theme(
+                            data: ThemeData.light().copyWith(
+                              buttonTheme: ButtonThemeData(
+                                textTheme: ButtonTextTheme.primary,
+                              ),
+                              colorScheme: ColorScheme.light(
+                                primary: Color(0xe53f46bd),
+                              ).copyWith(secondary: Colors.pink),
+                            ),
+                            child: child!,
+                          );
+                        },
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(
+                            1900), //DateTime.now() - not to allow to choose before today.
+                        lastDate: DateTime.now());
+
+                    if (pickedDate != null) {
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(pickedDate);
+                      dateController.text = formattedDate;
+                    } else {
+                      var newFormat = DateFormat('yyyy-MM-dd').format(date);
+                      dateController.text = newFormat;
+                    }
+                    return;
+                  },
+                ),
+              ],
             ),
           ),
         ],
@@ -293,8 +364,22 @@ class InvoiceDetailsController extends GetxController {
           ),
           radius: BorderRadius.circular(10),
           onPressed: () {
+            var taxAmount = taxAmountController.text.isEmpty
+                ? amount.toString()
+                : taxAmountController.text;
+            var invoiceDate = dateController.text.isEmpty
+                ? formattedDate
+                : dateController.text;
+            var invNumber = invoiceNumberController.text.isEmpty
+                ? invoiceNumber
+                : invoiceNumberController.text;
+            log(invoiceDate.toString());
             if (taxFormKey.currentState!.validate()) {
-              editTaxAmount(id, int.tryParse(taxAmountController.text));
+              editTaxAmount(
+                  invoiceId: id,
+                  amount: int.tryParse(taxAmount),
+                  date: invoiceDate,
+                  invoiceNumber: invNumber);
             }
           },
           child: Obx(() {
@@ -313,8 +398,13 @@ class InvoiceDetailsController extends GetxController {
   }
 
   var editButton = false.obs;
-  editTaxAmount(invoiceId, amount) async {
-    var body = {"invoice_id": invoiceId, "pretax_amount": amount};
+  editTaxAmount({invoiceId, amount, date, invoiceNumber}) async {
+    var body = {
+      "invoice_id": invoiceId,
+      "pretax_amount": amount,
+      "invoice_date": date,
+      "invoice_number": invoiceNumber
+    };
     try {
       editButton.value = true;
       final requests = await http.post(
@@ -328,7 +418,9 @@ class InvoiceDetailsController extends GetxController {
         await getInvoiceDetails(invoiceId: invoiceId);
         await invoiceController.onPullRefreshInWallet();
 
+        dateController.clear();
         taxAmountController.clear();
+        invoiceNumberController.clear();
         final response = jsonDecode(requests.body);
         if (response["success"] == true) {
           Get.snackbar("Info ", "Edited Succesfully",
