@@ -14,16 +14,21 @@ class WalletScreenModel {
   WalletScreenModel({
     required this.shopWalletAmount,
     required this.transactionData,
+    this.page,
+    required this.totalPages,
   });
 
-  double shopWalletAmount;
+  dynamic shopWalletAmount;
   List<TransactionDatum> transactionData;
-
+  dynamic page;
+  int totalPages;
   factory WalletScreenModel.fromJson(Map<String, dynamic> json) =>
       WalletScreenModel(
         shopWalletAmount: json["shop_wallet_amount"],
         transactionData: List<TransactionDatum>.from(
             json["transaction_data"].map((x) => TransactionDatum.fromJson(x))),
+        page: json["page"],
+        totalPages: json["total_pages"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,6 +53,7 @@ class TransactionDatum {
     required this.entryType,
     required this.remark,
     required this.status,
+    required this.createdAt,
   });
 
   dynamic id;
@@ -63,6 +69,7 @@ class TransactionDatum {
   dynamic entryType;
   dynamic remark;
   dynamic status;
+  dynamic createdAt;
 
   factory TransactionDatum.fromJson(Map<String, dynamic> json) =>
       TransactionDatum(
@@ -79,6 +86,7 @@ class TransactionDatum {
         entryType: json["entry_type"] ?? "null",
         remark: json["remark"] ?? "null",
         status: json["status"] ?? "null",
+        createdAt: json["created_at"] ?? "null",
       );
 
   Map<String, dynamic> toJson() => {

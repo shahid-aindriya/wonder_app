@@ -1,43 +1,48 @@
 // To parse this JSON data, do
 //
-//     final verfiedModel = verfiedModelFromJson(jsonString);
+//     final searchInvoiceData = searchInvoiceDataFromJson(jsonString);
 
 import 'dart:convert';
 
-VerfiedModel verfiedModelFromJson(String str) =>
-    VerfiedModel.fromJson(json.decode(str));
+SearchInvoiceData searchInvoiceDataFromJson(String str) =>
+    SearchInvoiceData.fromJson(json.decode(str));
 
-String verfiedModelToJson(VerfiedModel data) => json.encode(data.toJson());
+String searchInvoiceDataToJson(SearchInvoiceData data) =>
+    json.encode(data.toJson());
 
-class VerfiedModel {
-  VerfiedModel({
-    required this.totalAmountData,
+class SearchInvoiceData {
+  SearchInvoiceData({
     required this.invoiceData,
+    required this.page,
+    required this.totalPages,
   });
 
-  TotalAmountData totalAmountData;
-  List<VerifiedInvoiceData> invoiceData;
+  List<InvoiceDatas> invoiceData;
+  int page;
+  int totalPages;
 
-  factory VerfiedModel.fromJson(Map<String, dynamic> json) => VerfiedModel(
-        totalAmountData: TotalAmountData.fromJson(json["total_amount_data"]),
-        invoiceData: List<VerifiedInvoiceData>.from(
-            json["invoice_data"].map((x) => VerifiedInvoiceData.fromJson(x))),
+  factory SearchInvoiceData.fromJson(Map<String, dynamic> json) =>
+      SearchInvoiceData(
+        invoiceData: List<InvoiceDatas>.from(
+            json["invoice_data"].map((x) => InvoiceDatas.fromJson(x))),
+        page: json["page"],
+        totalPages: json["total_pages"],
       );
 
   Map<String, dynamic> toJson() => {
-        "total_amount_data": totalAmountData.toJson(),
         "invoice_data": List<dynamic>.from(invoiceData.map((x) => x.toJson())),
+        "page": page,
+        "total_pages": totalPages,
       };
 }
 
-class VerifiedInvoiceData {
-  VerifiedInvoiceData({
+class InvoiceDatas {
+  InvoiceDatas({
     required this.id,
     required this.customerId,
     required this.customerName,
     required this.phone,
     required this.userId,
-    required this.vendorPhone,
     required this.shopId,
     required this.shopName,
     required this.invoiceImage,
@@ -58,43 +63,39 @@ class VerifiedInvoiceData {
   dynamic customerName;
   dynamic phone;
   dynamic userId;
-  String vendorPhone;
   dynamic shopId;
-  String shopName;
-  String invoiceImage;
+  dynamic shopName;
+  dynamic invoiceImage;
   dynamic invoiceNumber;
-  DateTime invoiceDate;
+  dynamic invoiceDate;
   dynamic preTaxAmount;
   dynamic invoiceAmount;
   dynamic remark;
   dynamic status;
-  bool myself;
+  dynamic myself;
   dynamic vendorImage;
   dynamic userImage;
-  VerifiedAmountData amountData;
+  AmountDatas amountData;
 
-  factory VerifiedInvoiceData.fromJson(Map<String, dynamic> json) =>
-      VerifiedInvoiceData(
+  factory InvoiceDatas.fromJson(Map<String, dynamic> json) => InvoiceDatas(
         id: json["id"],
         customerId: json["customer_id"],
         customerName: json["customer_name"],
         phone: json["phone"],
         userId: json["user_id"],
-        vendorPhone: json["vendor_phone"],
         shopId: json["shop_id"],
         shopName: json["shop_name"],
         invoiceImage: json["invoice_image"],
         invoiceNumber: json["invoice_number"],
-        invoiceDate:
-            DateTime.parse(json["invoice_date"] ?? DateTime.now().toString()),
+        invoiceDate: DateTime.parse(json["invoice_date"]),
         preTaxAmount: json["pre_tax_amount"],
         invoiceAmount: json["invoice_amount"],
-        remark: json["remark"] ?? "",
+        remark: json["remark"],
         status: json["status"],
         myself: json["myself"],
         vendorImage: json["vendor_image"],
         userImage: json["user_image"],
-        amountData: VerifiedAmountData.fromJson(json["amount_data"]),
+        amountData: AmountDatas.fromJson(json["amount_data"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -103,7 +104,6 @@ class VerifiedInvoiceData {
         "customer_name": customerName,
         "phone": phone,
         "user_id": userId,
-        "vendor_phone": vendorPhone,
         "shop_id": shopId,
         "shop_name": shopName,
         "invoice_image": invoiceImage,
@@ -120,8 +120,8 @@ class VerifiedInvoiceData {
       };
 }
 
-class VerifiedAmountData {
-  VerifiedAmountData({
+class AmountDatas {
+  AmountDatas({
     required this.currentAmount,
     required this.commissionAmount,
     required this.additionalAmount,
@@ -132,17 +132,16 @@ class VerifiedAmountData {
     required this.haveBank,
   });
 
-  dynamic currentAmount;
-  dynamic commissionAmount;
-  dynamic additionalAmount;
+  int currentAmount;
+  int commissionAmount;
+  int additionalAmount;
   String name;
   String email;
   String razorKey;
   String razorSecret;
   bool haveBank;
 
-  factory VerifiedAmountData.fromJson(Map<String, dynamic> json) =>
-      VerifiedAmountData(
+  factory AmountDatas.fromJson(Map<String, dynamic> json) => AmountDatas(
         currentAmount: json["current_amount"],
         commissionAmount: json["commission_amount"],
         additionalAmount: json["additional_amount"],
@@ -157,46 +156,6 @@ class VerifiedAmountData {
         "current_amount": currentAmount,
         "commission_amount": commissionAmount,
         "additional_amount": additionalAmount,
-        "name": name,
-        "email": email,
-        "razor_key": razorKey,
-        "razor_secret": razorSecret,
-        "have_bank": haveBank,
-      };
-}
-
-class TotalAmountData {
-  TotalAmountData({
-    required this.totalAmount,
-    required this.name,
-    required this.email,
-    required this.razorKey,
-    required this.razorSecret,
-    required this.haveBank,
-    required this.shopId,
-  });
-
-  dynamic totalAmount;
-  String name;
-  String email;
-  String razorKey;
-  String razorSecret;
-  bool haveBank;
-  String shopId;
-
-  factory TotalAmountData.fromJson(Map<String, dynamic> json) =>
-      TotalAmountData(
-        totalAmount: json["total_amount"],
-        shopId: json["shop_id"],
-        name: json["name"],
-        email: json["email"],
-        razorKey: json["razor_key"],
-        razorSecret: json["razor_secret"],
-        haveBank: json["have_bank"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "total_amount": totalAmount,
         "name": name,
         "email": email,
         "razor_key": razorKey,

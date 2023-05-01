@@ -23,7 +23,7 @@ class InvoiceTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        await invoiceController.getInvoiceLists();
+        // await invoiceController.getInvoiceLists();
       },
       child: Obx(() {
         return invoiceController.invoiceLists.value.isEmpty

@@ -37,209 +37,234 @@ class InvoiceTab extends GetView<InvoiceController> {
                   ),
                 ],
               )
-            : ListView.builder(
-                itemCount: invoiceController.invoiceLists.value.length,
-                itemBuilder: (context, index) {
-                  var datas = invoiceController.invoiceLists.value[index];
+            : Obx(() {
+                return ListView.builder(
+                  controller: invoiceController.filterListValue.value == "All"
+                      ? invoiceController.invoiceScrollController
+                      : invoiceController.filterScrolController,
+                  itemCount: invoiceController.isInvoiceLoading.value
+                      ? invoiceController.invoiceLists.value.length + 1
+                      : invoiceController.invoiceLists.value.length,
+                  itemBuilder: (context, index) {
+                    if (index < invoiceController.invoiceLists.value.length) {
+                      var datas = invoiceController.invoiceLists.value[index];
 
-                  String formattedDate = DateFormat("MMM dd, yyyy")
-                      .format(DateTime.parse(datas.invoiceDate.toString()));
-                  // log(formattedDate);
+                      String formattedDate = DateFormat("MMM dd, yyyy")
+                          .format(DateTime.parse(datas.invoiceDate.toString()));
+                      // log(formattedDate);
 
-                  return InkWell(
-                    onTap: () async {
-                      // await invoiceController.invoiceDetails(
-                      //     invoiceId: datas.id);
-                      Get.to(InvoiceDetailsView(
-                        id: datas.id,
-                      ));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        width: 100.w,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 1),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(14),
-                            topRight: Radius.circular(14),
-                            bottomLeft: Radius.circular(14),
-                            bottomRight: Radius.circular(14),
-                          ),
-                          gradient: LinearGradient(
-                              begin: Alignment(
-                                  1.1437236070632935, -0.005003529135137796),
-                              end: Alignment(
-                                  -0.06076670065522194, 0.042849887162446976),
-                              colors: [
-                                Color.fromRGBO(255, 255, 255, 0.75),
-                                Color.fromRGBO(
-                                    255, 255, 255, 0.3199999928474426)
-                              ]),
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 3.0, left: 10),
-                              child: Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: (datas.status == "Pending" ||
-                                            datas.status == "Verified")
-                                        ? Color.fromARGB(255, 144, 149, 255)
-                                        : greyColor),
+                      return InkWell(
+                        onTap: () async {
+                          // await invoiceController.invoiceDetails(
+                          //     invoiceId: datas.id);
+                          Get.to(InvoiceDetailsView(
+                            id: datas.id,
+                          ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
+                            width: 100.w,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white, width: 1),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(14),
+                                topRight: Radius.circular(14),
+                                bottomLeft: Radius.circular(14),
+                                bottomRight: Radius.circular(14),
                               ),
+                              gradient: LinearGradient(
+                                  begin: Alignment(1.1437236070632935,
+                                      -0.005003529135137796),
+                                  end: Alignment(-0.06076670065522194,
+                                      0.042849887162446976),
+                                  colors: [
+                                    Color.fromRGBO(255, 255, 255, 0.75),
+                                    Color.fromRGBO(
+                                        255, 255, 255, 0.3199999928474426)
+                                  ]),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Container(
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 3.0, left: 10),
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color:
-                                            Color.fromARGB(255, 229, 223, 227)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: AutoSizeText(
-                                        maxLines: 2,
-                                        "₹${datas.preTaxAmount}",
-                                        maxFontSize: 18,
-                                        minFontSize: 12,
-                                        style: GoogleFonts.roboto(
-                                            color: datas.status == "Pending" ||
-                                                    datas.status == "Verified"
-                                                ? Color.fromARGB(
-                                                    255, 73, 117, 231)
-                                                : greyColor,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    ),
+                                        color: (datas.status == "Pending" ||
+                                                datas.status == "Verified")
+                                            ? Color.fromARGB(255, 144, 149, 255)
+                                            : greyColor),
                                   ),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 3.w),
-                                    child: Text(
-                                      formattedDate,
-                                      style: GoogleFonts.roboto(
-                                          color: datas.status == "Pending" ||
-                                                  datas.status == "Verified"
-                                              ? Colors.black
-                                              : greyColor,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Expanded(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(top: 14.0, left: 2.w),
-                                    child: Column(
-                                      children: [
-                                        RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: 'By ',
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 16,
-                                                    color: datas.status ==
-                                                                "Pending" ||
-                                                            datas.status ==
-                                                                "Verified"
-                                                        ? Colors.black
-                                                        : greyColor,
-                                                    fontWeight:
-                                                        FontWeight.w300),
-                                              ),
-                                              TextSpan(
-                                                text: datas.phone,
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 14,
-                                                    color: datas.status ==
-                                                                "Pending" ||
-                                                            datas.status ==
-                                                                "Verified"
-                                                        ? Colors.black
-                                                        : greyColor,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 13,
-                                        ),
-                                        Text(
-                                            " Invoice No: ${datas.invoiceNumber}",
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Color.fromARGB(
+                                                255, 229, 223, 227)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: AutoSizeText(
+                                            maxLines: 2,
+                                            "₹${datas.preTaxAmount}",
+                                            maxFontSize: 18,
+                                            minFontSize: 12,
                                             style: GoogleFonts.roboto(
                                                 color:
                                                     datas.status == "Pending" ||
                                                             datas.status ==
                                                                 "Verified"
-                                                        ? Colors.black
+                                                        ? Color.fromARGB(
+                                                            255, 73, 117, 231)
                                                         : greyColor,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w300))
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 2.w,
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.white),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 3.0,
-                                            bottom: 3,
-                                            left: 4,
-                                            right: 4),
-                                        child: SvgPicture.asset(datas.status ==
-                                                "Pending"
-                                            ? "assets/images/pending.svg"
-                                            : datas.status == "Reject"
-                                                ? "assets/images/rejected.svg"
-                                                : datas.status == "Verified"
-                                                    ? "assets/images/verified.svg"
-                                                    : "assets/images/aporved.svg"),
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 3.w),
+                                        child: Text(
+                                          formattedDate,
+                                          style: GoogleFonts.roboto(
+                                              color: datas.status ==
+                                                          "Pending" ||
+                                                      datas.status == "Verified"
+                                                  ? Colors.black
+                                                  : greyColor,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 1.w,
-                                  )
-                                ],
-                              ),
+                                ),
+                                SizedBox(
+                                  width: 1.w,
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 14.0, left: 2.w),
+                                        child: Column(
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: 'By ',
+                                                    style: GoogleFonts.roboto(
+                                                        fontSize: 16,
+                                                        color: datas.status ==
+                                                                    "Pending" ||
+                                                                datas.status ==
+                                                                    "Verified"
+                                                            ? Colors.black
+                                                            : greyColor,
+                                                        fontWeight:
+                                                            FontWeight.w300),
+                                                  ),
+                                                  TextSpan(
+                                                    text: datas.phone,
+                                                    style: GoogleFonts.roboto(
+                                                        fontSize: 14,
+                                                        color: datas.status ==
+                                                                    "Pending" ||
+                                                                datas.status ==
+                                                                    "Verified"
+                                                            ? Colors.black
+                                                            : greyColor,
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 13,
+                                            ),
+                                            Flexible(
+                                              child: Container(
+                                                width: 40.w,
+                                                child: Text(
+                                                    " Invoice No: ${datas.invoiceNumber}",
+                                                    style: GoogleFonts.roboto(
+                                                        color: datas.status ==
+                                                                    "Pending" ||
+                                                                datas.status ==
+                                                                    "Verified"
+                                                            ? Colors.black
+                                                            : greyColor,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w300)),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 2.w,
+                                      ),
+                                      Flexible(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color: Colors.white),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 3.0,
+                                                bottom: 3,
+                                                left: 4,
+                                                right: 4),
+                                            child: SvgPicture.asset(datas
+                                                        .status ==
+                                                    "Pending"
+                                                ? "assets/images/pending.svg"
+                                                : datas.status == "Reject"
+                                                    ? "assets/images/rejected.svg"
+                                                    : datas.status == "Verified"
+                                                        ? "assets/images/verified.svg"
+                                                        : "assets/images/aporved.svg"),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 1.w,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              );
+                      );
+                    } else {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [CircularProgressIndicator()],
+                      );
+                    }
+                  },
+                );
+              });
       }),
     );
   }

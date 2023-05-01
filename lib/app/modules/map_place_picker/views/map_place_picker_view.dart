@@ -17,7 +17,7 @@ class MapPlacePickerView extends GetView<MapPlacePickerController> {
     final LocationDatas datas = Get.arguments;
     return Scaffold(
       body: PlacePicker(
-        apiKey: "AIzaSyB1wjIvMb5foy65Etk2JeVhHK_NVgxT8ho",
+        apiKey: "AIzaSyA6sfxAGWorlekK-rkolU152WkN5mzn76A",
         useCurrentLocation: true,
         initialPosition: LatLng(9.9312328, 76.26730410000005),
         forceSearchOnZoomChanged: true,

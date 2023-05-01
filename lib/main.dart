@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+
+import 'package:text_to_speech/text_to_speech.dart';
 import 'package:upgrader/upgrader.dart';
 
 import 'app/routes/app_pages.dart';
@@ -22,14 +23,42 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 FlutterTts flutterTts = FlutterTts();
-// void speak(String body) async {
-//   flutterTts.setLanguage("en-US");
-//   flutterTts.setPitch(1);
-//   flutterTts.speak(body);
-// }
+TextToSpeech tts = TextToSpeech();
+void speaks(String body) async {
+  flutterTts.setLanguage("en-US");
+  flutterTts.setPitch(1);
+  await flutterTts.speak(body);
+}
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('A bg message just showed up :  ${message.messageId}');
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+  // if (notification != null && android != null) {
+  //   flutterLocalNotificationsPlugin.show(
+  //       notification.hashCode,
+  //       notification.title,
+  //       notification.body,
+  //       NotificationDetails(
+  //         android: AndroidNotificationDetails(
+  //           channel.id,
+  //           channel.name,
+  //           channelDescription: channel.description,
+  //           color: Colors.blue,
+  //           playSound: true,
+  //           icon: '@mipmap/ic_launcher',
+  //         ),
+  //       ));
+  //   speaks(notification.body!);
+  //   if (message.notification != null) {
+  //     //notification from server to voice
+  //   }
+  // }
+  if (message.notification != null) {
+    //notification from server to voice
+    speaks(message.notification!.body!);
+  }
 }
 
 Future<void> main() async {
@@ -68,6 +97,8 @@ class _MyAppState extends State<MyApp> {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
+    // FirebaseMessaging.onBackgroundMessage(
+    //     (message) => _firebaseMessagingBackgroundHandler(message));
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -80,10 +111,6 @@ class _MyAppState extends State<MyApp> {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
-        if (message.notification != null) {
-          //notification from server to voice
-          // speak(message.notification!.title!);
-        }
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
@@ -98,6 +125,10 @@ class _MyAppState extends State<MyApp> {
                 icon: '@mipmap/ic_launcher',
               ),
             ));
+        speaks(notification.body!);
+        if (message.notification != null) {
+          //notification from server to voice
+        }
       }
     });
   }

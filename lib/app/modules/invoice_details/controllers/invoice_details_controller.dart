@@ -188,8 +188,9 @@ class InvoiceDetailsController extends GetxController {
         final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
         if (invoiceApprovalModel.success == true) {
           await getInvoiceDetails(invoiceId: invoiceId);
-          await inoviceController!.onPullRefreshInWallet();
-          await inoviceController.verifiedInvoiceList();
+          await invoiceController
+              .ondropDownChangedInvoice(invoiceController.selectShopId);
+          await inoviceController!.verifiedInvoiceList();
 
           MotionToast.success(
             dismissable: true,
@@ -413,7 +414,9 @@ class InvoiceDetailsController extends GetxController {
           headers: headers);
       log(requests.body);
       if (requests.statusCode == 201) {
-        await invoiceController.getInvoiceLists();
+        invoiceController.invoiceCurrentpage.value = 1;
+        await invoiceController
+            .ondropDownChangedInvoice(invoiceController.selectShopId);
         await invoiceController.verifiedInvoiceList();
         await getInvoiceDetails(invoiceId: invoiceId);
         await invoiceController.onPullRefreshInWallet();

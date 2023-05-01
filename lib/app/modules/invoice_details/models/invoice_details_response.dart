@@ -99,23 +99,23 @@ class InvoiceData {
 
   int id;
   int customerId;
-  String customerName;
-  String phone;
+  dynamic customerName;
+  dynamic phone;
   int userId;
-  String vendorName;
-  String vendorPhone;
+  dynamic vendorName;
+  dynamic vendorPhone;
   int shopId;
-  String shopName;
-  String invoiceImage;
-  String invoiceNumber;
-  DateTime invoiceDate;
-  String preTaxAmount;
-  String invoiceAmount;
-  String remark;
-  String status;
+  dynamic shopName;
+  dynamic invoiceImage;
+  dynamic invoiceNumber;
+  dynamic invoiceDate;
+  dynamic preTaxAmount;
+  dynamic invoiceAmount;
+  dynamic remark;
+  dynamic status;
   bool myself;
-  String vendorImage;
-  String userImage;
+  dynamic vendorImage;
+  dynamic userImage;
 
   factory InvoiceData.fromJson(Map<String, dynamic> json) => InvoiceData(
         id: json["id"],
@@ -129,7 +129,8 @@ class InvoiceData {
         shopName: json["shop_name"],
         invoiceImage: json["invoice_image"],
         invoiceNumber: json["invoice_number"],
-        invoiceDate: DateTime.parse(json["invoice_date"]),
+        invoiceDate:
+            DateTime.parse(json["invoice_date"] ?? DateTime.now().toString()),
         preTaxAmount: json["pre_tax_amount"],
         invoiceAmount: json["invoice_amount"],
         remark: json["remark"] ?? "",

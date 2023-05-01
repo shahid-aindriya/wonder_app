@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/data/urls.dart';
@@ -35,10 +36,11 @@ class InvoiceView extends GetView<InvoiceController> {
   @override
   Widget build(BuildContext context) {
     invoiceController.notifications();
-    addInvoiceController.getListOfShops();
-    invoiceController.getUserData();
+    // addInvoiceController.getListOfShops();
+    // invoiceController.getUserData();
     invoiceController.pushFCMtoken();
-    invoiceController.onPullRefreshInWallet();
+    // invoiceController.onPullRefreshInWallet();
+    invoiceController.checkActiveUser();
     return DefaultTabController(
       length: 2,
       child: UpgradeAlert(
@@ -254,6 +256,8 @@ class InvoiceView extends GetView<InvoiceController> {
                       onTap: () async {
                         final prefs = await SharedPreferences.getInstance();
                         await prefs.clear();
+                        invoiceController.invoiceLists.value.clear();
+                        invoiceController.walletTransactionLists.clear();
                         await DefaultCacheManager().emptyCache();
                         Get.offAll(LoginView());
                       },
@@ -305,62 +309,117 @@ class InvoiceView extends GetView<InvoiceController> {
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Obx(() {
-                    return Container(
-                        width: 60.w,
-                        child: DropdownButtonFormField(
-                          isExpanded: true,
-                          isDense: true,
-                          style: GoogleFonts.roboto(
-                              fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
-                          decoration: InputDecoration(
-                              hintStyle: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300,
-                                height: 1.1725,
-                                color: Color.fromARGB(93, 0, 0, 0),
+                  child: FutureBuilder(
+                      future: addInvoiceController.getListOfShops(),
+                      builder: (contextsd, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container(
+                            width: 60.w,
+                            height: 50,
+                            child: Shimmer(
+                              color: Color.fromARGB(255, 185, 84, 84),
+                              child: ListTile(
+                                dense: true,
+                                leading: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      backgroundColor:
+                                          Color.fromARGB(255, 220, 216, 216),
+                                      radius: 20,
+                                    ),
+                                  ],
+                                ),
+                                title: Container(
+                                  height: 20,
+                                  color: Color.fromARGB(255, 220, 216, 216),
+                                ),
+                                subtitle: Container(
+                                  height: 16,
+                                  margin: EdgeInsets.only(top: 8),
+                                  color: Color.fromARGB(255, 220, 216, 216),
+                                ),
                               ),
-                              hintText: "Select Shop",
-                              enabled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: BorderSide(
-                                      width: 0,
-                                      color:
-                                          Color.fromARGB(255, 199, 199, 179))),
-                              filled: true,
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 0,
-                                      color:
-                                          Color.fromARGB(255, 255, 255, 255)),
-                                  borderRadius: BorderRadius.circular(16)),
-                              fillColor: Color.fromARGB(153, 255, 255, 255),
-                              focusColor: Color.fromARGB(255, 231, 231, 231)),
-                          value: invoiceController.selectShopId,
-                          onChanged: (value) {
-                            invoiceController.invoiceListsFilter.value.clear();
-                            invoiceController.walletTransactionLists.clear();
-                            invoiceController.walletAmount.value = '';
-                            invoiceController.onDropDownChanged(value);
-                            invoiceController.changeShop(
-                              value: value,
-                            );
-                          },
-                          items:
-                              addInvoiceController.shopLists.value.map((data) {
-                            return DropdownMenuItem(
-                                value: data.id.toString(),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 5.0),
-                                  child: Text(
-                                    data.name,
-                                    overflow: TextOverflow.visible,
-                                  ),
-                                ));
-                          }).toList(),
-                        ));
-                  }),
+                              direction: ShimmerDirection.fromRTLB(),
+                            ),
+                          );
+                        }
+                        return Obx(() {
+                          return Container(
+                              width: 60.w,
+                              child: DropdownButtonFormField(
+                                isExpanded: true,
+                                isDense: true,
+                                style: GoogleFonts.roboto(
+                                    fontSize: 18,
+                                    color: Color.fromRGBO(0, 0, 0, 1)),
+                                decoration: InputDecoration(
+                                    hintStyle: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w300,
+                                      height: 1.1725,
+                                      color: Color.fromARGB(93, 0, 0, 0),
+                                    ),
+                                    hintText: "Select Shop",
+                                    enabled: true,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                        borderSide: BorderSide(
+                                            width: 0,
+                                            color: Color.fromARGB(
+                                                255, 199, 199, 179))),
+                                    filled: true,
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 0,
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255)),
+                                        borderRadius:
+                                            BorderRadius.circular(16)),
+                                    fillColor:
+                                        Color.fromARGB(153, 255, 255, 255),
+                                    focusColor:
+                                        Color.fromARGB(255, 231, 231, 231)),
+                                value: invoiceController.selectShopId,
+                                onChanged: (value) async {
+                                  invoiceController.invoiceListsFilter.value
+                                      .clear();
+                                  invoiceController.walletTransactionLists
+                                      .clear();
+                                  invoiceController.invoiceLists.value.clear();
+                                  invoiceController.walletCurrentpage.value = 1;
+                                  invoiceController.invoiceCurrentpage.value =
+                                      1;
+                                  invoiceController.walletAmount.value = '';
+                                  invoiceController.filterPage.value = 1;
+                                  invoiceController.debitListValue.value =
+                                      "All";
+                                  invoiceController.changeShop(
+                                    value: value,
+                                  );
+                                  await invoiceController.checkVerifiedVendor();
+                                  await invoiceController
+                                      .onDropDownChanged(value);
+                                  await invoiceController
+                                      .ondropDownChangedInvoice(value);
+                                },
+                                items: addInvoiceController.shopLists.value
+                                    .map((data) {
+                                  return DropdownMenuItem(
+                                      value: data.id.toString(),
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 5.0),
+                                        child: Text(
+                                          data.name,
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                      ));
+                                }).toList(),
+                              ));
+                        });
+                      }),
                 ),
                 Container(
                   decoration: BoxDecoration(),
@@ -540,7 +599,7 @@ class InvoiceView extends GetView<InvoiceController> {
                                           invoiceController.filterListValue
                                               .value = value.toString();
                                           invoiceController
-                                              .onFilterListChange(value);
+                                              .onFilterListChange();
                                         },
                                         items: invoiceController.filterList
                                             .map((data) {
@@ -591,17 +650,23 @@ class InvoiceView extends GetView<InvoiceController> {
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterFloat,
-            floatingActionButton: FloatingActionButton(
-                backgroundColor: Color.fromARGB(255, 57, 55, 166),
-                onPressed: () {
-                  Get.to(AddInvoiceView(
-                    invoiceController: invoiceController,
-                  ));
-                },
-                child: Icon(
-                  Icons.add,
-                  size: 30,
-                )),
+            floatingActionButton: Obx(() {
+              return (invoiceController.isAddInvoiceTrue.value == false ||
+                      invoiceController.selectShopId == null)
+                  ? Container()
+                  : FloatingActionButton(
+                      backgroundColor: Color.fromARGB(255, 57, 55, 166),
+                      onPressed: () {
+                        Get.to(AddInvoiceView(
+                          shopId: invoiceController.selectShopId,
+                          invoiceController: invoiceController,
+                        ));
+                      },
+                      child: Icon(
+                        Icons.add,
+                        size: 30,
+                      ));
+            }),
           ),
         ),
       ),

@@ -298,56 +298,56 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                                           thickness: 2,
                                                         ),
                                                       ),
-                                                      Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            "Invoice Number",
-                                                            style: GoogleFonts
-                                                                .roboto(
-                                                                    fontSize:
-                                                                        14,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w300),
-                                                          ),
-                                                          Text(
-                                                              newData
-                                                                  .invoiceData
-                                                                  .invoiceNumber,
+                                                      Expanded(
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              "Invoice Number",
                                                               style: GoogleFonts.roboto(
-                                                                  fontSize: 18,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w500)),
-                                                          SizedBox(
-                                                            height: 16,
-                                                          ),
-                                                          Text(
-                                                            "Invoice Date",
-                                                            style: GoogleFonts
-                                                                .roboto(
+                                                                          .w300),
+                                                            ),
+                                                            Text(
+                                                                newData
+                                                                    .invoiceData
+                                                                    .invoiceNumber
+                                                                    .toString(),
+                                                                style: GoogleFonts.roboto(
                                                                     fontSize:
-                                                                        14,
+                                                                        18,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .w300),
-                                                          ),
-                                                          AutoSizeText(
-                                                              formattedDate,
-                                                              maxLines: 2,
-                                                              minFontSize: 14,
-                                                              maxFontSize: 20,
+                                                                            .w500)),
+                                                            SizedBox(
+                                                              height: 16,
+                                                            ),
+                                                            Text(
+                                                              "Invoice Date",
                                                               style: GoogleFonts.roboto(
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .w500)),
-                                                        ],
+                                                                          .w300),
+                                                            ),
+                                                            AutoSizeText(
+                                                                formattedDate,
+                                                                maxLines: 2,
+                                                                minFontSize: 14,
+                                                                maxFontSize: 20,
+                                                                style: GoogleFonts.roboto(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500)),
+                                                          ],
+                                                        ),
                                                       )
                                                     ],
                                                   ),

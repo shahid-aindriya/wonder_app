@@ -1,5 +1,5 @@
 name: wonder_app
-version: 1.0.11+12
+version: 1.0.13+14
 publish_to: none
 description: A new Flutter project.
 environment: 
@@ -43,6 +43,11 @@ dependencies:
   upgrader: ^4.8.1
   flutter_cache_manager: ^3.3.0
   pinch_zoom: ^1.0.0
+  text_to_speech: ^0.2.3
+  paginated_search_bar: ^1.1.1
+  infinite_scroll_pagination: ^3.2.0
+  pull_to_refresh: ^2.0.0
+  shimmer_animation: ^2.1.0+1
  
 dev_dependencies: 
   flutter_lints: ^2.0.0

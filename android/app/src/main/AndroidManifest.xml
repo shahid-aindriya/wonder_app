@@ -14,7 +14,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyB1wjIvMb5foy65Etk2JeVhHK_NVgxT8ho"/>
+               android:value="AIzaSyA6sfxAGWorlekK-rkolU152WkN5mzn76A"/>
         <activity
               android:name="com.yalantis.ucrop.UCropActivity"
               android:screenOrientation="portrait"
@@ -40,7 +40,10 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+                <action android:name="android.intent.action.TTS_SERVICE"/>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>      
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

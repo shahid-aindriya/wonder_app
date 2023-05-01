@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -12,11 +13,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/add_invoice/controllers/add_invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 
-import '../../../data/urls.dart';
 import 'package:http/http.dart' as http;
+import 'package:wonder_app/app/modules/request_pending/views/request_pending_view.dart';
 
+import '../../../data/urls.dart';
 import '../../invoice_details/models/invoice_approval_model.dart';
 import '../../profile_view/model/userdata_response.dart';
+import '../model/search_invoice_model.dart';
+import '../model/search_transaction_model.dart';
 import '../model/verified_model.dart';
 import '../model/wallet_screen_model.dart';
 
@@ -28,7 +32,7 @@ class InvoiceController extends GetxController {
   final count = 0.obs;
   @override
   void onInit() {
-    pushFCMtoken();
+    // pushFCMtoken();
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
@@ -38,6 +42,12 @@ class InvoiceController extends GetxController {
     razorpay3.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess3);
     razorpay3.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError3);
     razorpay3.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet3);
+    scrollController.addListener(scrollListner);
+    walletScrollController.addListener(walletScroll);
+    walletTransactionScrollController.addListener(walletTransactionScroll);
+    invoiceScrollController.addListener(invoiceScroll);
+    filterScrolController.addListener(filterScrollListener);
+    dateRangeScrollController.addListener(dateRangeScrollListener);
     // TODO: implement onInit
     super.onInit();
   }
@@ -69,28 +79,50 @@ class InvoiceController extends GetxController {
   var amountDataList = RxList<AmountData>().obs;
 
   dynamic selectShopId;
-  getInvoiceLists() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final userId = prefs.getInt("userId");
-      var body = {
-        "user_id": userId,
-      };
-      var request = await http.post(
-          Uri.parse("${baseUrl.value}vendor-invoice-list/"),
-          headers: headers,
-          body: jsonEncode(body));
+  // getInvoiceLists() async {
+  //   try {
+  //     final prefs = await SharedPreferences.getInstance();
+  //     final userId = prefs.getInt("userId");
+  //     var body = {
+  //       "user_id": userId,
+  //     };
+  //     var request = await http.post(
+  //         Uri.parse("${baseUrl.value}vendor-invoice-list/"),
+  //         headers: headers,
+  //         body: jsonEncode(body));
 
-      log(request.statusCode.toString());
-      if (request.statusCode == 201) {
-        invoiceLists.value.clear();
-        final invoiceData = invoiceDataFromJson(request.body);
-        // invoiceLists.value.addAll(invoiceData.invoiceData);
-        invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
-        // selectShopId = invoiceLists.value.first.id;
+  //     log(request.statusCode.toString());
+  //     if (request.statusCode == 201) {
+  //       invoiceLists.value.clear();
+  //       final invoiceData = invoiceDataFromJson(request.body);
+  //       // invoiceLists.value.addAll(invoiceData.invoiceData);
+  //       invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
+  //       // selectShopId = invoiceLists.value.first.id;
+  //     }
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
+
+  var isAddInvoiceTrue = false.obs;
+  checkVerifiedVendor() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+    final body = {"user_id": userId};
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}check-vendor-add-invoice/"),
+        body: jsonEncode(body),
+        headers: headers);
+    if (request.statusCode == 201) {
+      log(request.body);
+      final data = jsonDecode(request.body);
+      if (data["add_invoice"] == true) {
+        isAddInvoiceTrue.value = true;
+        return;
+      } else {
+        isAddInvoiceTrue.value = false;
+        return;
       }
-    } catch (e) {
-      log(e.toString());
     }
   }
 
@@ -102,66 +134,135 @@ class InvoiceController extends GetxController {
 
     update();
   }
-  // RxList<AmountData> amountdataList = <AmountData>[].obs;
-  // invoiceDetails({int? invoiceId}) async {
-  //   var body = {"invoice_id": invoiceId};
 
-  //   var request = await http.post(
-  //       Uri.parse("${baseUrl.value}vendor-invoice-details/"),
-  //       headers: headers,
-  //       body: jsonEncode(body));
-
-  //   log(request.body.toString());
-  //   if (request.statusCode == 201) {
-  //     final invoiceDetailsResponse =
-  //         invoiceDetailsResponseFromJson(request.body);
-  //     amountdataList.assign(invoiceDetailsResponse.amountData);
-  //   }
-  // }
+  final invoiceScrollController = ScrollController();
+  final walletTransactionScrollController = ScrollController();
   RxList<TransactionDatum> walletTransactionLists = <TransactionDatum>[].obs;
+  RxList<TransactionDatum> walletTransactionLists2 = <TransactionDatum>[].obs;
+
+  RxInt walletTransactionTotalpage = 1.obs;
+  var walletCurrentpage = 1.obs;
+
   var walletAmount = "".obs;
   onDropDownChanged(id) async {
-    walletTransactionLists.clear();
-    var body = {"shop_id": id};
+    // walletTransactionLists.clear();
+    // invoiceLists.value.clear();
+    startDate = null;
+    endDate = null;
+    final entryType =
+        debitListValue.value == "All" ? null : debitListValue.value;
+    if (walletCurrentpage.value > walletTransactionTotalpage.value) {
+      return;
+    }
+    var walletBody = {
+      "shop_id": id,
+      "page": walletCurrentpage.value,
+      "entry_type": entryType
+    };
     log("haii $id");
     walletAmount.value = '';
-    // invoiceLists.value.clear();
-    // invoiceLists.value
-    //     .addAll(invoiceListsForDropDown.value.where((p0) => p0.shopId = int.tryParse(id)!));
-    // update();
-    try {
-      final request = await http.post(
-          Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
-          headers: headers,
-          body: jsonEncode(body));
 
+    try {
       final requests = await http.post(
           Uri.parse("${baseUrl.value}shop-wallet-transactions/"),
           headers: headers,
-          body: jsonEncode(body));
-      log(requests.body);
-      if (request.statusCode == 201) {
-        final invoiceData = invoiceDataFromJson(request.body);
-        invoiceLists.value.assignAll(invoiceData.invoiceData);
-        invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
-        filterListValue.value = "All";
-        searchInvoiceList.clear();
-        update();
-      }
+          body: jsonEncode(walletBody));
+      log(requests.statusCode.toString());
+
       if (requests.statusCode == 201) {
         final walletScreenModel = walletScreenModelFromJson(requests.body);
-        walletTransactionLists.assignAll(walletScreenModel.transactionData);
+        walletTransactionTotalpage.value = walletScreenModel.totalPages;
         walletAmount.value = walletScreenModel.shopWalletAmount.toString();
-        update();
+
+        if (walletCurrentpage.value == 1) {
+          walletTransactionLists.assignAll(walletScreenModel.transactionData);
+          walletTransactionLists2.assignAll(walletScreenModel.transactionData);
+
+          searchWalletTransactionList.clear();
+          await checkActiveUser();
+          update();
+        } else {
+          walletTransactionLists.addAll(walletScreenModel.transactionData);
+          walletTransactionLists2.addAll(walletScreenModel.transactionData);
+          walletAmount.value = walletScreenModel.shopWalletAmount.toString();
+          searchWalletTransactionList.clear();
+          await checkActiveUser();
+          update();
+        }
       }
-      log(requests.body);
+      // log(requests.body);
     } catch (e) {
       // Get.snackbar("Error", "Something went wrong",
       //     backgroundColor: Colors.red);
     }
   }
 
+  RxInt invoiceTotalpage = 1.obs;
+  var invoiceCurrentpage = 1.obs;
+  ondropDownChangedInvoice(id) async {
+    if (invoiceCurrentpage.value > invoiceTotalpage.value) {
+      return;
+    }
+    var invoiceBody = {"shop_id": id, "page": invoiceCurrentpage.value};
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
+        headers: headers,
+        body: jsonEncode(invoiceBody));
+    log(request.statusCode.toString());
+    if (request.statusCode == 201) {
+      final invoiceData = invoiceDataFromJson(request.body);
+      invoiceTotalpage.value = invoiceData.totalPages;
+
+      if (invoiceCurrentpage.value == 1) {
+        invoiceLists.value.assignAll(invoiceData.invoiceData);
+        invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
+
+        filterListValue.value = "All";
+        searchInvoiceLists.clear();
+        searchWalletTransactionList.clear();
+        await checkActiveUser();
+        update();
+      } else {
+        invoiceLists.value.addAll(invoiceData.invoiceData);
+        invoiceListsFilter.value.addAll(invoiceData.invoiceData);
+
+        filterListValue.value = "All";
+        searchInvoiceLists.clear();
+
+        await checkActiveUser();
+        update();
+      }
+    }
+  }
+
+  var isInvoiceLoading = false.obs;
+  Future<void> invoiceScroll() async {
+    if (invoiceScrollController.position.pixels ==
+        invoiceScrollController.position.maxScrollExtent) {
+      isInvoiceLoading.value = true;
+      invoiceCurrentpage.value++;
+      log("hai");
+      await ondropDownChangedInvoice(selectShopId);
+      isInvoiceLoading.value = false;
+      update();
+    }
+  }
+
+  var isWalletLoading = false.obs;
+  Future<void> walletTransactionScroll() async {
+    if (walletTransactionScrollController.position.pixels ==
+        walletTransactionScrollController.position.maxScrollExtent) {
+      isWalletLoading.value = true;
+      walletCurrentpage.value++;
+      log("hai");
+      await onDropDownChanged(selectShopId);
+      isWalletLoading.value = false;
+      update();
+    }
+  }
+
   onPullRefreshInWallet() async {
+    walletCurrentpage.value = 1;
     var body = {"shop_id": selectShopId};
     try {
       final request = await http.post(
@@ -174,18 +275,19 @@ class InvoiceController extends GetxController {
           body: jsonEncode(body));
       // log(requests.body);
       if (request.statusCode == 201) {
-        invoiceLists.value.clear();
+        // invoiceLists.value.clear();
         final invoiceData = invoiceDataFromJson(request.body);
-        invoiceLists.value.addAll(invoiceData.invoiceData);
+        invoiceLists.value.assignAll(invoiceData.invoiceData);
         invoiceListsFilter.value.assignAll(invoiceData.invoiceData);
         filterListValue.value = "All";
-        searchInvoiceList.clear();
+        searchInvoiceLists.clear();
         update();
       }
       if (requests.statusCode == 201) {
         final walletScreenModel = walletScreenModelFromJson(requests.body);
         walletTransactionLists.assignAll(walletScreenModel.transactionData);
         walletAmount.value = walletScreenModel.shopWalletAmount.toString();
+        searchWalletTransactionList.clear();
         update();
       }
     } catch (e) {
@@ -212,60 +314,287 @@ class InvoiceController extends GetxController {
 
   RxList<dynamic> filterList = ['All', 'Approved', 'Pending', 'Rejected'].obs;
   var filterListValue = 'All'.obs;
-  onFilterListChange(value) {
-    invoiceLists.value.clear();
-    if (value == "All") {
-      invoiceLists.value.assignAll(invoiceListsFilter.value);
-    } else if (value == "Approved") {
-      invoiceLists.value.assignAll(
-          invoiceListsFilter.value.where((p0) => p0.status == "Approve"));
-    } else if (value == "Pending") {
-      invoiceLists.value.assignAll(
-          invoiceListsFilter.value.where((p0) => p0.status == "Pending"));
-    } else {
-      invoiceLists.value.assignAll(
-          invoiceListsFilter.value.where((p0) => p0.status == "Reject"));
+  var filterPage = 1.obs;
+  RxInt totalFilterPage = 1.obs;
+  final filterScrolController = ScrollController();
+  onFilterListChange() async {
+    if (filterPage.value > totalFilterPage.value) {
+      return;
     }
-  }
+    invoiceLists.value.clear();
+    dynamic body;
+    if (filterListValue.value == "All") {
+      log("1");
+      body = {"shop_id": 1, "status": "All", "page": filterPage.value};
+    } else if (filterListValue.value == "Approved") {
+      log("2");
+      body = {"shop_id": 1, "status": "Approve", "page": filterPage.value};
+    } else if (filterListValue.value == "Pending") {
+      log("3");
+      body = {"shop_id": 1, "status": "Pending", "page": filterPage.value};
+    } else {
+      log("4");
+      body = {"shop_id": 1, "status": "Reject", "page": filterPage.value};
+    }
 
-  RxList<InvoiceDatum> searchInvoiceList = <InvoiceDatum>[].obs;
-  searchInvoiceResults(String value) {
-    searchInvoiceList.clear();
-    for (var index in invoiceListsFilter.value) {
-      if (index.invoiceNumber.toString().contains(
-                value.toLowerCase(),
-              ) ||
-          index.invoiceDate.toString().contains(
-                value.toLowerCase(),
-              ) ||
-          index.phone.toString().contains(
-                value.toLowerCase(),
-              )) {
-        InvoiceDatum data = InvoiceDatum(
-            id: index.id,
-            customerId: index.customerId,
-            customerName: index.customerName,
-            phone: index.phone,
-            userId: index.userId,
-            shopId: index.shopId,
-            userImage: index.userImage,
-            vendorImage: index.vendorImage,
-            invoiceImage: index.invoiceImage,
-            invoiceNumber: index.invoiceNumber,
-            invoiceDate: index.invoiceDate,
-            preTaxAmount: index.preTaxAmount,
-            invoiceAmount: index.invoiceAmount,
-            remark: index.remark,
-            status: index.status,
-            myself: index.myself,
-            amountData: index.amountData);
-        searchInvoiceList.add(data);
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}shop-invoice-filter-by-status/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(request.body);
+    if (request.statusCode == 201) {
+      final invoiceData = invoiceDataFromJson(request.body);
+      totalFilterPage.value = invoiceData.totalPages;
+      if (filterPage.value == 1) {
+        invoiceLists.value.assignAll(invoiceData.invoiceData);
+        update();
+      } else {
+        invoiceLists.value.addAll(invoiceData.invoiceData);
+        update();
       }
     }
   }
 
-  RxList<UserData> userDetailLists = <UserData>[].obs;
+  Future<void> filterScrollListener() async {
+    if (filterScrolController.position.maxScrollExtent ==
+        filterScrolController.offset) {
+      isInvoiceLoading.value = true;
+      filterPage.value++;
+      log("hello");
+      await onFilterListChange();
+      isInvoiceLoading.value = false;
+      update();
+    }
+  }
 
+  RxList<dynamic> debitList = ['All', 'Debit', 'Credit'].obs;
+  var debitListValue = 'All'.obs;
+  DateTime? startDate;
+  DateTime? endDate;
+  DateTimeRange? selecteds;
+  var currentDatePage = 1.obs;
+  RxInt totalDatePage = 1.obs;
+  final dateRangeScrollController = ScrollController();
+  dateSelect({context}) async {
+    DateTimeRange? newRange;
+    final initialDate = DateTimeRange(
+        start: DateTime.now().add(const Duration(days: -2)),
+        end: DateTime.now());
+    selecteds = (await showDateRangePicker(
+      context: context,
+      initialDateRange: newRange ?? initialDate,
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+    ));
+
+    if (selecteds == null) {
+      return;
+    } else {
+      startDate = selecteds!.start;
+      endDate = selecteds!.end;
+
+      await fetChDateRange();
+      update();
+      // walletTransactionLists.value = walletTransactionLists2.where((list) {
+      //   DateTime date =
+      //       DateFormat('yyyy MMM dd, hh:mm a').parse(list.createdAt);
+      //   DateTime dates = DateTime.parse(date.toString());
+      //   return dates.isAtSameMomentAs(startDate!) ||
+      //       dates.isAfter(startDate!) &&
+      //           dates.isBefore(endDate!.add(Duration(days: 1)));
+      // }).toList();
+
+      // log(startDate.toString());
+      // log(endDate.toString());
+    }
+  }
+
+  fetChDateRange() async {
+    if (selecteds == null || currentDatePage.value > totalDatePage.value) {
+      return;
+    }
+    final entryType =
+        debitListValue.value == "All" ? null : debitListValue.value;
+    startDate = selecteds!.start;
+    endDate = selecteds!.end;
+    walletTransactionLists.clear();
+    DateTime date = DateTime.parse(startDate.toString());
+    String formattedStartDate = DateFormat('yyyy-MM-dd').format(date);
+    DateTime date2 = DateTime.parse(endDate.toString());
+    String formattedEndDate = DateFormat('yyyy-MM-dd').format(date2);
+    final body = {
+      "shop_id": selectShopId,
+      "date_from": formattedStartDate,
+      "date_to": formattedEndDate,
+      "page": currentDatePage.value,
+      "entry_type": entryType
+    };
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}filter-shop-wallet-transactions-date/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(request.body);
+    if (request.statusCode == 201) {
+      final walletScreenModel = walletScreenModelFromJson(request.body);
+      totalDatePage.value = walletScreenModel.totalPages;
+      if (currentDatePage.value == 1) {
+        walletTransactionLists.assignAll(walletScreenModel.transactionData);
+        update();
+      } else {
+        walletTransactionLists.addAll(walletScreenModel.transactionData);
+        update();
+      }
+    }
+  }
+
+  var isDateMoving = false.obs;
+  dateRangeScrollListener() async {
+    if (dateRangeScrollController.position.maxScrollExtent ==
+        dateRangeScrollController.offset) {
+      isDateMoving.value = true;
+      currentDatePage.value++;
+      log("haidfg");
+      await fetChDateRange();
+      isDateMoving.value = false;
+      update();
+    }
+  }
+
+  RxList<InvoiceDatas> searchInvoiceLists = <InvoiceDatas>[].obs;
+  var isFetching = false.obs;
+
+  final TextEditingController searchInvoiceController = TextEditingController();
+  RxInt totalpage = 1.obs;
+  var page = 1.obs;
+
+  final scrollController = ScrollController();
+  fetchData() async {
+    if (page.value > totalpage.value) {
+      return;
+    }
+    final body = {
+      "shop_id": selectShopId,
+      "search_key": searchInvoiceController.text,
+      "page": page.value
+    };
+    final response = await http.post(
+        Uri.parse("${baseUrl.value}vendor-invoice-search/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(response.body);
+
+    if (response.statusCode == 201) {
+      final searchInvoiceData = searchInvoiceDataFromJson(response.body);
+      totalpage.value = searchInvoiceData.totalPages;
+
+      if (page.value == 1) {
+        searchInvoiceLists.assignAll(searchInvoiceData.invoiceData);
+        update();
+      } else {
+        searchInvoiceLists.addAll(searchInvoiceData.invoiceData);
+        update();
+      }
+
+      update();
+    }
+  }
+
+  Future<void> scrollListner() async {
+    if (scrollController.position.maxScrollExtent == scrollController.offset) {
+      isFetching.value = true;
+      page.value++;
+      log("hai");
+      await fetchData();
+      isFetching.value = false;
+      update();
+    }
+  }
+
+  final TextEditingController searchWalletTextController =
+      TextEditingController();
+  RxList<WalletTransactionDatum> searchWalletTransactionList =
+      <WalletTransactionDatum>[].obs;
+  var isMoving = false.obs;
+  final currentPage = 1.obs;
+  RxInt walletTotalpage = 1.obs;
+  final walletScrollController = ScrollController();
+  Future<void> searchWalletTransactions() async {
+    if (currentPage.value > walletTotalpage.value) {
+      return;
+    }
+
+    final body = {
+      "shop_id": selectShopId,
+      "search_key": searchWalletTextController.text,
+      "page": currentPage.value
+    };
+    try {
+      final response = await http.post(
+          Uri.parse("${baseUrl.value}search-shop-wallet-transactions/"),
+          body: jsonEncode(body),
+          headers: headers);
+      log(response.body);
+      if (response.statusCode == 201) {
+        final searchWalletTransaction =
+            searchWalletTransactionFromJson(response.body);
+        walletTotalpage.value = searchWalletTransaction.totalPages;
+
+        if (currentPage.value == 1) {
+          searchWalletTransactionList
+              .assignAll(searchWalletTransaction.transactionData);
+          update();
+        } else {
+          searchWalletTransactionList
+              .addAll(searchWalletTransaction.transactionData);
+          update();
+        }
+
+        update();
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> walletScroll() async {
+    if (walletScrollController.position.maxScrollExtent ==
+        walletScrollController.offset) {
+      isMoving.value = true;
+      currentPage.value++;
+      log("hai");
+      await searchWalletTransactions();
+      isMoving.value = false;
+      update();
+    }
+  }
+
+  Future<bool?> checkActiveUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+    var body = {"user_id": userId};
+    try {
+      final request = await http.post(
+          Uri.parse("${baseUrl.value}check-vendor-active/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(request.body);
+      if (request.statusCode == 201) {
+        final jsonData = jsonDecode(request.body);
+        if (jsonData["is_active"] == true) {
+          return true;
+        } else {
+          await prefs.clear();
+          Get.offAll(RequestPendingView());
+          return false;
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  RxList<UserData> userDetailLists = <UserData>[].obs;
   Future<dynamic> getUserData() async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
@@ -293,7 +622,7 @@ class InvoiceController extends GetxController {
     try {
       String? token = await messaging.getToken();
 
-      log("token:$token");
+      print("token:$token");
       print("hello");
       await sendDeviceToken(token!);
     } catch (e) {

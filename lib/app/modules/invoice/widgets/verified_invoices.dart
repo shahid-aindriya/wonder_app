@@ -463,7 +463,8 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                             return RefreshIndicator(
                               onRefresh: () async {
                                 await widget.invoiceController
-                                    .getInvoiceLists();
+                                    .ondropDownChangedInvoice(
+                                        widget.invoiceController.selectShopId);
                               },
                               child: Obx(() {
                                 return widget

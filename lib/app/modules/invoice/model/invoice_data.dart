@@ -12,13 +12,19 @@ String invoiceDataToJson(InvoiceData data) => json.encode(data.toJson());
 class InvoiceData {
   InvoiceData({
     required this.invoiceData,
+    required this.page,
+    required this.totalPages,
   });
+  dynamic page;
+  dynamic totalPages;
 
   List<InvoiceDatum> invoiceData;
 
   factory InvoiceData.fromJson(Map<String, dynamic> json) => InvoiceData(
         invoiceData: List<InvoiceDatum>.from(
             json["invoice_data"].map((x) => InvoiceDatum.fromJson(x))),
+        page: json["page"],
+        totalPages: json["total_pages"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -47,22 +53,22 @@ class InvoiceDatum {
     required this.userImage,
   });
 
-  int id;
-  int customerId;
+  dynamic id;
+  dynamic customerId;
   String? customerName;
-  String phone;
-  int userId;
-  int shopId;
-  String invoiceImage;
-  String invoiceNumber;
-  DateTime invoiceDate;
-  String preTaxAmount;
-  String invoiceAmount;
-  String remark;
-  String status;
+  dynamic phone;
+  dynamic userId;
+  dynamic shopId;
+  dynamic invoiceImage;
+  dynamic invoiceNumber;
+  dynamic invoiceDate;
+  dynamic preTaxAmount;
+  dynamic invoiceAmount;
+  dynamic remark;
+  dynamic status;
   bool myself;
-  String vendorImage;
-  String userImage;
+  dynamic vendorImage;
+  dynamic userImage;
 
   AmountData amountData;
 
@@ -74,8 +80,9 @@ class InvoiceDatum {
         userId: json["user_id"],
         shopId: json["shop_id"],
         invoiceImage: json["invoice_image"],
-        invoiceNumber: json["invoice_number"],
-        invoiceDate: DateTime.parse(json["invoice_date"]),
+        invoiceNumber: json["invoice_number"] ?? "",
+        invoiceDate: DateTime.parse(
+            json["invoice_date"] ?? DateTime.now().toIso8601String()),
         preTaxAmount: json["pre_tax_amount"],
         invoiceAmount: json["invoice_amount"],
         remark: json["remark"] ?? "null",

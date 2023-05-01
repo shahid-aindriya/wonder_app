@@ -6,22 +6,24 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/add_invoice/models/all_user_model.dart';
+import 'package:wonder_app/app/modules/add_invoice/widgets/amount_details.dart';
+import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 import '../../../data/urls.dart';
-import '../../invoice/controllers/invoice_controller.dart';
 import '../../my_shops/model/shops_list_model.dart';
 
 class AddInvoiceController extends GetxController {
   //TODO: Implement AddInvoiceController
   @override
   void onInit() {
-    getAllUsers();
-    getListOfShops();
+    // getAllUsers();
+    // getListOfShops();
     // TODO: implement onInit
     super.onInit();
   }
@@ -101,30 +103,58 @@ class AddInvoiceController extends GetxController {
     update();
   }
 
+  RxList<dynamic> amountDetailsList = <dynamic>[].obs;
+  var isButtonLoad = false.obs;
+  var totalVerified = "".obs;
+  invoiceAmountData(shopId, addInvoiceController, customerId) async {
+    amountDetailsList.clear();
+    isButtonLoad.value = true;
+    final body = {
+      "shop_id": shopId,
+      "invoice_amount": invoiceAmountController.text
+    };
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-invoice-amount-data/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(request.body);
+    if (request.statusCode == 201) {
+      final data = jsonDecode(request.body);
+      amountDetailsList.assign(data);
+
+      isButtonLoad.value = false;
+      Get.to(AmountDetails(
+        customerId: customerId,
+        shopId: shopId,
+        addInvoiceController: addInvoiceController,
+      ));
+    }
+  }
+
   var isLoading = false.obs;
-  addInvoice(
-      {context, customerid, required InvoiceController controller}) async {
+  addInvoice(context, customerid, shopId) async {
     isLoading.value = true;
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
+    log(customerid.toString());
+    log(userId.toString());
+    log(shopId);
+    log(invoiceAmountController.text);
 
     var body = {
       "customer_id": customerid,
       "user_id": userId,
-      "shop_id": selectShopId,
-      "invoice_image": invoiceImg,
-      "invoice_number": invoiceNumber.text,
-      "invoice_date": invoiceDAte.text,
-      "pre_tax_amount": preTaxController.text,
+      "shop_id": shopId,
+      "pre_tax_amount": invoiceAmountController.text,
       "invoice_amount": invoiceAmountController.text,
     };
     try {
       var request = await http.post(
           Uri.parse("${baseUrl.value}vendor-add-invoice/"),
           headers: headers,
-          body: json.encode(body));
-      log(selectShopId);
-      // log(request.body.toString());
+          body: jsonEncode(body));
+
+      log(request.statusCode.toString());
       if (request.statusCode == 201) {
         selectUserId = null;
         invoiceImg = '';
@@ -135,10 +165,11 @@ class AddInvoiceController extends GetxController {
         preTaxController.clear();
         remarksController.clear();
         invoiceDAte.clear();
-        await controller.onPullRefreshInWallet();
+        await invoiceController.onPullRefreshInWallet();
 
         update();
-
+      Get.back();
+        Get.back();
         MotionToast.success(
           dismissable: true,
           enableAnimation: false,
@@ -154,6 +185,7 @@ class AddInvoiceController extends GetxController {
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
+  
       }
     } catch (e) {
       // Get.snackbar("Error", "Something went wrong",
@@ -250,6 +282,96 @@ class AddInvoiceController extends GetxController {
           ),
         );
       },
+    );
+  }
+
+  dialogPopForAddInvoice(context, customerId, shopId) {
+    Get.defaultDialog(
+      title: "CONFIRMATION MESSAGE",
+      titleStyle: GoogleFonts.roboto(
+          color: Color.fromARGB(255, 63, 70, 189),
+          fontWeight: FontWeight.bold,
+          fontSize: 18),
+      content: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          text: 'Are you sure you want to submit the invoice?',
+          style: GoogleFonts.roboto(color: Colors.black, fontSize: 16),
+        ),
+      ),
+      contentPadding: EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 10),
+      confirm: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: LinearGradient(
+              begin: Alignment(0.8374384045600891, 0.11822659522294998),
+              end: Alignment(-0.11822660267353058, 0.10431758314371109),
+              colors: [
+                Color.fromRGBO(63, 70, 189, 1),
+                Color.fromRGBO(65, 125, 232, 1)
+              ]),
+        ),
+        child: Obx(() {
+          return ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.transparent),
+                  elevation: MaterialStateProperty.all(0)),
+              onPressed: isLoading.value == true
+                  ? null
+                  : () async {
+                      await addInvoice(context, customerId, shopId);
+                    },
+              child: isLoading.value == true
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Processing",
+                            style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400))
+                      ],
+                    )
+                  : Text("Confirm",
+                      style: GoogleFonts.roboto(
+                          fontSize: 16, fontWeight: FontWeight.w400)));
+        }),
+      ),
+      cancel: Obx(() {
+        return Visibility(
+          visible: isLoading.value == true ? false : true,
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color.fromARGB(255, 236, 236, 236)),
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(Size(100, 40)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.transparent),
+                    elevation: MaterialStateProperty.all(0)),
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text(
+                  "Cancel",
+                  style: GoogleFonts.roboto(
+                      color: Color.fromARGB(255, 81, 90, 197),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                )),
+          ),
+        );
+      }),
     );
   }
 }

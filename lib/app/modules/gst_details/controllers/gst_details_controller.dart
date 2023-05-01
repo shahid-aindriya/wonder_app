@@ -173,6 +173,7 @@ class GstDetailsController extends GetxController {
         isLoading.value = false;
       }
     } catch (e) {
+      log(e.toString());
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);
       isLoading.value = false;
