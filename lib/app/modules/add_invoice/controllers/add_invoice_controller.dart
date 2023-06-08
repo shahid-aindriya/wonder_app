@@ -36,7 +36,7 @@ class AddInvoiceController extends GetxController {
   var shopLists = RxList<ShopDatum>().obs;
   String? selectUserId;
   dynamic selectShopId;
-
+  final TextEditingController searchUserController = TextEditingController();
   final TextEditingController invoiceNumber = TextEditingController();
   final TextEditingController invoiceDAte = TextEditingController();
   final TextEditingController preTaxController = TextEditingController();
@@ -109,15 +109,16 @@ class AddInvoiceController extends GetxController {
   invoiceAmountData(shopId, addInvoiceController, customerId) async {
     amountDetailsList.clear();
     isButtonLoad.value = true;
+    log(shopId.toString());
     final body = {
       "shop_id": shopId,
-      "invoice_amount": invoiceAmountController.text
+      "invoice_amount": invoiceAmountController.text,
     };
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-invoice-amount-data/"),
         body: jsonEncode(body),
         headers: headers);
-    log(request.body);
+    log(request.statusCode.toString());
     if (request.statusCode == 201) {
       final data = jsonDecode(request.body);
       amountDetailsList.assign(data);
@@ -142,11 +143,12 @@ class AddInvoiceController extends GetxController {
     log(invoiceAmountController.text);
 
     var body = {
-      "customer_id": customerid,
+      "phone": searchUserController.text,
       "user_id": userId,
       "shop_id": shopId,
       "pre_tax_amount": invoiceAmountController.text,
       "invoice_amount": invoiceAmountController.text,
+      "invoice_date": invoiceDAte.text
     };
     try {
       var request = await http.post(
@@ -164,11 +166,12 @@ class AddInvoiceController extends GetxController {
         invoiceNumber.clear();
         preTaxController.clear();
         remarksController.clear();
+        searchUserController.clear();
         invoiceDAte.clear();
         await invoiceController.onPullRefreshInWallet();
 
         update();
-      Get.back();
+        Get.back();
         Get.back();
         MotionToast.success(
           dismissable: true,
@@ -185,7 +188,6 @@ class AddInvoiceController extends GetxController {
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
-  
       }
     } catch (e) {
       // Get.snackbar("Error", "Something went wrong",

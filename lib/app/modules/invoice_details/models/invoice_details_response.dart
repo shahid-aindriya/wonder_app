@@ -39,6 +39,7 @@ class AmountData {
     required this.name,
     required this.email,
     required this.razorKey,
+    required this.totalAmount,
     required this.razorSecret,
     required this.haveBank,
   });
@@ -46,6 +47,7 @@ class AmountData {
   dynamic currentAmount;
   dynamic commissionAmount;
   dynamic additionalAmount;
+  dynamic totalAmount;
   String name;
   String email;
   dynamic razorKey;
@@ -55,6 +57,7 @@ class AmountData {
   factory AmountData.fromJson(Map<String, dynamic> json) => AmountData(
         currentAmount: json["current_amount"],
         commissionAmount: json["commission_amount"],
+        totalAmount: json["total_amount"],
         additionalAmount: json["additional_amount"],
         name: json["name"],
         email: json["email"],
@@ -94,6 +97,7 @@ class InvoiceData {
     required this.status,
     required this.myself,
     required this.vendorImage,
+    required this.payHalfAmount,
     required this.userImage,
   });
 
@@ -107,6 +111,7 @@ class InvoiceData {
   int shopId;
   dynamic shopName;
   dynamic invoiceImage;
+  bool payHalfAmount;
   dynamic invoiceNumber;
   dynamic invoiceDate;
   dynamic preTaxAmount;
@@ -124,6 +129,7 @@ class InvoiceData {
         phone: json["phone"],
         userId: json["user_id"],
         vendorName: json["vendor_name"],
+        payHalfAmount: json["pay_half_amount"],
         vendorPhone: json["vendor_phone"],
         shopId: json["shop_id"],
         shopName: json["shop_name"],

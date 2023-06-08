@@ -16,6 +16,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/map_place_picker/bindings/map_place_picker_binding.dart';
 import '../modules/map_place_picker/views/map_place_picker_view.dart';
+import '../modules/my_earnings/bindings/my_earnings_binding.dart';
+import '../modules/my_earnings/views/my_earnings_view.dart';
 import '../modules/my_shops/bindings/my_shops_binding.dart';
 import '../modules/my_shops/views/my_shops_view.dart';
 import '../modules/notifications/bindings/notifications_binding.dart';
@@ -42,6 +44,8 @@ import '../modules/store_details/bindings/store_details_binding.dart';
 import '../modules/store_details/views/store_details_view.dart';
 import '../modules/success/bindings/success_binding.dart';
 import '../modules/success/views/success_view.dart';
+import '../modules/support_request/bindings/support_request_binding.dart';
+import '../modules/support_request/views/support_request_view.dart';
 import '../modules/terms_conditions/bindings/terms_conditions_binding.dart';
 import '../modules/terms_conditions/views/terms_conditions_view.dart';
 
@@ -160,8 +164,18 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.REQUEST_COINS,
-      page: () =>  RequestCoinsView(),
+      page: () => RequestCoinsView(),
       binding: RequestCoinsBinding(),
+    ),
+    GetPage(
+      name: _Paths.SUPPORT_REQUEST,
+      page: () => SupportRequestView(),
+      binding: SupportRequestBinding(),
+    ),
+    GetPage(
+      name: _Paths.MY_EARNINGS,
+      page: () => const MyEarningsView(),
+      binding: MyEarningsBinding(),
     ),
   ];
 }

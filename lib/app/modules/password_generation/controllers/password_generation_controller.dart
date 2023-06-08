@@ -41,7 +41,8 @@ class PasswordGenerationController extends GetxController {
       password,
       adarImag,
       panImag,
-      context}) async {
+      context,
+      repId}) async {
     var body = {
       "name": name,
       "phone": phone,
@@ -51,7 +52,8 @@ class PasswordGenerationController extends GetxController {
       "auto_password": isOn.value,
       "password": password,
       "adar_image": adarImag,
-      "pan_image": panImag
+      "pan_image": panImag,
+      "business_rep_id": repId
     };
 
     try {

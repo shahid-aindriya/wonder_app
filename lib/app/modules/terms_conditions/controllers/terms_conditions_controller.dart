@@ -19,7 +19,7 @@ class TermsConditionsController extends GetxController {
           Uri.parse("${baseUrl.value}terms-and-conditions/"),
           headers: headers);
 
-      log(request.statusCode.toString());
+      log(request.body.toString());
       if (request.statusCode == 201) {
         final termsConditions = termsConditionsFromJson(request.body);
         termsList.assign(termsConditions.terms);

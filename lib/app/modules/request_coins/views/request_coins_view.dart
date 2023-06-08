@@ -22,6 +22,7 @@ class RequestCoinsView extends GetView<RequestCoinsController> {
   final TextEditingController selectUserId = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    addInvoiceController.getListOfShops();
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(

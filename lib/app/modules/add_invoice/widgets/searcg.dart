@@ -13,6 +13,7 @@ class SearchUser extends GetView<AddInvoiceController> {
   final focusNode = FocusNode();
   @override
   Widget build(BuildContext context) {
+    _controller.getAllUsers();
     final TextData phone = Get.arguments;
     final TextEditingController searchController = TextEditingController();
     focusNode.requestFocus();
@@ -54,175 +55,188 @@ class SearchUser extends GetView<AddInvoiceController> {
           ),
         ),
         body: SafeArea(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
-                      child: TextField(
-                        focusNode: focusNode,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                            hintStyle: GoogleFonts.roboto(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w300,
-                              height: 1.1725,
-                              color: Color.fromARGB(93, 0, 0, 0),
+          child: FutureBuilder(
+              future: _controller.getAllUsers(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 20, 15, 20),
+                            child: TextField(
+                              focusNode: focusNode,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                  hintStyle: GoogleFonts.roboto(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w300,
+                                    height: 1.1725,
+                                    color: Color.fromARGB(93, 0, 0, 0),
+                                  ),
+                                  hintText: "Search user",
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 18.0, horizontal: 18),
+                                  enabled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(
+                                          width: 0,
+                                          color: Color.fromARGB(
+                                              255, 199, 199, 179))),
+                                  filled: true,
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 0,
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255)),
+                                      borderRadius: BorderRadius.circular(16)),
+                                  fillColor: Color.fromARGB(153, 255, 255, 255),
+                                  focusColor:
+                                      Color.fromARGB(255, 231, 231, 231)),
+                              controller: searchController,
+                              onChanged: (value) {
+                                _controller.getSearchResults(value);
+                              },
                             ),
-                            hintText: "Search user",
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 18.0, horizontal: 18),
-                            enabled: true,
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: BorderSide(
-                                    width: 0,
-                                    color: Color.fromARGB(255, 199, 199, 179))),
-                            filled: true,
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 0,
-                                    color: Color.fromARGB(255, 255, 255, 255)),
-                                borderRadius: BorderRadius.circular(16)),
-                            fillColor: Color.fromARGB(153, 255, 255, 255),
-                            focusColor: Color.fromARGB(255, 231, 231, 231)),
-                        controller: searchController,
-                        onChanged: (value) {
-                          _controller.getSearchResults(value);
-                        },
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-              Obx(
-                () {
-                  return Expanded(
-                    child: ListView.separated(
-                        itemBuilder: (context, index) {
-                          var data = _controller.searchUserList[index];
+                    Obx(
+                      () {
+                        return Expanded(
+                          child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                var data = _controller.searchUserList[index];
 
-                          if (data.phone
-                              .toLowerCase()
-                              .contains(searchController.text.toLowerCase())) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14)),
-                                elevation: 10,
-                                child: ListTile(
-                                  onTap: (() {
-                                    phone.number.text = data.phone;
-                                    phone.id.text = data.id.toString();
-                                    Get.back();
-                                  }),
-                                  leading: Padding(
-                                    padding: const EdgeInsets.all(1.0),
-                                    child: Image.asset(
-                                      'assets/images/User.png',
-                                    ),
-                                  ),
-                                  title: Row(
-                                    children: [
-                                      Text(
-                                        "Number:",
-                                        style: GoogleFonts.roboto(
-                                            fontWeight: FontWeight.w300),
+                                if (data.phone.toLowerCase().contains(
+                                    searchController.text.toLowerCase())) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: Card(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(14)),
+                                      elevation: 10,
+                                      child: ListTile(
+                                        onTap: (() {
+                                          phone.number.text = data.phone;
+                                          phone.id.text = data.id.toString();
+                                          Get.back();
+                                        }),
+                                        leading: Padding(
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Image.asset(
+                                            'assets/images/User.png',
+                                          ),
+                                        ),
+                                        title: Row(
+                                          children: [
+                                            Text(
+                                              "Number:",
+                                              style: GoogleFonts.roboto(
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              " ${data.phone}",
+                                              style: GoogleFonts.roboto(
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                        subtitle: Row(
+                                          children: [
+                                            // SizedBox(
+                                            //   width: 10.w,
+                                            // ),
+                                            Text(
+                                              "Id: ",
+                                              style: GoogleFonts.roboto(
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(data.id.toString(),
+                                                style: GoogleFonts.roboto(
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
                                       ),
-                                      Text(
-                                        " ${data.phone}",
-                                        style: GoogleFonts.roboto(
-                                            fontWeight: FontWeight.w500),
+                                    ),
+                                  );
+                                }
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 10, right: 10),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(14)),
+                                    elevation: 10,
+                                    child: ListTile(
+                                      onTap: (() {
+                                        phone.number.text = data.phone;
+                                        phone.id.text = data.id.toString();
+                                        Get.back();
+                                      }),
+                                      leading: Padding(
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: Image.asset(
+                                          'assets/images/User.png',
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                  subtitle: Row(
-                                    children: [
-                                      // SizedBox(
-                                      //   width: 10.w,
-                                      // ),
-                                      Text(
-                                        "Id: ",
-                                        style: GoogleFonts.roboto(
-                                            fontWeight: FontWeight.w300),
+                                      title: Row(
+                                        children: [
+                                          Text(
+                                            "Number:",
+                                            style: GoogleFonts.roboto(
+                                                fontWeight: FontWeight.w300),
+                                          ),
+                                          Text(
+                                            " ${data.phone}",
+                                            style: GoogleFonts.roboto(
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
                                       ),
-                                      Text(data.id.toString(),
-                                          style: GoogleFonts.roboto(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w500)),
-                                    ],
+                                      subtitle: Row(
+                                        children: [
+                                          // SizedBox(
+                                          //   width: 10.w,
+                                          // ),
+                                          Text(
+                                            "Id: ",
+                                            style: GoogleFonts.roboto(
+                                                fontWeight: FontWeight.w300),
+                                          ),
+                                          Text(data.id.toString(),
+                                              style: GoogleFonts.roboto(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500)),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            );
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14)),
-                              elevation: 10,
-                              child: ListTile(
-                                onTap: (() {
-                                  phone.number.text = data.phone;
-                                  phone.id.text = data.id.toString();
-                                  Get.back();
-                                }),
-                                leading: Padding(
-                                  padding: const EdgeInsets.all(1.0),
-                                  child: Image.asset(
-                                    'assets/images/User.png',
-                                  ),
-                                ),
-                                title: Row(
-                                  children: [
-                                    Text(
-                                      "Number:",
-                                      style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                    Text(
-                                      " ${data.phone}",
-                                      style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Row(
-                                  children: [
-                                    // SizedBox(
-                                    //   width: 10.w,
-                                    // ),
-                                    Text(
-                                      "Id: ",
-                                      style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                    Text(data.id.toString(),
-                                        style: GoogleFonts.roboto(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, index) {
-                          return const Divider();
-                        },
-                        itemCount: _controller.searchUserList == []
-                            ? _controller.userLists.value.length
-                            : _controller.searchUserList.length),
-                  );
-                },
-              ),
-            ],
-          ),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return const Divider();
+                              },
+                              itemCount: _controller.searchUserList == []
+                                  ? _controller.userLists.value.length
+                                  : _controller.searchUserList.length),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              }),
         ),
       ),
     );

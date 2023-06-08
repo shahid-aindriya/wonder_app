@@ -13,20 +13,24 @@ class VerfiedModel {
   VerfiedModel({
     required this.totalAmountData,
     required this.invoiceData,
+    required this.totalPages,
   });
 
   TotalAmountData totalAmountData;
   List<VerifiedInvoiceData> invoiceData;
+  int totalPages;
 
   factory VerfiedModel.fromJson(Map<String, dynamic> json) => VerfiedModel(
-        totalAmountData: TotalAmountData.fromJson(json["total_amount_data"]),
         invoiceData: List<VerifiedInvoiceData>.from(
             json["invoice_data"].map((x) => VerifiedInvoiceData.fromJson(x))),
+        totalAmountData: TotalAmountData.fromJson(json["total_amount_data"]),
+        totalPages: json["total_pages"],
       );
 
   Map<String, dynamic> toJson() => {
-        "total_amount_data": totalAmountData.toJson(),
         "invoice_data": List<dynamic>.from(invoiceData.map((x) => x.toJson())),
+        "total_amount_data": totalAmountData.toJson(),
+        "total_pages": totalPages,
       };
 }
 
@@ -51,6 +55,7 @@ class VerifiedInvoiceData {
     required this.vendorImage,
     required this.userImage,
     required this.amountData,
+    required this.payHalfAmount,
   });
 
   int id;
@@ -71,6 +76,7 @@ class VerifiedInvoiceData {
   bool myself;
   dynamic vendorImage;
   dynamic userImage;
+  bool payHalfAmount;
   VerifiedAmountData amountData;
 
   factory VerifiedInvoiceData.fromJson(Map<String, dynamic> json) =>
@@ -85,6 +91,7 @@ class VerifiedInvoiceData {
         shopName: json["shop_name"],
         invoiceImage: json["invoice_image"],
         invoiceNumber: json["invoice_number"],
+        payHalfAmount: json["pay_half_amount"],
         invoiceDate:
             DateTime.parse(json["invoice_date"] ?? DateTime.now().toString()),
         preTaxAmount: json["pre_tax_amount"],
@@ -123,6 +130,7 @@ class VerifiedInvoiceData {
 class VerifiedAmountData {
   VerifiedAmountData({
     required this.currentAmount,
+    required this.totalAmount,
     required this.commissionAmount,
     required this.additionalAmount,
     required this.name,
@@ -130,11 +138,14 @@ class VerifiedAmountData {
     required this.razorKey,
     required this.razorSecret,
     required this.haveBank,
+    required this.vendorBalance,
   });
 
   dynamic currentAmount;
   dynamic commissionAmount;
   dynamic additionalAmount;
+  dynamic totalAmount;
+  dynamic vendorBalance;
   String name;
   String email;
   String razorKey;
@@ -147,7 +158,9 @@ class VerifiedAmountData {
         commissionAmount: json["commission_amount"],
         additionalAmount: json["additional_amount"],
         name: json["name"],
+        totalAmount: json["total_amount"],
         email: json["email"],
+        vendorBalance: json["vendor_balance"],
         razorKey: json["razor_key"],
         razorSecret: json["razor_secret"],
         haveBank: json["have_bank"],
@@ -167,32 +180,43 @@ class VerifiedAmountData {
 
 class TotalAmountData {
   TotalAmountData({
+    required this.shopId,
     required this.totalAmount,
+    required this.shopWalletAmount,
     required this.name,
     required this.email,
     required this.razorKey,
     required this.razorSecret,
     required this.haveBank,
-    required this.shopId,
+    required this.dueAmount,
+    required this.halfAmount,
+    required this.shopBalance,
   });
 
   dynamic totalAmount;
+  dynamic dueAmount;
+  dynamic halfAmount;
+  dynamic shopWalletAmount;
   String name;
   String email;
   String razorKey;
   String razorSecret;
   bool haveBank;
   String shopId;
-
+  dynamic shopBalance;
   factory TotalAmountData.fromJson(Map<String, dynamic> json) =>
       TotalAmountData(
         totalAmount: json["total_amount"],
+        shopWalletAmount: json["shop_wallet_amount"],
         shopId: json["shop_id"],
         name: json["name"],
         email: json["email"],
         razorKey: json["razor_key"],
         razorSecret: json["razor_secret"],
         haveBank: json["have_bank"],
+        dueAmount: json["due_amount"],
+        halfAmount: json["half_amount"],
+        shopBalance: json["shop_balance"],
       );
 
   Map<String, dynamic> toJson() => {

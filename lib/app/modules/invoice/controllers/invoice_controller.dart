@@ -48,6 +48,7 @@ class InvoiceController extends GetxController {
     invoiceScrollController.addListener(invoiceScroll);
     filterScrolController.addListener(filterScrollListener);
     dateRangeScrollController.addListener(dateRangeScrollListener);
+    verifiedScrollController.addListener(verfiedListScrollListener);
     // TODO: implement onInit
     super.onInit();
   }
@@ -321,20 +322,36 @@ class InvoiceController extends GetxController {
     if (filterPage.value > totalFilterPage.value) {
       return;
     }
-    invoiceLists.value.clear();
+
     dynamic body;
     if (filterListValue.value == "All") {
       log("1");
-      body = {"shop_id": 1, "status": "All", "page": filterPage.value};
+      body = {
+        "shop_id": selectShopId,
+        "status": "All",
+        "page": filterPage.value
+      };
     } else if (filterListValue.value == "Approved") {
       log("2");
-      body = {"shop_id": 1, "status": "Approve", "page": filterPage.value};
+      body = {
+        "shop_id": selectShopId,
+        "status": "Approve",
+        "page": filterPage.value
+      };
     } else if (filterListValue.value == "Pending") {
       log("3");
-      body = {"shop_id": 1, "status": "Pending", "page": filterPage.value};
+      body = {
+        "shop_id": selectShopId,
+        "status": "Pending",
+        "page": filterPage.value
+      };
     } else {
       log("4");
-      body = {"shop_id": 1, "status": "Reject", "page": filterPage.value};
+      body = {
+        "shop_id": selectShopId,
+        "status": "Reject",
+        "page": filterPage.value
+      };
     }
 
     final request = await http.post(
@@ -660,24 +677,61 @@ class InvoiceController extends GetxController {
 
   RxList<VerifiedInvoiceData> verifiedList = <VerifiedInvoiceData>[].obs;
   RxList<TotalAmountData> verifiedAmountData = <TotalAmountData>[].obs;
+  RxList<dynamic> listOfId = <dynamic>[].obs;
   RxList<bool> checkBoxedList = <bool>[].obs;
   var verifiedAmount = ''.obs;
-  Future<bool> verifiedInvoiceList() async {
-    var body = {"shop_id": selectShopId};
+  RxDouble totalAmount = 0.0.obs;
 
+  RxInt totalVerifiedCount = 1.obs;
+  var currentVerifiedCount = 1.obs;
+  final verifiedScrollController = ScrollController();
+  Future<bool?> verifiedInvoiceList() async {
+    if (currentVerifiedCount.value > totalVerifiedCount.value) {
+      return true;
+    }
+    var body = {"shop_id": selectShopId, "page": currentVerifiedCount.value};
+    // listOfId.clear();
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-verified-invoice-list/"),
         body: jsonEncode(body));
     log(request.body.toString());
     if (request.statusCode == 201) {
       final verfiedModel = verfiedModelFromJson(request.body);
-      verifiedList.assignAll(verfiedModel.invoiceData);
+
       verifiedAmountData.assign(verfiedModel.totalAmountData);
-      checkBoxedList = RxList.filled(verifiedList.length, false);
+
+      totalAmount.value = verifiedAmountData.first.totalAmount;
+      totalVerifiedCount.value = verfiedModel.totalPages;
+      if (currentVerifiedCount.value == 1) {
+        verifiedList.assignAll(verfiedModel.invoiceData);
+        checkBoxedList = RxList.filled(verifiedList.length, false);
+        update();
+      } else {
+        verifiedList.addAll(verfiedModel.invoiceData);
+        checkBoxedList = RxList.filled(verifiedList.length, false);
+        update();
+      }
+      // for (var element in verifiedList) {
+      //   listOfId.add(element.id);
+      // }
+
       update();
       return true;
     }
     return false;
+  }
+
+  var isVerfiedInvoiceLoading = false.obs;
+  verfiedListScrollListener() async {
+    if (verifiedScrollController.position.maxScrollExtent ==
+        verifiedScrollController.offset) {
+      isVerfiedInvoiceLoading.value = true;
+      currentVerifiedCount.value++;
+      log("haidfg");
+      await verifiedInvoiceList();
+      isVerfiedInvoiceLoading.value = false;
+      update();
+    }
   }
 
   var isVerifyLoading = false.obs;
@@ -902,15 +956,17 @@ class InvoiceController extends GetxController {
   }
 
   dynamic shopId;
-  dynamic fullAmount;
+  dynamic halfAmount;
   paymentSuccessForAll({
     razorId,
   }) async {
     var body = {
       "shop_id": selectShopId,
-      "amount": fullAmount,
+      "amount": halfAmount,
+      "invoice_ids": idOfVerifiedList,
       "razorpay_transaction_id": razorId,
-      "razorpay_status": "completed"
+      "razorpay_status": "completed",
+      "total_amount": totalAmount.value
     };
     try {
       isVerifyLoading.value = true;
@@ -943,27 +999,49 @@ class InvoiceController extends GetxController {
   RxInt selecteddCommissionCount = 0.obs;
   List<double> selectedAmountList = [];
   RxDouble totalSelectedCommissionAmount = 0.0.obs;
-  checBoxFunct(value, index, commissionAmount, walletAmount) {
+  RxDouble additionSelectAmount = 0.0.obs;
+  RxDouble dueSelectAmount = 0.0.obs;
+  checBoxFunct(
+      {value,
+      index,
+      commissionAmount,
+      walletAmount,
+      preTaxAmount,
+      addiTionalAmount,
+      dueAmount}) {
+    num preTax = num.tryParse(preTaxAmount)!;
     checkBoxedList[index] = value!;
+    update();
     if (value == true) {
+      // log(commissionAmount.toString());
+      additionSelectAmount.value =
+          additionSelectAmount.value + commissionAmount;
       selecteddCommission.value = selecteddCommission.value + commissionAmount;
-
+      totalSelectedCommissionAmount.value =
+          totalSelectedCommissionAmount.value + preTax;
+      dueSelectAmount.value = dueSelectAmount.value + dueAmount;
       selecteddCommissionCount.value++;
       update();
     } else {
       selecteddCommission.value = selecteddCommission.value - commissionAmount;
-
+      totalSelectedCommissionAmount.value =
+          totalSelectedCommissionAmount.value - preTax;
+      selecteddCommission.value = selecteddCommission.value - commissionAmount;
+      dueSelectAmount.value = dueSelectAmount.value - dueAmount;
+      additionSelectAmount.value =
+          additionSelectAmount.value - commissionAmount;
       selecteddCommissionCount.value--;
       update();
     }
-    totalSelectedCommissionAmount.value = 0;
-    if (selecteddCommission.value > walletAmount) {
-      totalSelectedCommissionAmount.value =
-          selecteddCommission.value - walletAmount;
-    }
-
-    log(selecteddCommission.value.toString());
-    log(walletAmount.toString());
+    // totalSelectedCommissionAmount.value = 0;
+    // if (selecteddCommission.value > walletAmount) {
+    //   totalSelectedCommissionAmount.value =
+    //       selecteddCommission.value - walletAmount;
+    // }
+    // log("selecteddCommission:-${selecteddCommission.value.toString()}");
+    // log("totalValue:-${totalSelectedCommissionAmount.value.toString()}");
+    // log("walletAmount:-${walletAmount.toString()}");
+    log(value.toString());
     update();
   }
 
@@ -1067,6 +1145,83 @@ class InvoiceController extends GetxController {
       totalSelectedCommissionAmount.value = 0;
       checkButton.value = false;
       checkBoxedList = RxList.filled(checkBoxedList.length, false);
+    }
+  }
+
+  RxList<dynamic> dueList = <dynamic>[].obs;
+  RxString shopWalletAmount = "0".obs;
+  getDueData() async {
+    log(selectShopId);
+    final body = {"shop_id": selectShopId.toString()};
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}shop-list-due-transactions/"),
+        headers: headers,
+        body: jsonEncode(body));
+    log(request.body);
+    if (request.statusCode == 201) {
+      final data = jsonDecode(request.body);
+      shopWalletAmount.value = data['shop_wallet_amount'].toString();
+      dueList.assignAll(data["transaction_data"]);
+    }
+  }
+
+  var isWithdrawSend = false.obs;
+  sentWithdrawRequest(context) async {
+    final body = {"shop_id": selectShopId};
+    isWithdrawSend.value = true;
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}shop-withdraw-amount/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(request.body);
+    if (request.statusCode == 201) {
+      final data = jsonDecode(request.body);
+      if (data['success'] == true) {
+        isWithdrawSend.value = false;
+        MotionToast.success(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Success ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: const Text('Please check your mail for the reqeust'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      } else {
+        isWithdrawSend.value = false;
+        MotionToast.error(
+          dismissable: true,
+          enableAnimation: false,
+          position: MotionToastPosition.top,
+          title: const Text(
+            'Error ',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          description: const Text('Try again after sometime'),
+          animationCurve: Curves.bounceIn,
+          borderRadius: 0,
+          animationDuration: const Duration(milliseconds: 1000),
+        ).show(context);
+      }
+      isWithdrawSend.value = false;
+    }
+    isWithdrawSend.value = false;
+  }
+
+  RxList<dynamic> idOfVerifiedList = <dynamic>[].obs;
+  void toggleIdSelection(int itemId) {
+    if (idOfVerifiedList.contains(itemId)) {
+      idOfVerifiedList.remove(itemId);
+    } else {
+      idOfVerifiedList.add(itemId);
     }
   }
 }

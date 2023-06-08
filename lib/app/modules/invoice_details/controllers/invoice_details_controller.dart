@@ -71,7 +71,7 @@ class InvoiceDetailsController extends GetxController {
 
   var isLoading = false.obs;
   void _showSnackBar(String message, {id}) async {
-    // Get.snackbar("Info ", message, backgroundColor: Colors.amber);
+     Get.snackbar("Info ", message, backgroundColor: Colors.amber);
     log(message);
     if (id != null) {
       isLoading.value = true;

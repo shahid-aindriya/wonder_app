@@ -455,7 +455,7 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                                                 newData.amountData
                                                                             .commissionAmount !=
                                                                         null
-                                                                    ? "₹ ${newData.amountData.commissionAmount}"
+                                                                    ? "₹ ${newData.amountData.totalAmount}"
                                                                     : "₹0",
                                                                 textAlign:
                                                                     TextAlign
@@ -943,28 +943,37 @@ class ApproveAndDecline extends StatelessWidget {
                     elevation: MaterialStateProperty.all(0),
                     backgroundColor: MaterialStateProperty.all(
                         Color.fromARGB(134, 255, 255, 255))),
-                onPressed: data.amountData.additionalAmount > 0
-                    ? () {
-                        invoiceDetailsController.openCheckout(
-                            data: data,
-                            email: data.amountData.email,
-                            name: data.amountData.name,
-                            amount: data.amountData.additionalAmount,
-                            razorKey: data.amountData.razorKey,
-                            invoiceId: data.invoiceData.id);
+                onPressed:
+                    //  data.invoiceData.payHalfAmount == false
+                    //     ? () {
+                    //         Get.snackbar("Error", "Can't approve this Invoice",
+                    //             backgroundColor: Colors.red);
+                    //       }
+                    //     :
 
-                        // invoiceDetailsController.openCheckout(
-                        //     invoiceId: data!.id,
-                        //     amount: data!.amountData.additionalAmount + 00,
-                        //     razorKey: data!.amountData.razorKey);
-                      }
-                    : () async {
-                        await invoiceDetailsController.approveOrDeclineInvoice(
-                            inoviceController: invoiceController,
-                            context: context,
-                            choice: "Approve",
-                            invoiceId: data.invoiceData.id);
-                      },
+                    data.amountData.additionalAmount > 0
+                        ? () {
+                            invoiceDetailsController.openCheckout(
+                                data: data,
+                                email: data.amountData.email,
+                                name: data.amountData.name,
+                                amount: data.amountData.additionalAmount,
+                                razorKey: data.amountData.razorKey,
+                                invoiceId: data.invoiceData.id);
+
+                            // invoiceDetailsController.openCheckout(
+                            //     invoiceId: data!.id,
+                            //     amount: data!.amountData.additionalAmount + 00,
+                            //     razorKey: data!.amountData.razorKey);
+                          }
+                        : () async {
+                            await invoiceDetailsController
+                                .approveOrDeclineInvoice(
+                                    inoviceController: invoiceController,
+                                    context: context,
+                                    choice: "Approve",
+                                    invoiceId: data.invoiceData.id);
+                          },
                 icon: Icon(Icons.check, color: Color.fromARGB(255, 0, 158, 16)),
                 label: Text(
                     data.amountData.additionalAmount > 0

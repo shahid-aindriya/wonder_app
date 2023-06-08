@@ -26,6 +26,8 @@ abstract class Routes {
   static const MAP_PLACE_PICKER = _Paths.MAP_PLACE_PICKER;
   static const TERMS_CONDITIONS = _Paths.TERMS_CONDITIONS;
   static const REQUEST_COINS = _Paths.REQUEST_COINS;
+  static const SUPPORT_REQUEST = _Paths.SUPPORT_REQUEST;
+  static const MY_EARNINGS = _Paths.MY_EARNINGS;
 }
 
 abstract class _Paths {
@@ -51,4 +53,6 @@ abstract class _Paths {
   static const MAP_PLACE_PICKER = '/map-place-picker';
   static const TERMS_CONDITIONS = '/terms-conditions';
   static const REQUEST_COINS = '/request-coins';
+  static const SUPPORT_REQUEST = '/support-request';
+  static const MY_EARNINGS = '/my-earnings';
 }

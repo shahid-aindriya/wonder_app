@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -23,7 +25,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
         TextEditingController();
     final formKey = GlobalKey<FormState>();
     return Container(
-     decoration: BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment(2, 1.0548897981643677),
             end: Alignment(-1.0548897981643677, 1.226324439048767),
@@ -769,7 +771,145 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 ),
                               ],
                             );
-                          })
+                          }),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          GetBuilder<SellerRegistController>(builder: (c) {
+                            return Row(
+                              children: [
+                                Container(
+                                  height: 20,
+                                  width: 20,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: Checkbox(
+                                    checkColor: Color(0xff4956b2),
+                                    activeColor:
+                                        Color.fromARGB(255, 255, 255, 255),
+                                    fillColor: MaterialStateProperty.all(
+                                        Color.fromARGB(255, 255, 255, 255)),
+                                    value: c.isChecked,
+                                    onChanged: (value) {
+                                      c.checkBox(value);
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Text("Signing up by Business Representative",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        height: 1.1725,
+                                        color: Color(0xff4956b2)))
+                              ],
+                            );
+                          }),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          GetBuilder<SellerRegistController>(builder: (c) {
+                            return Visibility(
+                              visible: c.isChecked == true ? true : false,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 14.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Select Business Representative',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.1725,
+                                            color: Color(0xff4956b2),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Obx(() {
+                                    return FutureBuilder(
+                                        future: controller.getReps(),
+                                        builder: (context, snapshot) {
+                                          return Container(
+                                              width: 100.w,
+                                              height: 50,
+                                              child: DropdownButtonFormField(
+                                                isExpanded: true,
+                                                isDense: true,
+                                                style: GoogleFonts.roboto(
+                                                    fontSize: 18,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1)),
+                                                decoration: InputDecoration(
+                                                    hintStyle:
+                                                        GoogleFonts.roboto(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      height: 1.1725,
+                                                      color: Color.fromARGB(
+                                                          93, 0, 0, 0),
+                                                    ),
+                                                    hintText:
+                                                        "Select Representative",
+                                                    enabled: true,
+                                                    enabledBorder: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                16),
+                                                        borderSide: BorderSide(
+                                                            width: 0,
+                                                            color: Color.fromARGB(
+                                                                255, 199, 199, 179))),
+                                                    filled: true,
+                                                    focusedBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            width: 0,
+                                                            color: Color.fromARGB(
+                                                                255, 255, 255, 255)),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                16)),
+                                                    fillColor: Color.fromARGB(
+                                                        153, 255, 255, 255),
+                                                    focusColor: Color.fromARGB(255, 231, 231, 231)),
+                                                value: controller.selectRepId,
+                                                onChanged: (value) async {
+                                                  controller.selectRepId =
+                                                      value;
+                                                },
+                                                items: controller.repsList
+                                                    .map((data) {
+                                                  return DropdownMenuItem(
+                                                      value: data['id'],
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 5.0),
+                                                        child: Text(
+                                                          data['phone'],
+                                                          overflow: TextOverflow
+                                                              .visible,
+                                                        ),
+                                                      ));
+                                                }).toList(),
+                                              ));
+                                        });
+                                  })
+                                ],
+                              ),
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -777,7 +917,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                 ),
               ),
               SizedBox(
-                height: 52,
+                height: 32,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -810,6 +950,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                         onPressed: () {
                           if (controller.panimg == '' ||
                               controller.adhaarimg == '') {
+                            log(controller.selectRepId.toString());
                             controller.snackBar(
                                 context: context,
                                 text: "Aadhar and pan photo is mandatory");
@@ -819,6 +960,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                 context: context,
                                 text: "Please fill all fileds properly");
                           } else {
+                            // log(controller.selectRepId.toString());
                             Get.to(PasswordGenerationView(
                               adhaarNumber: adhaarNumberEditingController.text,
                               adhaarimag: controller.adhaarimg,
@@ -826,7 +968,7 @@ class SellerRegistView extends GetView<SellerRegistController> {
                               panImag: controller.panimg,
                               panNumber: panNumberEditingController.text,
                               phoneNmber: phoneNumberEditingController.text,
-                              email: emailEditingController.text,
+                              email: emailEditingController.text,repId: controller.selectRepId,
                             ));
                           }
                         },

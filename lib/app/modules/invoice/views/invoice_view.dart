@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:wonder_app/app/data/colors.dart';
-import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/search_invoice.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/verified_invoices.dart';
-import 'package:wonder_app/app/modules/login/views/login_view.dart';
 
 import '../../add_invoice/controllers/add_invoice_controller.dart';
-import '../../my_shops/views/my_shops_view.dart';
 import '../../notifications/views/notifications_view.dart';
-import '../../profile_view/views/profile_view_view.dart';
-import '../../terms_conditions/views/terms_conditions_view.dart';
 import '../controllers/invoice_controller.dart';
+import '../widgets/drawer_tab.dart';
+import '../widgets/due.dart';
 import '../widgets/invoices_tab.dart';
 import '../widgets/notification_icon.dart';
 import '../widgets/wallet_tab.dart';
@@ -42,7 +37,7 @@ class InvoiceView extends GetView<InvoiceController> {
     // invoiceController.onPullRefreshInWallet();
     invoiceController.checkActiveUser();
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: UpgradeAlert(
         upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.material),
         child: Container(
@@ -58,235 +53,7 @@ class InvoiceView extends GetView<InvoiceController> {
                 ]),
           ),
           child: Scaffold(
-            drawer: Drawer(
-              backgroundColor: Color.fromARGB(
-                255,
-                239,
-                240,
-                246,
-              ),
-              child: ListView(children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        icon: Icon(Icons.close))
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      height: 124,
-                      width: 30.w,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: Obx(() {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(25),
-                            child: (invoiceController.userDetailLists.isEmpty ||
-                                    invoiceController
-                                            .userDetailLists.first.image ==
-                                        '')
-                                ? Image.asset("assets/images/User.png")
-                                : Image.network(
-                                    "$baseUrlForImage${invoiceController.userDetailLists.first.image}",
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                          );
-                        }),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Obx(() {
-                        return Text(
-                            invoiceController.userDetailLists.isEmpty
-                                ? ""
-                                : invoiceController.userDetailLists.first.email,
-                            style: GoogleFonts.roboto(
-                                color: Color.fromARGB(255, 63, 69, 189),
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600));
-                      }),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    // Text("Kakkanad",
-                    //     style: GoogleFonts.roboto(
-                    //         color: Color.fromARGB(255, 0, 0, 0),
-                    //         fontSize: 18,
-                    //         fontWeight: FontWeight.w300)),
-                  ],
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Column(
-                  children: [
-                    ListTile(
-                      onTap: () {
-                        Get.back();
-                        Get.to(ProfileViewView());
-                      },
-                      leading: Image.asset(
-                        "assets/images/User.png",
-                        fit: BoxFit.contain,
-                      ),
-                      title: Text(
-                        "View Profile",
-                        style: GoogleFonts.roboto(
-                            color: Color.fromARGB(177, 0, 0, 0),
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      trailing: IconButton(
-                          onPressed: () {
-                            Get.back();
-                            Get.to(ProfileViewView());
-                          },
-                          icon: Icon(Icons.arrow_forward_ios_outlined)),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 6.0),
-                      child: Divider(color: Colors.white, thickness: 2),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Get.to(MyShopsView());
-                        // Get.to(BankDetailsView());
-                      },
-                      leading: Image.asset(
-                        "assets/images/Storefront.png",
-                        fit: BoxFit.contain,
-                      ),
-                      title: Text(
-                        "My Shops",
-                        style: GoogleFonts.roboto(
-                            color: Color.fromARGB(177, 0, 0, 0),
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      trailing: IconButton(
-                          onPressed: () {
-                            Get.to(MyShopsView());
-                            // Get.to(BankDetailsView());
-                          },
-                          icon: Icon(Icons.arrow_forward_ios_outlined)),
-                    ),
-                    // Padding(
-                    //   padding: EdgeInsets.only(top: 6.0),
-                    //   child: Divider(color: Colors.white, thickness: 2),
-                    // ),
-                    // ListTile(
-                    //   leading: Image.asset(
-                    //     "assets/images/SuitcaseSimple.png",
-                    //     fit: BoxFit.contain,
-                    //   ),
-                    //   title: Text(
-                    //     "GST Details",
-                    //     style: GoogleFonts.roboto(
-                    //         color: Color.fromARGB(177, 0, 0, 0),
-                    //         fontSize: 17,
-                    //         fontWeight: FontWeight.normal),
-                    //   ),
-                    //   trailing: IconButton(
-                    //       onPressed: () {},
-                    //       icon: Icon(Icons.arrow_forward_ios_outlined)),
-                    // ),
-                    // Padding(
-                    //   padding: EdgeInsets.only(top: 6.0),
-                    //   child: Divider(color: Colors.white, thickness: 2),
-                    // ),
-                    // ListTile(
-                    //   leading: Image.asset(
-                    //     "assets/images/Bank.png",
-                    //     fit: BoxFit.contain,
-                    //   ),
-                    //   title: Text(
-                    //     "Bank Details",
-                    //     style: GoogleFonts.roboto(
-                    //         color: Color.fromARGB(177, 0, 0, 0),
-                    //         fontSize: 17,
-                    //         fontWeight: FontWeight.normal),
-                    //   ),
-                    //   trailing: IconButton(
-                    //       onPressed: () {},
-                    //       icon: Icon(Icons.arrow_forward_ios_outlined)),
-                    // ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 6.0),
-                      child: Divider(color: Colors.white, thickness: 2),
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Get.to(TermsConditionsView());
-                      },
-                      leading: Image.asset(
-                        "assets/images/ClipboardText.png",
-                        fit: BoxFit.contain,
-                      ),
-                      title: Text(
-                        "Terms & Conditions",
-                        style: GoogleFonts.roboto(
-                            color: Color.fromARGB(177, 0, 0, 0),
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      trailing: IconButton(
-                          onPressed: () {
-                            Get.to(TermsConditionsView());
-                          },
-                          icon: Icon(Icons.arrow_forward_ios_outlined)),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 6.0),
-                      child: Divider(color: Colors.white, thickness: 2),
-                    ),
-                    ListTile(
-                      onTap: () async {
-                        final prefs = await SharedPreferences.getInstance();
-                        await prefs.clear();
-                        invoiceController.invoiceLists.value.clear();
-                        invoiceController.walletTransactionLists.clear();
-                        await DefaultCacheManager().emptyCache();
-                        Get.offAll(LoginView());
-                      },
-                      leading: Image.asset(
-                        "assets/images/SignOut.png",
-                        fit: BoxFit.contain,
-                      ),
-                      title: Text(
-                        "Logout",
-                        style: GoogleFonts.roboto(
-                            color: Color.fromARGB(177, 0, 0, 0),
-                            fontSize: 17,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      trailing: IconButton(
-                          onPressed: () async {
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.clear();
-                            Get.offAll(LoginView());
-                          },
-                          icon: Icon(Icons.arrow_forward_ios_outlined)),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    )
-                  ],
-                )
-              ]),
-            ),
+            drawer: DrawerTab(addInvoiceController: addInvoiceController),
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               leading: Builder(builder: (contezxt) {
@@ -403,6 +170,7 @@ class InvoiceView extends GetView<InvoiceController> {
                                       .onDropDownChanged(value);
                                   await invoiceController
                                       .ondropDownChangedInvoice(value);
+                                  await invoiceController.getDueData();
                                 },
                                 items: addInvoiceController.shopLists.value
                                     .map((data) {
@@ -525,6 +293,28 @@ class InvoiceView extends GetView<InvoiceController> {
                           ),
                         ),
                       ),
+                      Tab(
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Wrap(
+                                children: [
+                                  ImageIcon(
+                                      AssetImage("assets/images/due.png")),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 2.0, left: 2),
+                                    child: Text(
+                                      "Due",
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -598,6 +388,10 @@ class InvoiceView extends GetView<InvoiceController> {
                                         onChanged: (value) {
                                           invoiceController.filterListValue
                                               .value = value.toString();
+                                          invoiceController.invoiceLists.value
+                                              .clear();
+                                          invoiceController.filterPage.value =
+                                              1;
                                           invoiceController
                                               .onFilterListChange();
                                         },
@@ -643,6 +437,7 @@ class InvoiceView extends GetView<InvoiceController> {
                         ],
                       ),
                       WalletTab(),
+                      Due()
                     ],
                   ),
                 ),

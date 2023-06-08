@@ -6,10 +6,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
+import 'package:wonder_app/app/data/urls.dart';
 
 class SellerRegistController extends GetxController {
   //TODO: Implement SellerRegistController
@@ -144,6 +146,27 @@ class SellerRegistController extends GetxController {
       return _croppedFile;
     } else {
       return;
+    }
+  }
+
+  bool isChecked = false;
+  dynamic selectRepId;
+  checkBox(value) {
+    isChecked = value;
+    if (value == false) {
+      selectRepId = null;
+    }
+    update();
+  }
+
+  RxList<dynamic> repsList = <dynamic>[].obs;
+  getReps() async {
+    final request = await http
+        .get(Uri.parse("${baseUrl.value}all-business-rep/"), headers: headers);
+    log(request.body);
+    if (request.statusCode == 201) {
+      final data = jsonDecode(request.body);
+      repsList.assignAll(data['list_business_rep']);
     }
   }
 }

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:wonder_app/app/modules/add_invoice/widgets/searcg.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 
 import '../controllers/add_invoice_controller.dart';
@@ -15,7 +15,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
       Get.put(AddInvoiceController());
   final InvoiceController? invoiceController;
   final formKey = GlobalKey<FormState>();
-  final TextEditingController searchUserController = TextEditingController();
+
   final TextEditingController selectUserId = TextEditingController();
   final shopId;
   AddInvoiceView({this.invoiceController, this.shopId});
@@ -79,7 +79,7 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                         child: Row(
                           children: [
                             Text(
-                              'Select User',
+                              'Enter phone number',
                               style: GoogleFonts.roboto(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -94,62 +94,60 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                         height: 8,
                       ),
 
-                      FutureBuilder(
-                          future: addInvoiceController.getAllUsers(),
-                          builder: (contsfext, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            }
-                            return TextFormField(
-                              enabled: true,
-                              controller: searchUserController,
-                              keyboardType: TextInputType.none,
-                              style: GoogleFonts.roboto(
-                                  fontSize: 18,
-                                  color: Color.fromRGBO(0, 0, 0, 1)),
-                              decoration: InputDecoration(
-                                  suffixIcon: Icon(Icons.search),
-                                  hintStyle: GoogleFonts.roboto(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w300,
-                                    height: 1.1725,
-                                    color: Color.fromARGB(93, 0, 0, 0),
-                                  ),
-                                  hintText: "Search user",
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 18.0, horizontal: 18),
-                                  enabled: true,
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                      borderSide: BorderSide(
-                                          width: 0,
-                                          color: Color.fromARGB(
-                                              255, 199, 199, 179))),
-                                  filled: true,
-                                  focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 0,
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255)),
-                                      borderRadius: BorderRadius.circular(16)),
-                                  fillColor: Color.fromARGB(153, 255, 255, 255),
-                                  focusColor:
-                                      Color.fromARGB(255, 231, 231, 231)),
-                              validator: (value) {
-                                if (selectUserId.text.isEmpty) {
-                                  return 'please enter valid Number';
-                                } else {
-                                  return null;
-                                }
-                              },
-                              onTap: () {
-                                Get.to(SearchUser(),
-                                    arguments: TextData(
-                                        searchUserController, selectUserId));
-                              },
-                            );
-                          }),
+                      // FutureBuilder(
+                      //     future: addInvoiceController.getAllUsers(),
+                      //     builder: (contsfext, snapshot) {
+                      //       if (snapshot.connectionState ==
+                      //           ConnectionState.waiting) {
+                      //         return CircularProgressIndicator();
+                      //       }
+                      // return
+                      TextFormField(
+                        enabled: true,
+                        controller: addInvoiceController.searchUserController,
+                        keyboardType: TextInputType.number, maxLength: 10,
+                        style: GoogleFonts.roboto(
+                            fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                        decoration: InputDecoration(
+                            // suffixIcon: Icon(Icons.search),
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              height: 1.1725,
+                              color: Color.fromARGB(93, 0, 0, 0),
+                            ),
+                            hintText: "Enter number",
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18.0, horizontal: 18),
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(16)),
+                            fillColor: Color.fromARGB(153, 255, 255, 255),
+                            focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        validator: (value) {
+                          if (!RegExp(r"^\d{10}$").hasMatch(value!) ||
+                              value.length < 3) {
+                            return 'please enter valid number';
+                          } else {
+                            return null;
+                          }
+                        },
+                        // onTap: () {
+                        //   Get.to(SearchUser(),
+                        //       arguments: TextData(
+                        //           searchUserController, selectUserId));
+                        // },
+                      ),
+                      // }),
                       // Obx(() {
                       //   return DropdownButtonFormField(
                       //     isExpanded: true,
@@ -218,9 +216,9 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                       //     ],
                       //   ),
                       // ),
-                      SizedBox(
-                        height: 8,
-                      ),
+                      // SizedBox(
+                      //   height: 8,
+                      // ),
                       // FutureBuilder(
                       //     future: addInvoiceController.getListOfShops(),
                       //     builder: (context, snapshot) {
@@ -460,98 +458,98 @@ class AddInvoiceView extends GetView<AddInvoiceController> {
                       //     }
                       //   },
                       // ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 14.0, top: 20),
-                      //   child: Row(
-                      //     children: [
-                      //       Text(
-                      //         'Invoice Date',
-                      //         style: GoogleFonts.roboto(
-                      //           fontSize: 16,
-                      //           fontWeight: FontWeight.w400,
-                      //           height: 1.1725,
-                      //           color: Color(0xff4956b2),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      // SizedBox(
-                      //   height: 8,
-                      // ),
-                      // TextFormField(
-                      //   controller: addInvoiceController.invoiceDAte,
-                      //   enabled: true, keyboardType: TextInputType.none,
-                      //   style: GoogleFonts.roboto(
-                      //       fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
-                      //   decoration: InputDecoration(
-                      //       hintStyle: GoogleFonts.roboto(
-                      //         fontSize: 18,
-                      //         fontWeight: FontWeight.w300,
-                      //         height: 1.1725,
-                      //         color: Color.fromARGB(93, 0, 0, 0),
-                      //       ),
-                      //       suffixIcon: Icon(Icons.calendar_month),
-                      //       hintText: "Enter Date",
-                      //       contentPadding: const EdgeInsets.symmetric(
-                      //           vertical: 18.0, horizontal: 18),
-                      //       enabled: true,
-                      //       enabledBorder: OutlineInputBorder(
-                      //           borderRadius: BorderRadius.circular(16),
-                      //           borderSide: BorderSide(
-                      //               width: 0,
-                      //               color: Color.fromARGB(255, 199, 199, 179))),
-                      //       filled: true,
-                      //       focusedBorder: OutlineInputBorder(
-                      //           borderSide: BorderSide(
-                      //               width: 0,
-                      //               color: Color.fromARGB(255, 255, 255, 255)),
-                      //           borderRadius: BorderRadius.circular(16)),
-                      //       fillColor: Color.fromARGB(153, 255, 255, 255),
-                      //       focusColor: Color.fromARGB(255, 231, 231, 231)),
-                      //   onTap: () async {
-                      //     DateTime? pickedDate = await showDatePicker(
-                      //         builder: (context, child) {
-                      //           return Theme(
-                      //             data: ThemeData.light().copyWith(
-                      //               buttonTheme: ButtonThemeData(
-                      //                 textTheme: ButtonTextTheme.primary,
-                      //               ),
-                      //               colorScheme: ColorScheme.light(
-                      //                 primary: Color(0xe53f46bd),
-                      //               ).copyWith(secondary: Colors.pink),
-                      //             ),
-                      //             child: child!,
-                      //           );
-                      //         },
-                      //         context: context,
-                      //         initialDate: DateTime.now(),
-                      //         firstDate: DateTime(
-                      //             1900), //DateTime.now() - not to allow to choose before today.
-                      //         lastDate: DateTime.now());
+                      Padding(
+                        padding: const EdgeInsets.only(left: 14.0, top: 20),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Invoice Date',
+                              style: GoogleFonts.roboto(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                height: 1.1725,
+                                color: Color(0xff4956b2),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      TextFormField(
+                        controller: addInvoiceController.invoiceDAte,
+                        enabled: true, keyboardType: TextInputType.none,
+                        style: GoogleFonts.roboto(
+                            fontSize: 18, color: Color.fromRGBO(0, 0, 0, 1)),
+                        decoration: InputDecoration(
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              height: 1.1725,
+                              color: Color.fromARGB(93, 0, 0, 0),
+                            ),
+                            suffixIcon: Icon(Icons.calendar_month),
+                            hintText: "Enter Date",
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 18.0, horizontal: 18),
+                            enabled: true,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 199, 199, 179))),
+                            filled: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                                borderRadius: BorderRadius.circular(16)),
+                            fillColor: Color.fromARGB(153, 255, 255, 255),
+                            focusColor: Color.fromARGB(255, 231, 231, 231)),
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                              builder: (context, child) {
+                                return Theme(
+                                  data: ThemeData.light().copyWith(
+                                    buttonTheme: ButtonThemeData(
+                                      textTheme: ButtonTextTheme.primary,
+                                    ),
+                                    colorScheme: ColorScheme.light(
+                                      primary: Color(0xe53f46bd),
+                                    ).copyWith(secondary: Colors.pink),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(
+                                  1900), //DateTime.now() - not to allow to choose before today.
+                              lastDate: DateTime.now());
 
-                      //     if (pickedDate != null) {
-                      //       String formattedDate =
-                      //           DateFormat('yyyy-MM-dd').format(pickedDate);
-                      //       addInvoiceController.invoiceDAte.text =
-                      //           formattedDate;
-                      //     } else {
-                      //       var newdate = DateTime.now();
-                      //       var newFormat =
-                      //           DateFormat('yyyy-MM-dd').format(newdate);
-                      //       addInvoiceController.invoiceDAte.text = newFormat;
-                      //     }
-                      //     return;
-                      //   },
-                      //   // validator: (value) {
-                      //   //   if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value!) ||
-                      //   //       value.length < 3) {
-                      //   //     return 'please enter valid name';
-                      //   //   } else {
-                      //   //     return null;
-                      //   //   }
-                      //   // },
-                      // ),
+                          if (pickedDate != null) {
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                            addInvoiceController.invoiceDAte.text =
+                                formattedDate;
+                          } else {
+                            var newdate = DateTime.now();
+                            var newFormat =
+                                DateFormat('yyyy-MM-dd').format(newdate);
+                            addInvoiceController.invoiceDAte.text = newFormat;
+                          }
+                          return;
+                        },
+                        // validator: (value) {
+                        //   if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value!) ||
+                        //       value.length < 3) {
+                        //     return 'please enter valid name';
+                        //   } else {
+                        //     return null;
+                        //   }
+                        // },
+                      ),
                       // Padding(
                       //   padding: const EdgeInsets.only(left: 14.0, top: 20),
                       //   child: Row(
