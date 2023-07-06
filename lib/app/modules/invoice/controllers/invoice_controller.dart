@@ -49,6 +49,7 @@ class InvoiceController extends GetxController {
     filterScrolController.addListener(filterScrollListener);
     dateRangeScrollController.addListener(dateRangeScrollListener);
     verifiedScrollController.addListener(verfiedListScrollListener);
+    dueScrollController.addListener(dueScrollListener);
     // TODO: implement onInit
     super.onInit();
   }
@@ -752,6 +753,8 @@ class InvoiceController extends GetxController {
       if (request.statusCode == 201) {
         final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
         if (invoiceApprovalModel.success == true) {
+          currentVerifiedCount.value = 1;
+          verifiedList.clear();
           await verifiedInvoiceList();
           await onPullRefreshInWallet();
           isVerifyLoading.value = false;
@@ -798,7 +801,7 @@ class InvoiceController extends GetxController {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            description: Text('Something went wrong or No sufficient balance'),
+            description: Text(invoiceApprovalModel.message),
             animationCurve: Curves.bounceIn,
             borderRadius: 0,
             animationDuration: const Duration(milliseconds: 1000),
@@ -978,6 +981,8 @@ class InvoiceController extends GetxController {
       if (requests.statusCode == 201) {
         Get.snackbar("Info ", "Payment completed succesfully",
             backgroundColor: Colors.green);
+        verifiedList.clear();
+        currentVerifiedCount.value = 1;
         await verifiedInvoiceList();
         await onPullRefreshInWallet();
         isVerifyLoading.value = false;
@@ -1150,9 +1155,18 @@ class InvoiceController extends GetxController {
 
   RxList<dynamic> dueList = <dynamic>[].obs;
   RxString shopWalletAmount = "0".obs;
+  final dueScrollController = ScrollController();
+  RxInt dueTotalCount = 1.obs;
+  var dueCurrentCount = 1.obs;
   getDueData() async {
-    log(selectShopId);
-    final body = {"shop_id": selectShopId.toString()};
+    if (dueCurrentCount.value > dueTotalCount.value) {
+      return;
+    }
+    log(selectShopId.toString());
+    final body = {
+      "shop_id": selectShopId.toString(),
+      "page": dueCurrentCount.value
+    };
     final request = await http.post(
         Uri.parse("${baseUrl.value}shop-list-due-transactions/"),
         headers: headers,
@@ -1160,8 +1174,28 @@ class InvoiceController extends GetxController {
     log(request.body);
     if (request.statusCode == 201) {
       final data = jsonDecode(request.body);
+      dueTotalCount.value = data["total_pages"];
       shopWalletAmount.value = data['shop_wallet_amount'].toString();
-      dueList.assignAll(data["transaction_data"]);
+      if (dueCurrentCount.value == 1) {
+        dueList.assignAll(data["transaction_data"]);
+        update();
+      } else {
+        dueList.addAll(data["transaction_data"]);
+        update();
+      }
+    }
+  }
+
+  var isDueLoading = false.obs;
+  dueScrollListener() async {
+    if (dueScrollController.position.maxScrollExtent ==
+        dueScrollController.offset) {
+      isDueLoading.value = true;
+      dueCurrentCount.value++;
+      log("haidfg");
+      await getDueData();
+      isDueLoading.value = false;
+      update();
     }
   }
 

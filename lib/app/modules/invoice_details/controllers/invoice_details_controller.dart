@@ -71,7 +71,7 @@ class InvoiceDetailsController extends GetxController {
 
   var isLoading = false.obs;
   void _showSnackBar(String message, {id}) async {
-     Get.snackbar("Info ", message, backgroundColor: Colors.amber);
+    Get.snackbar("Info ", message, backgroundColor: Colors.amber);
     log(message);
     if (id != null) {
       isLoading.value = true;
@@ -188,8 +188,11 @@ class InvoiceDetailsController extends GetxController {
         final invoiceApprovalModel = invoiceApprovalModelFromJson(request.body);
         if (invoiceApprovalModel.success == true) {
           await getInvoiceDetails(invoiceId: invoiceId);
+          await invoiceController.onPullRefreshInWallet();
           await invoiceController
               .ondropDownChangedInvoice(invoiceController.selectShopId);
+          invoiceController.currentVerifiedCount.value = 1;
+          invoiceController.verifiedList.clear();
           await inoviceController!.verifiedInvoiceList();
 
           MotionToast.success(

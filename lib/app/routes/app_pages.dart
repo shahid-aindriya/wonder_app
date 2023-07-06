@@ -4,6 +4,8 @@ import '../modules/add_invoice/bindings/add_invoice_binding.dart';
 import '../modules/add_invoice/views/add_invoice_view.dart';
 import '../modules/bank_details/bindings/bank_details_binding.dart';
 import '../modules/bank_details/views/bank_details_view.dart';
+import '../modules/bank_transactions/bindings/bank_transactions_binding.dart';
+import '../modules/bank_transactions/views/bank_transactions_view.dart';
 import '../modules/gst_details/bindings/gst_details_binding.dart';
 import '../modules/gst_details/views/gst_details_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -48,6 +50,8 @@ import '../modules/support_request/bindings/support_request_binding.dart';
 import '../modules/support_request/views/support_request_view.dart';
 import '../modules/terms_conditions/bindings/terms_conditions_binding.dart';
 import '../modules/terms_conditions/views/terms_conditions_view.dart';
+import '../modules/upload_manually/bindings/upload_manually_binding.dart';
+import '../modules/upload_manually/views/upload_manually_view.dart';
 
 part 'app_routes.dart';
 
@@ -176,6 +180,16 @@ class AppPages {
       name: _Paths.MY_EARNINGS,
       page: () => const MyEarningsView(),
       binding: MyEarningsBinding(),
+    ),
+    GetPage(
+      name: _Paths.UPLOAD_MANUALLY,
+      page: () => UploadManuallyView(),
+      binding: UploadManuallyBinding(),
+    ),
+    GetPage(
+      name: _Paths.BANK_TRANSACTIONS,
+      page: () => BankTransactionsView(),
+      binding: BankTransactionsBinding(),
     ),
   ];
 }

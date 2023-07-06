@@ -28,6 +28,8 @@ abstract class Routes {
   static const REQUEST_COINS = _Paths.REQUEST_COINS;
   static const SUPPORT_REQUEST = _Paths.SUPPORT_REQUEST;
   static const MY_EARNINGS = _Paths.MY_EARNINGS;
+  static const UPLOAD_MANUALLY = _Paths.UPLOAD_MANUALLY;
+  static const BANK_TRANSACTIONS = _Paths.BANK_TRANSACTIONS;
 }
 
 abstract class _Paths {
@@ -55,4 +57,6 @@ abstract class _Paths {
   static const REQUEST_COINS = '/request-coins';
   static const SUPPORT_REQUEST = '/support-request';
   static const MY_EARNINGS = '/my-earnings';
+  static const UPLOAD_MANUALLY = '/upload-manually';
+  static const BANK_TRANSACTIONS = '/bank-transactions';
 }

@@ -158,8 +158,13 @@ class InvoiceView extends GetView<InvoiceController> {
                                   invoiceController.walletCurrentpage.value = 1;
                                   invoiceController.invoiceCurrentpage.value =
                                       1;
+                                  invoiceController.shopWalletAmount.value =
+                                      "0";
+                                  invoiceController.dueList.clear();
                                   invoiceController.walletAmount.value = '';
                                   invoiceController.filterPage.value = 1;
+                                  invoiceController.dueTotalCount.value = 1;
+                                  invoiceController.dueCurrentCount.value = 1;
                                   invoiceController.debitListValue.value =
                                       "All";
                                   invoiceController.changeShop(

@@ -9,11 +9,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/modules/bank_transactions/views/bank_transactions_view.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
 import '../../../data/colors.dart';
 import '../../invoice_details/views/invoice_details_view.dart';
+import 'buttons/pay_half_all.dart';
+import 'buttons/pay_later.dart';
+import 'buttons/pay_manually.dart';
 
 class VerifiedInvoices extends StatefulWidget {
   final InvoiceController invoiceController;
@@ -106,6 +110,12 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                 ),
               ),
               actions: [
+                InkWell(
+                    onTap: () {
+                      Get.to(BankTransactionsView());
+                    },
+                    child: SvgPicture.asset(
+                        "assets/images/history-svgrepo-com 1.svg")),
                 Obx(() {
                   return IconButton(
                       onPressed: () {
@@ -271,86 +281,6 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                 SizedBox(
                                                   height: 10,
                                                 ),
-                                                // Obx(() {
-                                                //   return Visibility(
-                                                //     visible: widget
-                                                //                 .invoiceController
-                                                //                 .totalSelectedCommissionAmount
-                                                //                 .value >
-                                                //             0
-                                                //         ? true
-                                                //         : false,
-                                                //     child: Container(
-                                                //         height: 40,
-                                                //         decoration:
-                                                //             BoxDecoration(
-                                                //           borderRadius:
-                                                //               BorderRadius
-                                                //                   .circular(10),
-                                                //           border: Border(),
-                                                //           gradient:
-                                                //               LinearGradient(
-                                                //             begin: Alignment(
-                                                //                 -0.934, -1),
-                                                //             end: Alignment(
-                                                //                 1.125, 1.333),
-                                                //             colors: <Color>[
-                                                //               Color(0xe53f46bd),
-                                                //               Color(0xe5417de8)
-                                                //             ],
-                                                //             stops: <double>[
-                                                //               0,
-                                                //               1
-                                                //             ],
-                                                //           ),
-                                                //           boxShadow: [
-                                                //             BoxShadow(
-                                                //               color: Color(
-                                                //                   0x3f000000),
-                                                //               offset: Offset(0,
-                                                //                   0.7870440483),
-                                                //               blurRadius:
-                                                //                   2.7546541691,
-                                                //             ),
-                                                //           ],
-                                                //         ),
-                                                //         child: Padding(
-                                                //             padding:
-                                                //                 const EdgeInsets
-                                                //                         .only(
-                                                //                     left: 20,
-                                                //                     right: 20),
-                                                //             child:
-                                                //                 ElevatedButton(
-                                                //                     style: ButtonStyle(
-                                                //                         elevation:
-                                                //                             MaterialStateProperty.all(
-                                                //                                 0),
-                                                //                         backgroundColor:
-                                                //                             MaterialStateProperty.all(Colors
-                                                //                                 .transparent)),
-                                                //                     onPressed:
-                                                //                         () async {
-                                                //                       widget.invoiceController.openCheckoutForAllPay3(
-                                                //                           razorKey: amount
-                                                //                               .razorKey,
-                                                //                           name: amount
-                                                //                               .name,
-                                                //                           amounts: widget
-                                                //                               .invoiceController
-                                                //                               .totalSelectedCommissionAmount
-                                                //                               .value,
-                                                //                           email: amount
-                                                //                               .email,
-                                                //                           data:
-                                                //                               amount,
-                                                //                           phone:
-                                                //                               phoneData);
-                                                //                     },
-                                                //                     child: Text(
-                                                //                         "Pay")))),
-                                                //   );
-                                                // }),
                                               ],
                                             ),
                                           ),
@@ -358,91 +288,6 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                       }),
                                     ],
                                   ),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(
-                                  //       top: 10, bottom: 30),
-                                  //   child: Obx(() {
-                                  //     return Visibility(
-                                  //       visible: (widget
-                                  //                       .invoiceController
-                                  //                       .verifiedAmountData[
-                                  //                           index]
-                                  //                       .totalAmount ==
-                                  //                   0 ||
-                                  //               widget.invoiceController
-                                  //                   .checkButton.isTrue)
-                                  //           ? false
-                                  //           : true,
-                                  //       child: Row(
-                                  //         mainAxisAlignment:
-                                  //             MainAxisAlignment.center,
-                                  //         children: [
-                                  //           Container(
-                                  //               height: 40,
-                                  //               decoration: BoxDecoration(
-                                  //                 borderRadius:
-                                  //                     BorderRadius.circular(10),
-                                  //                 border: Border(),
-                                  //                 gradient: LinearGradient(
-                                  //                   begin:
-                                  //                       Alignment(-0.934, -1),
-                                  //                   end:
-                                  //                       Alignment(1.125, 1.333),
-                                  //                   colors: <Color>[
-                                  //                     Color(0xe53f46bd),
-                                  //                     Color(0xe5417de8)
-                                  //                   ],
-                                  //                   stops: <double>[0, 1],
-                                  //                 ),
-                                  //                 boxShadow: [
-                                  //                   BoxShadow(
-                                  //                     color: Color(0x3f000000),
-                                  //                     offset: Offset(
-                                  //                         0, 0.7870440483),
-                                  //                     blurRadius: 2.7546541691,
-                                  //                   ),
-                                  //                 ],
-                                  //               ),
-                                  //               child: Padding(
-                                  //                   padding:
-                                  //                       const EdgeInsets.only(
-                                  //                           left: 20,
-                                  //                           right: 20),
-                                  //                   child: ElevatedButton(
-                                  //                       style: ButtonStyle(
-                                  //                           elevation:
-                                  //                               MaterialStateProperty
-                                  //                                   .all(0),
-                                  //                           backgroundColor:
-                                  //                               MaterialStateProperty
-                                  //                                   .all(Colors
-                                  //                                       .transparent)),
-                                  //                       onPressed: () async {
-                                  //                         log(amount.totalAmount
-                                  //                             .toString());
-                                  //                         widget
-                                  //                             .invoiceController
-                                  //                             .openCheckoutForAllPay(
-                                  //                                 razorKey: amount
-                                  //                                     .razorKey,
-                                  //                                 name:
-                                  //                                     amount
-                                  //                                         .name,
-                                  //                                 amounts: amount
-                                  //                                     .totalAmount,
-                                  //                                 email: amount
-                                  //                                     .email,
-                                  //                                 phone:
-                                  //                                     phoneData,
-                                  //                                 data: amount);
-                                  //                       },
-                                  //                       child: Text("Pay")))),
-                                  //         ],
-                                  //       ),
-                                  //     );
-                                  //   }),
-                                  // ),
-
                                   Padding(
                                     padding: EdgeInsets.only(
                                         left: 5.w, top: 10, bottom: 8),
@@ -487,12 +332,12 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                                 left: 10,
                                                                 right: 10),
                                                         child: AutoSizeText(
-                                                          maxLines: 2,
+                                                          maxLines: 1,
                                                           "₹${amount.shopBalance}",
                                                           textAlign:
                                                               TextAlign.center,
                                                           maxFontSize: 23,
-                                                          minFontSize: 22,
+                                                          minFontSize: 16,
                                                           style: GoogleFonts
                                                               .roboto(
                                                                   color: Color
@@ -604,7 +449,7 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                         ),
                                       ),
                                       Container(
-                                          height: 13.h,
+                                          height: 15.h,
                                           child: VerticalDivider(
                                             thickness: 2,
                                           )),
@@ -612,190 +457,16 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                         width: 55.w,
                                         child: Column(
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 5.w, right: 5.w),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                      child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                            border: Border(),
-                                                            gradient:
-                                                                LinearGradient(
-                                                              begin: Alignment(
-                                                                  -0.934, -1),
-                                                              end: Alignment(
-                                                                  1.125, 1.333),
-                                                              colors: <Color>[
-                                                                Color(
-                                                                    0xe53f46bd),
-                                                                Color(
-                                                                    0xe5417de8)
-                                                              ],
-                                                              stops: <double>[
-                                                                0,
-                                                                1
-                                                              ],
-                                                            ),
-                                                            boxShadow: [
-                                                              BoxShadow(
-                                                                color: Color(
-                                                                    0x3f000000),
-                                                                offset: Offset(
-                                                                    0,
-                                                                    0.7870440483),
-                                                                blurRadius:
-                                                                    2.7546541691,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                          child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 5,
-                                                                      right: 5),
-                                                              child:
-                                                                  ElevatedButton(
-                                                                      style: ButtonStyle(
-                                                                          elevation: MaterialStateProperty.all(
-                                                                              0),
-                                                                          backgroundColor: MaterialStateProperty.all(Colors
-                                                                              .transparent)),
-                                                                      onPressed:
-                                                                          () async {
-                                                                        widget.invoiceController.openCheckoutForAllPay(
-                                                                            data:
-                                                                                amount,
-                                                                            amounts: widget.invoiceController.additionSelectAmount.value != 0
-                                                                                ? widget.invoiceController.additionSelectAmount.value
-                                                                                : amount.halfAmount,
-                                                                            email: amount.email,
-                                                                            name: amount.name,
-                                                                            phone: phoneData,
-                                                                            razorKey: amount.razorKey);
-                                                                      },
-                                                                      child: Obx(
-                                                                          () {
-                                                                        return widget.invoiceController.additionSelectAmount.value !=
-                                                                                0
-                                                                            ? Column(
-                                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                                children: [
-                                                                                  Text("Pay Half Now"),
-                                                                                  Text("Pay only ₹${widget.invoiceController.additionSelectAmount.value} now ", style: GoogleFonts.jost(fontSize: 9))
-                                                                                ],
-                                                                              )
-                                                                            : Column(
-                                                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                                                children: [
-                                                                                  Text("Pay Half Now"),
-                                                                                  Text(
-                                                                                    "Pay only ₹${amount.halfAmount} now ",
-                                                                                    style: GoogleFonts.jost(fontSize: 9),
-                                                                                  )
-                                                                                ],
-                                                                              );
-                                                                      }))))),
-                                                ],
-                                              ),
+                                            PayHalf(
+                                              widget: widget,
+                                              amount: amount,
+                                              phoneData: phoneData,
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 5.w,
-                                                  right: 5.w,
-                                                  top: 20),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.white,
-                                                              width: 1),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          gradient: LinearGradient(
-                                                              begin: Alignment(
-                                                                  1.1437236070632935,
-                                                                  -0.005003529135137796),
-                                                              end: Alignment(
-                                                                  -0.06076670065522194,
-                                                                  0.042849887162446976),
-                                                              colors: [
-                                                                Color.fromRGBO(
-                                                                    255,
-                                                                    255,
-                                                                    255,
-                                                                    0.75),
-                                                                Color.fromRGBO(
-                                                                    255,
-                                                                    255,
-                                                                    255,
-                                                                    0.3199999928474426)
-                                                              ]),
-                                                        ),
-                                                        child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 5,
-                                                                    right: 5),
-                                                            child:
-                                                                ElevatedButton(
-                                                                    style: ButtonStyle(
-                                                                        elevation:
-                                                                            MaterialStateProperty.all(
-                                                                                0),
-                                                                        backgroundColor:
-                                                                            MaterialStateProperty.all(Colors
-                                                                                .transparent)),
-                                                                    onPressed:
-                                                                        () async {},
-                                                                    child:
-                                                                        Obx(() {
-                                                                      return widget.invoiceController.dueSelectAmount.value !=
-                                                                              0
-                                                                          ? Column(
-                                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                                              children: [
-                                                                                Text(
-                                                                                  "Pay Later",
-                                                                                  style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500, color: Color.fromARGB(255, 73, 117, 231)),
-                                                                                ),
-                                                                                Text(
-                                                                                  "₹${widget.invoiceController.dueSelectAmount.value} Payable to wonder points/user",
-                                                                                  style: GoogleFonts.roboto(fontSize: 9, fontWeight: FontWeight.w400, color: Color.fromARGB(255, 73, 117, 231)),
-                                                                                ),
-                                                                              ],
-                                                                            )
-                                                                          : Column(
-                                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                                              children: [
-                                                                                Text(
-                                                                                  "Pay Later",
-                                                                                  style: GoogleFonts.roboto(fontSize: 14, fontWeight: FontWeight.w500, color: Color.fromARGB(255, 73, 117, 231)),
-                                                                                ),
-                                                                                Text(
-                                                                                  "₹${amount.dueAmount} Payable to wonder points/user",
-                                                                                  style: GoogleFonts.roboto(fontSize: 9, fontWeight: FontWeight.w400, color: Color.fromARGB(255, 73, 117, 231)),
-                                                                                ),
-                                                                              ],
-                                                                            );
-                                                                    })))),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                            PayManually(
+                                                amount: widget.invoiceController
+                                                    .halfAmount),
+                                            PayLater(
+                                                widget: widget, amount: amount),
                                           ],
                                         ),
                                       )
@@ -1328,3 +999,168 @@ class LoadingDialog {
     }
   }
 }
+  // Padding(
+                                  //   padding: const EdgeInsets.only(
+                                  //       top: 10, bottom: 30),
+                                  //   child: Obx(() {
+                                  //     return Visibility(
+                                  //       visible: (widget
+                                  //                       .invoiceController
+                                  //                       .verifiedAmountData[
+                                  //                           index]
+                                  //                       .totalAmount ==
+                                  //                   0 ||
+                                  //               widget.invoiceController
+                                  //                   .checkButton.isTrue)
+                                  //           ? false
+                                  //           : true,
+                                  //       child: Row(
+                                  //         mainAxisAlignment:
+                                  //             MainAxisAlignment.center,
+                                  //         children: [
+                                  //           Container(
+                                  //               height: 40,
+                                  //               decoration: BoxDecoration(
+                                  //                 borderRadius:
+                                  //                     BorderRadius.circular(10),
+                                  //                 border: Border(),
+                                  //                 gradient: LinearGradient(
+                                  //                   begin:
+                                  //                       Alignment(-0.934, -1),
+                                  //                   end:
+                                  //                       Alignment(1.125, 1.333),
+                                  //                   colors: <Color>[
+                                  //                     Color(0xe53f46bd),
+                                  //                     Color(0xe5417de8)
+                                  //                   ],
+                                  //                   stops: <double>[0, 1],
+                                  //                 ),
+                                  //                 boxShadow: [
+                                  //                   BoxShadow(
+                                  //                     color: Color(0x3f000000),
+                                  //                     offset: Offset(
+                                  //                         0, 0.7870440483),
+                                  //                     blurRadius: 2.7546541691,
+                                  //                   ),
+                                  //                 ],
+                                  //               ),
+                                  //               child: Padding(
+                                  //                   padding:
+                                  //                       const EdgeInsets.only(
+                                  //                           left: 20,
+                                  //                           right: 20),
+                                  //                   child: ElevatedButton(
+                                  //                       style: ButtonStyle(
+                                  //                           elevation:
+                                  //                               MaterialStateProperty
+                                  //                                   .all(0),
+                                  //                           backgroundColor:
+                                  //                               MaterialStateProperty
+                                  //                                   .all(Colors
+                                  //                                       .transparent)),
+                                  //                       onPressed: () async {
+                                  //                         log(amount.totalAmount
+                                  //                             .toString());
+                                  //                         widget
+                                  //                             .invoiceController
+                                  //                             .openCheckoutForAllPay(
+                                  //                                 razorKey: amount
+                                  //                                     .razorKey,
+                                  //                                 name:
+                                  //                                     amount
+                                  //                                         .name,
+                                  //                                 amounts: amount
+                                  //                                     .totalAmount,
+                                  //                                 email: amount
+                                  //                                     .email,
+                                  //                                 phone:
+                                  //                                     phoneData,
+                                  //                                 data: amount);
+                                  //                       },
+                                  //                       child: Text("Pay")))),
+                                  //         ],
+                                  //       ),
+                                  //     );
+                                  //   }),
+                                  // ),
+
+                                    // Obx(() {
+                                                //   return Visibility(
+                                                //     visible: widget
+                                                //                 .invoiceController
+                                                //                 .totalSelectedCommissionAmount
+                                                //                 .value >
+                                                //             0
+                                                //         ? true
+                                                //         : false,
+                                                //     child: Container(
+                                                //         height: 40,
+                                                //         decoration:
+                                                //             BoxDecoration(
+                                                //           borderRadius:
+                                                //               BorderRadius
+                                                //                   .circular(10),
+                                                //           border: Border(),
+                                                //           gradient:
+                                                //               LinearGradient(
+                                                //             begin: Alignment(
+                                                //                 -0.934, -1),
+                                                //             end: Alignment(
+                                                //                 1.125, 1.333),
+                                                //             colors: <Color>[
+                                                //               Color(0xe53f46bd),
+                                                //               Color(0xe5417de8)
+                                                //             ],
+                                                //             stops: <double>[
+                                                //               0,
+                                                //               1
+                                                //             ],
+                                                //           ),
+                                                //           boxShadow: [
+                                                //             BoxShadow(
+                                                //               color: Color(
+                                                //                   0x3f000000),
+                                                //               offset: Offset(0,
+                                                //                   0.7870440483),
+                                                //               blurRadius:
+                                                //                   2.7546541691,
+                                                //             ),
+                                                //           ],
+                                                //         ),
+                                                //         child: Padding(
+                                                //             padding:
+                                                //                 const EdgeInsets
+                                                //                         .only(
+                                                //                     left: 20,
+                                                //                     right: 20),
+                                                //             child:
+                                                //                 ElevatedButton(
+                                                //                     style: ButtonStyle(
+                                                //                         elevation:
+                                                //                             MaterialStateProperty.all(
+                                                //                                 0),
+                                                //                         backgroundColor:
+                                                //                             MaterialStateProperty.all(Colors
+                                                //                                 .transparent)),
+                                                //                     onPressed:
+                                                //                         () async {
+                                                //                       widget.invoiceController.openCheckoutForAllPay3(
+                                                //                           razorKey: amount
+                                                //                               .razorKey,
+                                                //                           name: amount
+                                                //                               .name,
+                                                //                           amounts: widget
+                                                //                               .invoiceController
+                                                //                               .totalSelectedCommissionAmount
+                                                //                               .value,
+                                                //                           email: amount
+                                                //                               .email,
+                                                //                           data:
+                                                //                               amount,
+                                                //                           phone:
+                                                //                               phoneData);
+                                                //                     },
+                                                //                     child: Text(
+                                                //                         "Pay")))),
+                                                //   );
+                                                // }),

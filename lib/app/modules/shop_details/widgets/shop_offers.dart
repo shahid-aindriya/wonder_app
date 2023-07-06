@@ -7,7 +7,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/add_offer.dart';
-import 'package:wonder_app/app/modules/shop_details/widgets/edit%20_offer.dart';
+
+import 'edit _offer.dart';
 
 class ShopOffers extends GetView<ShopDetailsController> {
   @override
@@ -98,6 +99,9 @@ class ShopOffers extends GetView<ShopDetailsController> {
                           var data = controller.offerdatas[index];
                           return InkWell(
                               onTap: () {
+                                // Get.to(VideoPlayerPage(
+                                //     videoUrl:
+                                //         "$baseUrlForImage/${data.video}"));
                                 Get.to(EditOffer(data: data));
                               },
                               child: Container(
@@ -125,7 +129,7 @@ class ShopOffers extends GetView<ShopDetailsController> {
                                       children: [
                                         Container(
                                             width: 100.w,
-                                            height: 18.h,
+                                            height: 14.h,
                                             decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.only(
                                                     topLeft:
@@ -175,7 +179,9 @@ class ShopOffers extends GetView<ShopDetailsController> {
                                           padding: EdgeInsets.only(left: 3.w),
                                           child: Container(
                                             child: AutoSizeText(
-                                              "₹${data.discount} Off",
+                                              data.discount == null
+                                                  ? "₹${data.discountAmount} Off"
+                                                  : "${data.discount}% Off",
                                               maxLines: 2,
                                               minFontSize: 24,
                                               maxFontSize: 26,

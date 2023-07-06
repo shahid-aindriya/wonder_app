@@ -11,11 +11,11 @@ String offerDataResponseToJson(OfferDataResponse data) =>
     json.encode(data.toJson());
 
 class OfferDataResponse {
+  List<OfferDatum> offerData;
+
   OfferDataResponse({
     required this.offerData,
   });
-
-  List<OfferDatum> offerData;
 
   factory OfferDataResponse.fromJson(Map<String, dynamic> json) =>
       OfferDataResponse(
@@ -29,6 +29,16 @@ class OfferDataResponse {
 }
 
 class OfferDatum {
+  int id;
+  dynamic title;
+  dynamic discount;
+  dynamic description;
+  dynamic image;
+  dynamic status;
+  dynamic video;
+  dynamic link;
+  dynamic discountAmount;
+
   OfferDatum({
     required this.id,
     required this.title,
@@ -36,23 +46,21 @@ class OfferDatum {
     required this.description,
     required this.image,
     required this.status,
+    required this.video,
+    required this.discountAmount,
+    required this.link,
   });
 
-  int id;
-  String title;
-  String discount;
-  String description;
-  String image;
-  String status;
-
   factory OfferDatum.fromJson(Map<String, dynamic> json) => OfferDatum(
-        id: json["id"],
-        title: json["title"] ?? "null",
-        discount: json["discount"],
-        description: json["description"],
-        image: json["image"],
-        status: json["status"],
-      );
+      id: json["id"],
+      title: json["title"],
+      discount: json["discount"],
+      description: json["description"],
+      image: json["image"],
+      status: json["status"],
+      video: json["video"],
+      link: json["link"],
+      discountAmount: json["discount_amount"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -61,5 +69,7 @@ class OfferDatum {
         "description": description,
         "image": image,
         "status": status,
+        "video": video,
+        "link": link,
       };
 }
