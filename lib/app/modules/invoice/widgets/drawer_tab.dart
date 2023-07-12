@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../data/urls.dart';
 import '../../add_invoice/controllers/add_invoice_controller.dart';
 import '../../login/views/login_view.dart';
+import '../../my_earnings/views/my_earnings_view.dart';
 import '../../my_shops/views/my_shops_view.dart';
 import '../../profile_view/views/profile_view_view.dart';
 import '../../support_request/views/support_request_view.dart';
@@ -152,31 +153,31 @@ class DrawerTab extends StatelessWidget {
               padding: EdgeInsets.only(top: 6.0),
               child: Divider(color: Colors.white, thickness: 2),
             ),
-            // ListTile(
-            //   onTap: () {
-            //     Get.to(MyEarningsView());
-            //   },
-            //   leading: SvgPicture.asset(
-            //     "assets/images/drawer/Coin (1).svg",
-            //     fit: BoxFit.contain,
-            //   ),
-            //   title: Text(
-            //     "My Earnings",
-            //     style: GoogleFonts.roboto(
-            //         color: Color.fromARGB(177, 0, 0, 0),
-            //         fontSize: 17,
-            //         fontWeight: FontWeight.normal),
-            //   ),
-            //   trailing: IconButton(
-            //       onPressed: () {
-            //         Get.to(MyEarningsView());
-            //       },
-            //       icon: Icon(Icons.arrow_forward_ios_outlined)),
-            // ),
-            // Padding(
-            //   padding: EdgeInsets.only(top: 6.0),
-            //   child: Divider(color: Colors.white, thickness: 2),
-            // ),
+            ListTile(
+              onTap: () {
+                Get.to(MyEarningsView());
+              },
+              leading: SvgPicture.asset(
+                "assets/images/drawer/Coin (1).svg",
+                fit: BoxFit.contain,
+              ),
+              title: Text(
+                "My Earnings",
+                style: GoogleFonts.roboto(
+                    color: Color.fromARGB(177, 0, 0, 0),
+                    fontSize: 17,
+                    fontWeight: FontWeight.normal),
+              ),
+              trailing: IconButton(
+                  onPressed: () {
+                    Get.to(MyEarningsView());
+                  },
+                  icon: Icon(Icons.arrow_forward_ios_outlined)),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 6.0),
+              child: Divider(color: Colors.white, thickness: 2),
+            ),
             InkWell(
               onTap: () {
                 Get.to(SupportRequestView());

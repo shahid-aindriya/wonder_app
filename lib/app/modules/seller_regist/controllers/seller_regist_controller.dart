@@ -15,6 +15,9 @@ import 'package:wonder_app/app/data/urls.dart';
 
 class SellerRegistController extends GetxController {
   //TODO: Implement SellerRegistController
+
+  final selectedDiscountValue = 1.obs;
+
   String adhaarimg = '';
   XFile? image;
   pickimage(bool value) async {

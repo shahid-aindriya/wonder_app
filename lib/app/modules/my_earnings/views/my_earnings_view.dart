@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../controllers/my_earnings_controller.dart';
-import '../extra/Settlements.dart';
 
 class MyEarningsView extends GetView<MyEarningsController> {
   const MyEarningsView({Key? key}) : super(key: key);
@@ -45,7 +44,7 @@ class MyEarningsView extends GetView<MyEarningsController> {
             elevation: 0,
             backgroundColor: Colors.transparent,
             title: Text(
-              'My Shops',
+              'Your Earnings',
               style: GoogleFonts.jost(
                 fontSize: 22,
                 fontWeight: FontWeight.w500,
@@ -137,10 +136,10 @@ class MyEarningsView extends GetView<MyEarningsController> {
                             backgroundColor:
                                 MaterialStateProperty.all(Colors.white)),
                         onPressed: () {
-                          Get.to(Settlements());
+                          // Get.to(Settlements());
                         },
                         child: Text(
-                          "View Settlements",
+                          "withdraw",
                           style: GoogleFonts.inter(
                               fontWeight: FontWeight.w500,
                               fontSize: 14,

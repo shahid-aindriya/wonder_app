@@ -60,7 +60,7 @@ class UploadManuallyController extends GetxController {
   uploadManually(amount, context) async {
     final body = {
       "shop_id": invoiceController.selectShopId,
-      "amount": 100,
+      "amount": amountEditingController.text,
       "image": screenShot
     };
     isUploadLoading.value = true;

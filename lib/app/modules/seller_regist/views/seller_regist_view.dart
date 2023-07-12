@@ -775,45 +775,107 @@ class SellerRegistView extends GetView<SellerRegistController> {
                           SizedBox(
                             height: 20,
                           ),
-                          GetBuilder<SellerRegistController>(builder: (c) {
-                            return Row(
+
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Container(
-                                  height: 20,
-                                  width: 20,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Checkbox(
-                                    checkColor: Color(0xff4956b2),
-                                    activeColor:
-                                        Color.fromARGB(255, 255, 255, 255),
+                                Obx(
+                                  () => Radio<int>(
                                     fillColor: MaterialStateProperty.all(
-                                        Color.fromARGB(255, 255, 255, 255)),
-                                    value: c.isChecked,
+                                        Color(0xff4956b2)),
+                                    value: 1,
+                                    groupValue:
+                                        controller.selectedDiscountValue.value,
                                     onChanged: (value) {
-                                      c.checkBox(value);
+                                      controller.selectedDiscountValue.value =
+                                          value!;
                                     },
                                   ),
                                 ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Text("Signing up by Business Representative",
+                                Flexible(
+                                  child: Text(
+                                    'Sign up by Business Rep',
                                     style: GoogleFonts.roboto(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.1725,
-                                        color: Color(0xff4956b2)))
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.1725,
+                                      color: Color(0xff4956b2),
+                                    ),
+                                  ),
+                                ),
+                                Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    Obx(
+                                      () => Radio<int>(
+                                        fillColor: MaterialStateProperty.all(
+                                            Color(0xff4956b2)),
+                                        value: 2,
+                                        groupValue: controller
+                                            .selectedDiscountValue.value,
+                                        onChanged: (value) {
+                                          controller.selectedDiscountValue
+                                              .value = value!;
+                                        },
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Text('Sign up by Vendor',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.1725,
+                                            color: Color(0xff4956b2),
+                                          )),
+                                    ),
+                                  ],
+                                ),
                               ],
-                            );
-                          }),
+                            ),
+                          ),
+                          // GetBuilder<SellerRegistController>(builder: (c) {
+                          //   return Row(
+                          //     children: [
+                          //       Container(
+                          //         height: 20,
+                          //         width: 20,
+                          //         decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(5)),
+                          //         child: Checkbox(
+                          //           checkColor: Color(0xff4956b2),
+                          //           activeColor:
+                          //               Color.fromARGB(255, 255, 255, 255),
+                          //           fillColor: MaterialStateProperty.all(
+                          //               Color.fromARGB(255, 255, 255, 255)),
+                          //           value: c.isChecked,
+                          //           onChanged: (value) {
+                          //             c.checkBox(value);
+                          //           },
+                          //         ),
+                          //       ),
+                          //       SizedBox(
+                          //         width: 8,
+                          //       ),
+                          //       Text("Signing up by Business Representative",
+                          //           style: GoogleFonts.roboto(
+                          //               fontSize: 16,
+                          //               fontWeight: FontWeight.w400,
+                          //               height: 1.1725,
+                          //               color: Color(0xff4956b2)))
+                          //     ],
+                          //   );
+                          // }),
                           SizedBox(
                             height: 25,
                           ),
                           GetBuilder<SellerRegistController>(builder: (c) {
                             return Visibility(
-                              visible: c.isChecked == true ? true : false,
+                              visible: c.selectedDiscountValue.value == 1
+                                  ? true
+                                  : false,
                               child: Column(
                                 children: [
                                   Padding(
@@ -968,7 +1030,8 @@ class SellerRegistView extends GetView<SellerRegistController> {
                               panImag: controller.panimg,
                               panNumber: panNumberEditingController.text,
                               phoneNmber: phoneNumberEditingController.text,
-                              email: emailEditingController.text,repId: controller.selectRepId,
+                              email: emailEditingController.text,
+                              repId: controller.selectRepId,
                             ));
                           }
                         },
