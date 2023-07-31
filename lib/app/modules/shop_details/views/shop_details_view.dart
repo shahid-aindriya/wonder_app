@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/my_shops/controllers/my_shops_controller.dart';
@@ -17,6 +17,7 @@ import '../controllers/shop_details_controller.dart';
 import '../widgets/bank_details.dart';
 import '../widgets/shop_gst_details.dart';
 
+// ignore: must_be_immutable
 class ShopDetailsView extends GetView<ShopDetailsController> {
   final MyShopsController? shopController;
   ShopDatum? data;

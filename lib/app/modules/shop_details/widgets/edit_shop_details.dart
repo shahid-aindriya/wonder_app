@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:sizer/sizer.dart';
 import 'package:wonder_app/app/modules/my_shops/controllers/my_shops_controller.dart';
 import 'package:wonder_app/app/modules/my_shops/model/shops_list_model.dart';
 import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
@@ -13,6 +13,7 @@ import '../../../data/urls.dart';
 import '../../map_place_picker/views/map_place_picker_view.dart';
 import '../../store_details/views/store_details_view.dart';
 
+// ignore: must_be_immutable
 class EditShopDetails extends StatelessWidget {
   ShopDatum? data;
   final MyShopsController shopController;
@@ -20,7 +21,7 @@ class EditShopDetails extends StatelessWidget {
   final ShopDetailsController shopDetailsController =
       Get.put(ShopDetailsController());
   final formkey = GlobalKey<FormState>();
-  @override
+
   final TextEditingController latController = TextEditingController();
   final TextEditingController longController = TextEditingController();
   @override

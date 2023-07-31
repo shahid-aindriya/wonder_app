@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:sizer/sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
 
 import '../controllers/profile_view_controller.dart';

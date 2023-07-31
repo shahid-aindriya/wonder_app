@@ -250,7 +250,7 @@ class ShopDetailsController extends GetxController {
       // log(invoiceImg);
     }
     // log(img);
-    update();
+    // update();
   }
 
   testComporessList(Uint8List list) async {

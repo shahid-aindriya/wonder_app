@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:sizer/sizer.dart';
 
 import 'package:text_to_speech/text_to_speech.dart';
 import 'package:upgrader/upgrader.dart';
@@ -137,7 +137,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return UpgradeAlert(
       upgrader: Upgrader(dialogStyle: UpgradeDialogStyle.material),
-      child: ResponsiveSizer(builder: (context, orientation, screenType) {
+      child: Sizer(builder: (context, orientation, screenType) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: "Application",

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
+import 'package:wonder_app/app/modules/bottom_bar/views/bottom_bar_view.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
 
 class SplashScreenController extends GetxController {
@@ -17,7 +17,7 @@ class SplashScreenController extends GetxController {
       gotoLogin();
     } else {
       await Future.delayed(const Duration(seconds: 4));
-      Get.off(InvoiceView());
+      Get.off(BottombarView());
     }
     return loggedName;
   }

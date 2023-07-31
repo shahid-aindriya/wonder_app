@@ -19,10 +19,11 @@ class BankTransactionsController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
     final body = {"user_id": userId};
-    final request = await post(
-        Uri.parse("${baseUrl.value}vendor-bank-transactions/"),
-        body: jsonEncode(body),
-        headers: headers.value);
+    final request =
+        await post(Uri.parse("${baseUrl.value}vendor-bank-transactions/"),
+            body: jsonEncode(body),
+            // ignore: invalid_use_of_protected_member
+            headers: headers.value);
     log(request.body);
     if (request.statusCode == 201) {
       final bankTransactionModel = bankTransactionModelFromJson(request.body);

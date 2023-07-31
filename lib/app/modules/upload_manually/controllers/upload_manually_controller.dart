@@ -51,13 +51,14 @@ class UploadManuallyController extends GetxController {
       format: CompressFormat.jpeg,
       rotate: 0,
     );
-    log(list.length.toString());
-    log(result.length.toString());
+    // log(list.length.toString());
+    // log(result.length.toString());
     return result.toList();
   }
 
   var isUploadLoading = false.obs;
   uploadManually(amount, context) async {
+    log(amountEditingController.text);
     final body = {
       "shop_id": invoiceController.selectShopId,
       "amount": amountEditingController.text,
@@ -67,7 +68,7 @@ class UploadManuallyController extends GetxController {
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-shop-manual-payment/"),
         body: jsonEncode(body),
-        headers: headers.value);
+        headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
       final data = jsonDecode(request.body);
@@ -78,7 +79,9 @@ class UploadManuallyController extends GetxController {
       } else if (data['success'] == true) {
         screenShot = "";
         amountEditingController.clear();
+        isUploadLoading.value = false;
         update();
+        Get.back();
         MotionToast.success(
           dismissable: true,
           enableAnimation: false,
@@ -94,7 +97,6 @@ class UploadManuallyController extends GetxController {
           borderRadius: 0,
           animationDuration: const Duration(milliseconds: 1000),
         ).show(context);
-        Get.back();
       }
     }
   }

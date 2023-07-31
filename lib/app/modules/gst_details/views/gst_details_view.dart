@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+// import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:sizer/sizer.dart';
 
 import '../controllers/gst_details_controller.dart';
 
@@ -41,7 +42,6 @@ class GstDetailsView extends GetView<GstDetailsController> {
       this.licenceImage});
   @override
   final GstDetailsController controller = Get.put(GstDetailsController());
-  @override
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {

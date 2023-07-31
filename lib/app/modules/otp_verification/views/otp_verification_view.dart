@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:sizer/sizer.dart';
 import 'package:wonder_app/app/modules/seller_regist/views/seller_regist_view.dart';
 
 import '../controllers/otp_verification_controller.dart';

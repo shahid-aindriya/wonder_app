@@ -30,6 +30,13 @@ abstract class Routes {
   static const MY_EARNINGS = _Paths.MY_EARNINGS;
   static const UPLOAD_MANUALLY = _Paths.UPLOAD_MANUALLY;
   static const BANK_TRANSACTIONS = _Paths.BANK_TRANSACTIONS;
+  static const VENDORS_ADDED = _Paths.VENDORS_ADDED;
+  static const WONDER_LIST = _Paths.WONDER_LIST;
+  static const CHAT = _Paths.CHAT;
+  static const CONNECTIONS = _Paths.CONNECTIONS;
+  static const BOTTOM_BAR = _Paths.BOTTOM_BAR;
+  static const ORDERS = _Paths.ORDERS;
+  static const PRODUCTS = _Paths.PRODUCTS;
 }
 
 abstract class _Paths {
@@ -59,4 +66,11 @@ abstract class _Paths {
   static const MY_EARNINGS = '/my-earnings';
   static const UPLOAD_MANUALLY = '/upload-manually';
   static const BANK_TRANSACTIONS = '/bank-transactions';
+  static const VENDORS_ADDED = '/vendors-added';
+  static const WONDER_LIST = '/wonder-list';
+  static const CHAT = '/chat';
+  static const CONNECTIONS = '/connections';
+  static const BOTTOM_BAR = '/bottom-bar';
+  static const ORDERS = '/orders';
+  static const PRODUCTS = '/products';
 }

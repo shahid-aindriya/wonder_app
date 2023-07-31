@@ -4,12 +4,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
+import 'package:sizer/sizer.dart';import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
 
 import '../../../data/urls.dart';
 import '../../my_shops/model/shops_list_model.dart';
 
+// ignore: must_be_immutable
 class BankDetailsOfShop extends StatelessWidget {
   BankData data;
   final image;
@@ -41,7 +41,7 @@ class BankDetailsOfShop extends StatelessWidget {
         TextEditingController(text: ifscCode);
     final TextEditingController accountTypeController =
         TextEditingController(text: accounType);
-    final TextEditingController branchNameController = TextEditingController();
+    // final TextEditingController branchNameController = TextEditingController();
     final formkey = GlobalKey<FormState>();
     return Container(
         decoration: BoxDecoration(

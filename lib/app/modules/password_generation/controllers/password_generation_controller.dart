@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/request_pending/views/request_pending_view.dart';
 import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
 
-import '../../../../api/api_service.dart';
 import '../../../data/urls.dart';
 import '../model/response_model.dart';
 import 'package:http/http.dart' as http;
@@ -17,7 +16,7 @@ import 'package:http/http.dart' as http;
 class PasswordGenerationController extends GetxController {
   //TODO: Implement PasswordGenerationController
 
-  final ApiService _apiService = Get.put(ApiService());
+  // final ApiService _apiService = Get.put(ApiService());
   final count = 0.obs;
 
   @override

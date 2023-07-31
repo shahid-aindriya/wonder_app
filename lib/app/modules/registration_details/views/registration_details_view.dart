@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:sizer/sizer.dart';
 import 'package:wonder_app/app/modules/gst_details/views/gst_details_view.dart';
 
 import '../controllers/registration_details_controller.dart';
@@ -36,7 +36,7 @@ class RegistrationDetailsView extends GetView<RegistrationDetailsController> {
       this.categoryId,
       this.featured,
       this.shopImage});
-  @override
+
   final TextEditingController licenseController = TextEditingController();
   @override
   final RegistrationDetailsController controller =

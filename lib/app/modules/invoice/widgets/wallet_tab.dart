@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:sizer/sizer.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/search_wallet_data.dart';
 import 'package:wonder_app/app/modules/request_coins/views/request_coins_view.dart';

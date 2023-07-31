@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:sizer/sizer.dart';
 
+import '../../../data/colors.dart';
+import '../../add_invoice/controllers/add_invoice_controller.dart';
+import '../../invoice/views/invoice_view.dart';
+import '../../invoice/widgets/drawer_tab.dart';
+import '../../invoice/widgets/notification_icon.dart';
+import '../../notifications/views/notifications_view.dart';
 import '../controllers/my_earnings_controller.dart';
 
 class MyEarningsView extends GetView<MyEarningsController> {
-  const MyEarningsView({Key? key}) : super(key: key);
+  MyEarningsView({Key? key}) : super(key: key);
+  final AddInvoiceController addInvoiceController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,34 +31,157 @@ class MyEarningsView extends GetView<MyEarningsController> {
             ]),
       ),
       child: Scaffold(
+          drawer: DrawerTab(addInvoiceController: addInvoiceController),
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            leading: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(117, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(10)),
-                child: IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: Color(0xff4956b2),
-                    )),
+            leading: Builder(builder: (contezxt) {
+              return InkWell(
+                onTap: () async {
+                  await invoiceController.getUserData();
+                  Scaffold.of(contezxt).openDrawer();
+                },
+                child: Container(
+                  decoration: BoxDecoration(),
+                  child: Center(
+                    child: Icon(
+                      Icons.menu,
+                      color: textGradientBlue,
+                    ),
+                  ),
+                ),
+              );
+            }),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: FutureBuilder(
+                    future: addInvoiceController.getListOfShops(),
+                    builder: (contextsd, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          width: 60.w,
+                          height: 50,
+                          child: Shimmer(
+                            color: Color.fromARGB(255, 185, 84, 84),
+                            child: ListTile(
+                              dense: true,
+                              leading: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor:
+                                        Color.fromARGB(255, 220, 216, 216),
+                                    radius: 20,
+                                  ),
+                                ],
+                              ),
+                              title: Container(
+                                height: 20,
+                                color: Color.fromARGB(255, 220, 216, 216),
+                              ),
+                              subtitle: Container(
+                                height: 16,
+                                margin: EdgeInsets.only(top: 8),
+                                color: Color.fromARGB(255, 220, 216, 216),
+                              ),
+                            ),
+                            direction: ShimmerDirection.fromRTLB(),
+                          ),
+                        );
+                      }
+                      return Obx(() {
+                        return Container(
+                            width: 60.w,
+                            child: DropdownButtonFormField(
+                              isExpanded: true,
+                              isDense: true,
+                              style: GoogleFonts.roboto(
+                                  fontSize: 18,
+                                  color: Color.fromRGBO(0, 0, 0, 1)),
+                              decoration: InputDecoration(
+                                  hintStyle: GoogleFonts.roboto(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w300,
+                                    height: 1.1725,
+                                    color: Color.fromARGB(93, 0, 0, 0),
+                                  ),
+                                  hintText: "Select Shop",
+                                  enabled: true,
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                      borderSide: BorderSide(
+                                          width: 0,
+                                          color: Color.fromARGB(
+                                              255, 199, 199, 179))),
+                                  filled: true,
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 0,
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255)),
+                                      borderRadius: BorderRadius.circular(16)),
+                                  fillColor: Color.fromARGB(153, 255, 255, 255),
+                                  focusColor:
+                                      Color.fromARGB(255, 231, 231, 231)),
+                              value: invoiceController.selectShopId,
+                              onChanged: (value) async {
+                                invoiceController.invoiceListsFilter.value
+                                    .clear();
+                                invoiceController.walletTransactionLists
+                                    .clear();
+                                invoiceController.invoiceLists.value.clear();
+                                invoiceController.walletCurrentpage.value = 1;
+                                invoiceController.invoiceCurrentpage.value = 1;
+                                invoiceController.shopWalletAmount.value = "0";
+                                invoiceController.dueList.clear();
+                                invoiceController.walletAmount.value = '';
+                                invoiceController.filterPage.value = 1;
+                                invoiceController.dueTotalCount.value = 1;
+                                invoiceController.dueCurrentCount.value = 1;
+                                invoiceController.debitListValue.value = "All";
+                                invoiceController.changeShop(
+                                  value: value,
+                                );
+                                await invoiceController.checkVerifiedVendor();
+                                await invoiceController
+                                    .onDropDownChanged(value);
+                                await invoiceController
+                                    .ondropDownChangedInvoice(value);
+                                await invoiceController.getDueData();
+                              },
+                              items: addInvoiceController.shopLists.value
+                                  .map((data) {
+                                return DropdownMenuItem(
+                                    value: data.id.toString(),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 5.0),
+                                      child: Text(
+                                        data.name,
+                                        overflow: TextOverflow.visible,
+                                      ),
+                                    ));
+                              }).toList(),
+                            ));
+                      });
+                    }),
               ),
-            ),
+              Container(
+                decoration: BoxDecoration(),
+                child: InkWell(
+                  onTap: () {
+                    Get.to(NotificationsView(
+                      invoiceController: invoiceController,
+                    ));
+                  },
+                  child: Center(
+                    child: BellWidget(),
+                  ),
+                ),
+              )
+            ],
             elevation: 0,
             backgroundColor: Colors.transparent,
-            title: Text(
-              'Your Earnings',
-              style: GoogleFonts.jost(
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-                color: Color(0xff4956b2),
-              ),
-            ),
           ),
           body: Column(
             children: [
