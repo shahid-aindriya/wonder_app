@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/map_place_picker/views/map_place_picker_view.dart';
 import 'package:wonder_app/app/modules/registration_details/views/registration_details_view.dart';
 

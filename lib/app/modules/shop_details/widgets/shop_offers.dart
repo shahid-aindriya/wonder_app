@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/shop_details/controllers/shop_details_controller.dart';
 import 'package:wonder_app/app/modules/shop_details/widgets/add_offer.dart';

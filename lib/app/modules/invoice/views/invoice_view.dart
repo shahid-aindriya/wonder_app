@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shimmer_animation/shimmer_animation.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:upgrader/upgrader.dart';
 import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';

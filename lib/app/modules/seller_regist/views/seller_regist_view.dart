@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../password_generation/views/password_generation_view.dart';
 import '../controllers/seller_regist_controller.dart';
@@ -805,32 +805,35 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                     ),
                                   ),
                                 ),
-                                Wrap(
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    Obx(
-                                      () => Radio<int>(
-                                        fillColor: MaterialStateProperty.all(
-                                            Color(0xff4956b2)),
-                                        value: 2,
-                                        groupValue: controller
-                                            .selectedDiscountValue.value,
-                                        onChanged: (value) {
-                                          controller.selectedDiscountValue
-                                              .value = value!;
-                                        },
+                                Expanded(
+                                  child: Row(
+                                    // crossAxisAlignment: WrapCrossAlignment.center,
+                                    children: [
+                                      Obx(
+                                        () => Radio<int>(
+                                          fillColor: MaterialStateProperty.all(
+                                              Color(0xff4956b2)),
+                                          value: 2,
+                                          groupValue: controller
+                                              .selectedDiscountValue.value,
+                                          onChanged: (value) {
+                                            controller.selectedDiscountValue
+                                                .value = value!;
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    Flexible(
-                                      child: Text('Sign up by Vendor',
-                                          style: GoogleFonts.roboto(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.1725,
-                                            color: Color(0xff4956b2),
-                                          )),
-                                    ),
-                                  ],
+                                      Flexible(
+                                        child: Text('Sign up by Vendor',
+                                            softWrap: true,
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1.1725,
+                                              color: Color(0xff4956b2),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),

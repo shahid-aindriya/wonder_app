@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:sizer/sizer.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/shop_details/views/shop_details_view.dart';
 import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
