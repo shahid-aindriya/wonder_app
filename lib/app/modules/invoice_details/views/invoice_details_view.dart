@@ -684,12 +684,18 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                                           "Verified")
                                                       ? true
                                                       : false,
-                                              child: ApproveAndDecline(
-                                                  invoiceController:
-                                                      invoiceController,
-                                                  invoiceDetailsController:
-                                                      invoiceDetailsController,
-                                                  data: newData)),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  ApproveAndDecline(
+                                                      invoiceController:
+                                                          invoiceController,
+                                                      invoiceDetailsController:
+                                                          invoiceDetailsController,
+                                                      data: newData),
+                                                ],
+                                              )),
 
                                           Obx(() {
                                             return Visibility(
@@ -928,63 +934,63 @@ class ApproveAndDecline extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Obx(() {
-          return Visibility(
-            visible: invoiceDetailsController.isLoading.value == false
-                ? true
-                : false,
-            child: ElevatedButton.icon(
-                style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(Size(44.w, 53)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(7),
-                        side: BorderSide(
-                            color: Color.fromARGB(255, 0, 158, 16)))),
-                    elevation: MaterialStateProperty.all(0),
-                    backgroundColor: MaterialStateProperty.all(
-                        Color.fromARGB(134, 255, 255, 255))),
-                onPressed:
-                    //  data.invoiceData.payHalfAmount == false
-                    //     ? () {
-                    //         Get.snackbar("Error", "Can't approve this Invoice",
-                    //             backgroundColor: Colors.red);
-                    //       }
-                    //     :
+        // Obx(() {
+        //   return Visibility(
+        //     visible: invoiceDetailsController.isLoading.value == false
+        //         ? true
+        //         : false,
+        //     child: ElevatedButton.icon(
+        //         style: ButtonStyle(
+        //             fixedSize: MaterialStateProperty.all(Size(44.w, 53)),
+        //             shape: MaterialStateProperty.all(RoundedRectangleBorder(
+        //                 borderRadius: BorderRadius.circular(7),
+        //                 side: BorderSide(
+        //                     color: Color.fromARGB(255, 0, 158, 16)))),
+        //             elevation: MaterialStateProperty.all(0),
+        //             backgroundColor: MaterialStateProperty.all(
+        //                 Color.fromARGB(134, 255, 255, 255))),
+        //         onPressed:
+        //             //  data.invoiceData.payHalfAmount == false
+        //             //     ? () {
+        //             //         Get.snackbar("Error", "Can't approve this Invoice",
+        //             //             backgroundColor: Colors.red);
+        //             //       }
+        //             //     :
 
-                    data.amountData.additionalAmount > 0
-                        ? () {
-                            invoiceDetailsController.openCheckout(
-                                data: data,
-                                email: data.amountData.email,
-                                name: data.amountData.name,
-                                amount: data.amountData.additionalAmount,
-                                razorKey: data.amountData.razorKey,
-                                invoiceId: data.invoiceData.id);
+        //             data.amountData.additionalAmount > 0
+        //                 ? () {
+        //                     invoiceDetailsController.openCheckout(
+        //                         data: data,
+        //                         email: data.amountData.email,
+        //                         name: data.amountData.name,
+        //                         amount: data.amountData.additionalAmount,
+        //                         razorKey: data.amountData.razorKey,
+        //                         invoiceId: data.invoiceData.id);
 
-                            // invoiceDetailsController.openCheckout(
-                            //     invoiceId: data!.id,
-                            //     amount: data!.amountData.additionalAmount + 00,
-                            //     razorKey: data!.amountData.razorKey);
-                          }
-                        : () async {
-                            await invoiceDetailsController
-                                .approveOrDeclineInvoice(
-                                    inoviceController: invoiceController,
-                                    context: context,
-                                    choice: "Approve",
-                                    invoiceId: data.invoiceData.id);
-                          },
-                icon: Icon(Icons.check, color: Color.fromARGB(255, 0, 158, 16)),
-                label: Text(
-                    data.amountData.additionalAmount > 0
-                        ? "Pay & Approve"
-                        : "Approve",
-                    style: GoogleFonts.roboto(
-                        color: Color.fromARGB(255, 0, 158, 16),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500))),
-          );
-        }),
+        //                     // invoiceDetailsController.openCheckout(
+        //                     //     invoiceId: data!.id,
+        //                     //     amount: data!.amountData.additionalAmount + 00,
+        //                     //     razorKey: data!.amountData.razorKey);
+        //                   }
+        //                 : () async {
+        //                     await invoiceDetailsController
+        //                         .approveOrDeclineInvoice(
+        //                             inoviceController: invoiceController,
+        //                             context: context,
+        //                             choice: "Approve",
+        //                             invoiceId: data.invoiceData.id);
+        //                   },
+        //         icon: Icon(Icons.check, color: Color.fromARGB(255, 0, 158, 16)),
+        //         label: Text(
+        //             data.amountData.additionalAmount > 0
+        //                 ? "Pay & Approve"
+        //                 : "Approve",
+        //             style: GoogleFonts.roboto(
+        //                 color: Color.fromARGB(255, 0, 158, 16),
+        //                 fontSize: 16,
+        //                 fontWeight: FontWeight.w500))),
+        //   );
+        // }),
         Obx(() {
           return Visibility(
             visible: invoiceDetailsController.isLoading.value == false

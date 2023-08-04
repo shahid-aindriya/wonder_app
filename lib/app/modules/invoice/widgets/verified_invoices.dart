@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
-
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/bank_transactions/views/bank_transactions_view.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
@@ -16,6 +15,7 @@ import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
 import '../../../data/colors.dart';
 import '../../invoice_details/views/invoice_details_view.dart';
+import '../controllers/invoice_payment_controller.dart';
 import 'buttons/pay_half_all.dart';
 import 'buttons/pay_later.dart';
 import 'buttons/pay_manually.dart';
@@ -49,6 +49,8 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
   @override
   Widget build(BuildContext context) {
     widget.invoiceController.verifiedInvoiceList();
+    InvoicePaymentController invoicePaymentController =
+        InvoicePaymentController();
     return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -582,7 +584,7 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
 
                                                 // The start action pane is the one at the left or the top side.
                                                 endActionPane: ActionPane(
-                                                  extentRatio: .4,
+                                                  extentRatio: .2,
                                                   dragDismissible: false,
                                                   // A motion is a widget used to control how the pane animates.
                                                   motion: const ScrollMotion(),
@@ -591,65 +593,65 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
 
                                                   // All actions are defined in the children parameter.
                                                   children: [
-                                                    InkWell(
-                                                      onLongPress: () {},
-                                                      onTap:
-                                                          // datas.payHalfAmount ==
-                                                          //         false
-                                                          //     ?
-                                                          //     () {
-                                                          //         Get.snackbar(
-                                                          //             "Error",
-                                                          //             "Can't approve this Invoice",
-                                                          //             backgroundColor:
-                                                          //                 Colors
-                                                          //                     .red);
-                                                          //       }
-                                                          // :
-                                                          () async {
-                                                        log("message");
-                                                        datas.amountData.additionalAmount ==
-                                                                0
-                                                            ? await widget
-                                                                .invoiceController
-                                                                .approveOrDeclineInvoice(
-                                                                    choice:
-                                                                        "Approve",
-                                                                    context:
-                                                                        context,
-                                                                    invoiceId:
-                                                                        datas
-                                                                            .id)
-                                                            : await widget
-                                                                .invoiceController
-                                                                .openCheckout(
-                                                                amount: datas
-                                                                    .amountData
-                                                                    .additionalAmount,
-                                                                email: datas
-                                                                    .amountData
-                                                                    .email,
-                                                                invoiceId:
-                                                                    datas.id,
-                                                                name: datas
-                                                                    .amountData
-                                                                    .name,
-                                                                razorKey: datas
-                                                                    .amountData
-                                                                    .razorKey,
-                                                                data: datas
-                                                                    .amountData,
-                                                              );
-                                                      },
-                                                      child: Container(
-                                                        height: 70,
-                                                        width: 54,
-                                                        child: Image.asset(
-                                                          "assets/images/approve.png",
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    // InkWell(
+                                                    //   onLongPress: () {},
+                                                    //   onTap:
+                                                    //       // datas.payHalfAmount ==
+                                                    //       //         false
+                                                    //       //     ?
+                                                    //       //     () {
+                                                    //       //         Get.snackbar(
+                                                    //       //             "Error",
+                                                    //       //             "Can't approve this Invoice",
+                                                    //       //             backgroundColor:
+                                                    //       //                 Colors
+                                                    //       //                     .red);
+                                                    //       //       }
+                                                    //       // :
+                                                    //       () async {
+                                                    //     log("message");
+                                                    //     datas.amountData.additionalAmount ==
+                                                    //             0
+                                                    //         ? await widget
+                                                    //             .invoiceController
+                                                    //             .approveOrDeclineInvoice(
+                                                    //                 choice:
+                                                    //                     "Approve",
+                                                    //                 context:
+                                                    //                     context,
+                                                    //                 invoiceId:
+                                                    //                     datas
+                                                    //                         .id)
+                                                    //         : await widget
+                                                    //             .invoiceController
+                                                    //             .openCheckout(
+                                                    //             amount: datas
+                                                    //                 .amountData
+                                                    //                 .additionalAmount,
+                                                    //             email: datas
+                                                    //                 .amountData
+                                                    //                 .email,
+                                                    //             invoiceId:
+                                                    //                 datas.id,
+                                                    //             name: datas
+                                                    //                 .amountData
+                                                    //                 .name,
+                                                    //             razorKey: datas
+                                                    //                 .amountData
+                                                    //                 .razorKey,
+                                                    //             data: datas
+                                                    //                 .amountData,
+                                                    //           );
+                                                    //   },
+                                                    //   child: Container(
+                                                    //     height: 70,
+                                                    //     width: 54,
+                                                    //     child: Image.asset(
+                                                    //       "assets/images/approve.png",
+                                                    //       fit: BoxFit.cover,
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
                                                     SizedBox(
                                                       width: 5,
                                                     ),
@@ -676,10 +678,6 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                   ],
                                                 ),
 
-                                                // The end action pane is the one at the right or the bottom side.
-
-                                                // The child of the Slidable is what the user sees when the
-                                                // component is not dragged.
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(
                                                       10.0),
@@ -767,29 +765,34 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                             ),
                                                           );
                                                         }),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 3.0,
-                                                                  left: 10),
-                                                          child: Container(
-                                                            width: 8,
-                                                            height: 8,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10),
-                                                                color: datas.status ==
-                                                                        "Verified"
-                                                                    ? Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            144,
-                                                                            149,
-                                                                            255)
-                                                                    : greyColor),
+                                                        Visibility(
+                                                          visible: datas.payHalfAmount ==
+                                                                      true &&
+                                                                  datas.bulkApproveStatus ==
+                                                                      true
+                                                              ? true
+                                                              : false,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 3.0,
+                                                                    left: 10),
+                                                            child: Container(
+                                                              width: 5,
+                                                              height: 5,
+                                                              child: Icon(
+                                                                Icons
+                                                                    .verified_user_sharp,
+                                                                size: 20,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        43,
+                                                                        154,
+                                                                        54),
+                                                              ),
+                                                            ),
                                                           ),
                                                         ),
                                                         Padding(
@@ -908,14 +911,37 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                                       height:
                                                                           13,
                                                                     ),
-                                                                    Text(
-                                                                        " Invoice No: ${datas.invoiceNumber}",
-                                                                        style: GoogleFonts.roboto(
-                                                                            color: datas.status == "Verified"
-                                                                                ? Colors.black
-                                                                                : greyColor,
-                                                                            fontSize: 12,
-                                                                            fontWeight: FontWeight.w300))
+                                                                    Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Text(
+                                                                            " Invoice No: ${datas.invoiceNumber}  ",
+                                                                            style: GoogleFonts.roboto(
+                                                                                color: datas.status == "Verified" ? Colors.black : greyColor,
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.w300)),
+                                                                        Visibility(
+                                                                          visible: datas.payHalfAmount == true
+                                                                              ? true
+                                                                              : false,
+                                                                          child:
+                                                                              Wrap(
+                                                                            crossAxisAlignment:
+                                                                                WrapCrossAlignment.center,
+                                                                            children: [
+                                                                              Container(
+                                                                                width: 8,
+                                                                                height: 8,
+                                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromARGB(255, 67, 213, 82)),
+                                                                              ),
+                                                                              Text(" Paid", style: GoogleFonts.roboto(color: Color.fromARGB(255, 67, 213, 82), fontSize: 12, fontWeight: FontWeight.w500))
+                                                                            ],
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    )
                                                                   ],
                                                                 ),
                                                               ),
@@ -980,40 +1006,68 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterFloat,
-            floatingActionButton: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border(),
-                  gradient: LinearGradient(
-                    begin: Alignment(-0.934, -1),
-                    end: Alignment(1.125, 1.333),
-                    colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
-                    stops: <double>[0, 1],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0x3f000000),
-                      offset: Offset(0, 0.7870440483),
-                      blurRadius: 2.7546541691,
+            floatingActionButton: Obx(() {
+              return Visibility(
+                visible: invoiceController.showButtonValue.value == true
+                    ? true
+                    : false,
+                child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border(),
+                      gradient: LinearGradient(
+                        begin: Alignment(-0.934, -1),
+                        end: Alignment(1.125, 1.333),
+                        colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+                        stops: <double>[0, 1],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0x3f000000),
+                          offset: Offset(0, 0.7870440483),
+                          blurRadius: 2.7546541691,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
-                    child: ElevatedButton(
-                        style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(0),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.transparent)),
-                        onPressed: () async {},
-                        child: Text(
-                          "Bulk Approval",
-                          style: GoogleFonts.roboto(color: Colors.white),
-                        )))),
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 5),
+                        child: ElevatedButton(
+                            style: ButtonStyle(
+                                elevation: MaterialStateProperty.all(0),
+                                backgroundColor: MaterialStateProperty.all(
+                                    Colors.transparent)),
+                            onPressed: () async {
+                              invoicePaymentController.bulkApproval(
+                                  widget.invoiceController.verifiedList);
+                            },
+                            child: Text(
+                              "Approve",
+                              style: GoogleFonts.roboto(color: Colors.white),
+                            )))),
+              );
+            }),
           ),
         ));
   }
+
+  // void getDataFromFirebase() async{
+
+  //   print("getDataFromFirebase");
+  //   final firebaseApp = Firebase.app();
+  //   final rtdb = FirebaseDatabase.instanceFor(app: firebaseApp, databaseURL: 'https://console.firebase.google.com/project/wonderapp-73f65/database/wonderapp-73f65-default-rtdb/data.firebaseio.com/');
+  //   await Firebase.initializeApp(); // Make sure Firebase is initialized before accessing its services.
+
+  //   // final rtdbs = FirebaseDatabase.instance;
+  //   // print("${rtdbs.ref().child("shops_tb")}");
+
+  //   final rtdbs = FirebaseDatabase.instance.ref().child("shops_tb");
+  //   rtdbs.onValue.listen((event) {
+  //     DataSnapshot snapshot = event.snapshot;
+  //     print(snapshot.value);
+  //   });
+
+  // }
 }
 
 class LoadingDialog {

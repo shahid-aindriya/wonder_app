@@ -307,7 +307,7 @@ class InvoiceController extends GetxController {
           Uri.parse("${baseUrl.value}vendor-notifications/"),
           headers: headers,
           body: jsonEncode(body));
-      log(request.statusCode.toString());
+      // log(request.body);
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);
@@ -706,12 +706,15 @@ class InvoiceController extends GetxController {
       if (currentVerifiedCount.value == 1) {
         verifiedList.assignAll(verfiedModel.invoiceData);
         checkBoxedList = RxList.filled(verifiedList.length, false);
+        await showButton();
         update();
       } else {
         verifiedList.addAll(verfiedModel.invoiceData);
         checkBoxedList = RxList.filled(verifiedList.length, false);
+        await showButton();
         update();
       }
+      await showButton();
       // for (var element in verifiedList) {
       //   listOfId.add(element.id);
       // }
@@ -1257,5 +1260,44 @@ class InvoiceController extends GetxController {
     } else {
       idOfVerifiedList.add(itemId);
     }
+  }
+
+  updateInvoiceBulkStatus(invoiceId) async {
+    var body = {
+      "invoice_id": invoiceId,
+    };
+    try {
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}change-shop-invoice-bulk-status/"),
+          headers: headers,
+          body: jsonEncode(body));
+
+      if (requests.statusCode == 201) {
+        Get.snackbar("Info ", "Success", backgroundColor: Colors.green);
+        return;
+      } else if (requests.statusCode == 500) {
+        Get.snackbar("Error ", "Something went wrong",
+            backgroundColor: Colors.red);
+      }
+    } catch (e) {
+      Get.snackbar("Error ", "Something went wrong",
+          backgroundColor: Colors.red);
+    }
+  }
+
+  var showButtonValue = false.obs;
+  showButton() async {
+    for (var element in verifiedList) {
+      if (element.payHalfAmount == true && element.bulkApproveStatus == false) {
+        showButtonValue.value = true;
+        log(showButtonValue.value.toString());
+        return;
+      } else {
+        showButtonValue.value = false;
+        log(showButtonValue.value.toString());
+        return;
+      }
+    }
+    return null;
   }
 }

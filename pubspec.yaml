@@ -53,6 +53,7 @@ dependencies:
   chewie: ^1.2.2
   chat_bubbles: ^1.4.1
   responsive_sizer: ^3.1.1
+  firebase_database: ^10.2.4
  
 dev_dependencies: 
   flutter_lints: ^2.0.0

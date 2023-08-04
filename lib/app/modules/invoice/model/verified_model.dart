@@ -43,6 +43,7 @@ class VerifiedInvoiceData {
     required this.userId,
     required this.vendorPhone,
     required this.shopId,
+    required this.shopCommission,
     required this.shopName,
     required this.invoiceImage,
     required this.invoiceNumber,
@@ -54,8 +55,17 @@ class VerifiedInvoiceData {
     required this.myself,
     required this.vendorImage,
     required this.userImage,
+    required this.isImport,
     required this.amountData,
     required this.payHalfAmount,
+    required this.shopAddedBy,
+    required this.shopBusinessRepId,
+    required this.fieldVisitCommission,
+    required this.addedByCommission,
+    required this.shopBalanceAmount,
+    required this.shopCreatedAt,
+    required this.businessRepCommission,
+    required this.bulkApproveStatus,
   });
 
   int id;
@@ -65,6 +75,7 @@ class VerifiedInvoiceData {
   dynamic userId;
   String vendorPhone;
   dynamic shopId;
+  double shopCommission;
   String shopName;
   String invoiceImage;
   dynamic invoiceNumber;
@@ -77,6 +88,15 @@ class VerifiedInvoiceData {
   dynamic vendorImage;
   dynamic userImage;
   bool payHalfAmount;
+  bool isImport;
+  dynamic shopAddedBy;
+  dynamic shopBusinessRepId;
+  dynamic fieldVisitCommission;
+  dynamic addedByCommission;
+  dynamic shopBalanceAmount;
+  dynamic shopCreatedAt;
+  dynamic businessRepCommission;
+  dynamic bulkApproveStatus;
   VerifiedAmountData amountData;
 
   factory VerifiedInvoiceData.fromJson(Map<String, dynamic> json) =>
@@ -88,6 +108,7 @@ class VerifiedInvoiceData {
         userId: json["user_id"],
         vendorPhone: json["vendor_phone"],
         shopId: json["shop_id"],
+        shopCommission: json["shop_commission"],
         shopName: json["shop_name"],
         invoiceImage: json["invoice_image"],
         invoiceNumber: json["invoice_number"],
@@ -101,6 +122,15 @@ class VerifiedInvoiceData {
         myself: json["myself"],
         vendorImage: json["vendor_image"],
         userImage: json["user_image"],
+        isImport: json["is_import"],
+        shopAddedBy: json["shop_added_by"],
+        shopBusinessRepId: json["shop_business_rep_id"],
+        fieldVisitCommission: json["field_visit_commission"],
+        addedByCommission: json["added_by_commission"],
+        shopBalanceAmount: json["shop_balance_amount"],
+        shopCreatedAt: json["shop_created_at"],
+        businessRepCommission: json["business_rep_commission"],
+        bulkApproveStatus: json["bulk_approve_status"],
         amountData: VerifiedAmountData.fromJson(json["amount_data"]),
       );
 
@@ -112,6 +142,7 @@ class VerifiedInvoiceData {
         "user_id": userId,
         "vendor_phone": vendorPhone,
         "shop_id": shopId,
+        "shop_commission": shopCommission,
         "shop_name": shopName,
         "invoice_image": invoiceImage,
         "invoice_number": invoiceNumber,
@@ -123,6 +154,15 @@ class VerifiedInvoiceData {
         "myself": myself,
         "vendor_image": vendorImage,
         "user_image": userImage,
+        "is_import": isImport,
+        "shop_added_by": shopAddedBy,
+        "shop_business_rep_id": shopBusinessRepId,
+        "field_visit_commission": fieldVisitCommission,
+        "added_by_commission": addedByCommission,
+        "shop_balance_amount": shopBalanceAmount,
+        "shop_created_at": shopCreatedAt,
+        "business_rep_commission": businessRepCommission,
+        "bulk_approve_status": bulkApproveStatus,
         "amount_data": amountData.toJson(),
       };
 }
