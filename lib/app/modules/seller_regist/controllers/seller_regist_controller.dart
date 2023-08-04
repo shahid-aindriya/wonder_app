@@ -16,7 +16,7 @@ import 'package:wonder_app/app/data/urls.dart';
 class SellerRegistController extends GetxController {
   //TODO: Implement SellerRegistController
 
-  final selectedDiscountValue = 1.obs;
+  final selectedDiscountValue = 0.obs;
 
   String adhaarimg = '';
   XFile? image;
@@ -171,5 +171,25 @@ class SellerRegistController extends GetxController {
       final data = jsonDecode(request.body);
       repsList.assignAll(data['list_business_rep']);
     }
+  }
+
+  changeRadioVal(value) {
+    if (value != null) {
+      selectedDiscountValue.value = value;
+      update();
+    } else {
+      selectedDiscountValue.value = 0;
+      update();
+    }
+  }
+
+  getVendors(email) async {
+    log(email);
+    final body = {"vendor_email": email};
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}list-all-has-child-vendors/"),
+        headers: headers.value,
+        body: jsonEncode(body));
+    log(request.body);
   }
 }

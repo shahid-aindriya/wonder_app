@@ -23,7 +23,10 @@ class SellerRegistView extends GetView<SellerRegistController> {
         TextEditingController();
     final TextEditingController emailEditingController =
         TextEditingController();
+    final TextEditingController vendorEmailEditingController =
+        TextEditingController();
     final formKey = GlobalKey<FormState>();
+    final formKeyForEmail = GlobalKey<FormState>();
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -91,6 +94,394 @@ class SellerRegistView extends GetView<SellerRegistController> {
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: Column(
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Obx(
+                                  () => Radio<int>(
+                                    toggleable: true,
+                                    fillColor: MaterialStateProperty.all(
+                                        Color(0xff4956b2)),
+                                    value: 1,
+                                    groupValue:
+                                        controller.selectedDiscountValue.value,
+                                    onChanged: (value) {
+                                      controller.changeRadioVal(value);
+                                    },
+                                  ),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    'Sign up by Business Rep',
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      height: 1.1725,
+                                      color: Color(0xff4956b2),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Row(
+                                    // crossAxisAlignment: WrapCrossAlignment.center,
+                                    children: [
+                                      Obx(
+                                        () => Radio<int>(
+                                          toggleable: true,
+                                          fillColor: MaterialStateProperty.all(
+                                              Color(0xff4956b2)),
+                                          value: 2,
+                                          groupValue: controller
+                                              .selectedDiscountValue.value,
+                                          onChanged: (value) {
+                                            controller.changeRadioVal(value);
+                                          },
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Text('Sign up by Vendor',
+                                            softWrap: true,
+                                            style: GoogleFonts.roboto(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              height: 1.1725,
+                                              color: Color(0xff4956b2),
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // GetBuilder<SellerRegistController>(builder: (c) {
+                          //   return Row(
+                          //     children: [
+                          //       Container(
+                          //         height: 20,
+                          //         width: 20,
+                          //         decoration: BoxDecoration(
+                          //             color: Colors.white,
+                          //             borderRadius: BorderRadius.circular(5)),
+                          //         child: Checkbox(
+                          //           checkColor: Color(0xff4956b2),
+                          //           activeColor:
+                          //               Color.fromARGB(255, 255, 255, 255),
+                          //           fillColor: MaterialStateProperty.all(
+                          //               Color.fromARGB(255, 255, 255, 255)),
+                          //           value: c.isChecked,
+                          //           onChanged: (value) {
+                          //             c.checkBox(value);
+                          //           },
+                          //         ),
+                          //       ),
+                          //       SizedBox(
+                          //         width: 8,
+                          //       ),
+                          //       Text("Signing up by Business Representative",
+                          //           style: GoogleFonts.roboto(
+                          //               fontSize: 16,
+                          //               fontWeight: FontWeight.w400,
+                          //               height: 1.1725,
+                          //               color: Color(0xff4956b2)))
+                          //     ],
+                          //   );
+                          // }),
+                          SizedBox(
+                            height: 25,
+                          ),
+
+                          Obx(() {
+                            return Visibility(
+                              visible:
+                                  controller.selectedDiscountValue.value == 2
+                                      ? true
+                                      : false,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 14.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Email of Referring Vendor',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.1725,
+                                            color: Color(0xff4956b2),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Form(
+                                    key: formKeyForEmail,
+                                    child: TextFormField(
+                                      controller: vendorEmailEditingController,
+                                      enabled: true,
+                                      keyboardType: TextInputType.emailAddress,
+                                      style: GoogleFonts.roboto(
+                                          fontSize: 18,
+                                          color: Color.fromRGBO(0, 0, 0, 1)),
+                                      decoration: InputDecoration(
+                                          hintStyle: GoogleFonts.roboto(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w300,
+                                            height: 1.1725,
+                                            color: Color.fromARGB(93, 0, 0, 0),
+                                          ),
+                                          hintText: "Enter your email",
+                                          contentPadding: const EdgeInsets.symmetric(
+                                              vertical: 18.0, horizontal: 18),
+                                          enabled: true,
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              borderSide: BorderSide(
+                                                  width: 0,
+                                                  color: Color.fromARGB(
+                                                      255, 199, 199, 179))),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              borderSide: BorderSide(
+                                                  width: 0,
+                                                  color: Color.fromARGB(
+                                                      255, 199, 199, 179))),
+                                          errorBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              borderSide: BorderSide(
+                                                  width: 0,
+                                                  color: Color.fromARGB(
+                                                      255, 199, 199, 179))),
+                                          filled: true,
+                                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 0, color: Color.fromARGB(255, 255, 255, 255)), borderRadius: BorderRadius.circular(16)),
+                                          fillColor: Color.fromARGB(153, 255, 255, 255),
+                                          focusColor: Color.fromARGB(255, 231, 231, 231)),
+                                      validator: (value) {
+                                        if (!RegExp(r'^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$')
+                                                .hasMatch(value!) ||
+                                            value.length < 3) {
+                                          return 'please enter valid email';
+                                        } else {
+                                          return null;
+                                        }
+                                      },
+                                      onFieldSubmitted: (value) {
+                                        if (formKeyForEmail.currentState!
+                                            .validate()) {
+                                          controller.getVendors(value);
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                          SizedBox(
+                            height: 18,
+                          ),
+
+                          Obx(() {
+                            return Visibility(
+                              visible:
+                                  controller.selectedDiscountValue.value == 2
+                                      ? true
+                                      : false,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 14.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Select Referring Vendor',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.1725,
+                                            color: Color(0xff4956b2),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Container(
+                                      width: 100.w,
+                                      height: 50,
+                                      child: DropdownButtonFormField(
+                                        isExpanded: true,
+                                        isDense: true,
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 18,
+                                            color: Color.fromRGBO(0, 0, 0, 1)),
+                                        decoration: InputDecoration(
+                                            hintStyle: GoogleFonts.roboto(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w300,
+                                              height: 1.1725,
+                                              color:
+                                                  Color.fromARGB(93, 0, 0, 0),
+                                            ),
+                                            hintText: "Select vendor",
+                                            enabled: true,
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                borderSide: BorderSide(
+                                                    width: 0,
+                                                    color: Color.fromARGB(
+                                                        255, 199, 199, 179))),
+                                            filled: true,
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    width: 0,
+                                                    color: Color.fromARGB(
+                                                        255, 255, 255, 255)),
+                                                borderRadius:
+                                                    BorderRadius.circular(16)),
+                                            fillColor: Color.fromARGB(
+                                                153, 255, 255, 255),
+                                            focusColor: Color.fromARGB(
+                                                255, 231, 231, 231)),
+                                        value: controller.selectRepId,
+                                        onChanged: (value) async {
+                                          controller.selectRepId = value;
+                                        },
+                                        items: controller.repsList.map((data) {
+                                          return DropdownMenuItem(
+                                              value: data['id'],
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 5.0),
+                                                child: Text(
+                                                  data['phone'],
+                                                  overflow:
+                                                      TextOverflow.visible,
+                                                ),
+                                              ));
+                                        }).toList(),
+                                      ))
+                                ],
+                              ),
+                            );
+                          }),
+                          GetBuilder<SellerRegistController>(builder: (c) {
+                            return Visibility(
+                              visible: c.selectedDiscountValue.value == 1
+                                  ? true
+                                  : false,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 14.0),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Select Business Representative',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.1725,
+                                            color: Color(0xff4956b2),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Obx(() {
+                                    return FutureBuilder(
+                                        future: controller.getReps(),
+                                        builder: (context, snapshot) {
+                                          return Container(
+                                              width: 100.w,
+                                              height: 50,
+                                              child: DropdownButtonFormField(
+                                                isExpanded: true,
+                                                isDense: true,
+                                                style: GoogleFonts.roboto(
+                                                    fontSize: 18,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1)),
+                                                decoration: InputDecoration(
+                                                    hintStyle:
+                                                        GoogleFonts.roboto(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      height: 1.1725,
+                                                      color: Color.fromARGB(
+                                                          93, 0, 0, 0),
+                                                    ),
+                                                    hintText:
+                                                        "Select Representative",
+                                                    enabled: true,
+                                                    enabledBorder: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                16),
+                                                        borderSide: BorderSide(
+                                                            width: 0,
+                                                            color: Color.fromARGB(
+                                                                255, 199, 199, 179))),
+                                                    filled: true,
+                                                    focusedBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            width: 0,
+                                                            color: Color.fromARGB(
+                                                                255, 255, 255, 255)),
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                16)),
+                                                    fillColor: Color.fromARGB(
+                                                        153, 255, 255, 255),
+                                                    focusColor: Color.fromARGB(255, 231, 231, 231)),
+                                                value: controller.selectRepId,
+                                                onChanged: (value) async {
+                                                  controller.selectRepId =
+                                                      value;
+                                                },
+                                                items: controller.repsList
+                                                    .map((data) {
+                                                  return DropdownMenuItem(
+                                                      value: data['id'],
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 5.0),
+                                                        child: Text(
+                                                          data['phone'],
+                                                          overflow: TextOverflow
+                                                              .visible,
+                                                        ),
+                                                      ));
+                                                }).toList(),
+                                              ));
+                                        });
+                                  })
+                                ],
+                              ),
+                            );
+                          }),
+                          SizedBox(
+                            height: 20,
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 14.0),
                             child: Row(
@@ -770,209 +1161,6 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                   ),
                                 ),
                               ],
-                            );
-                          }),
-                          SizedBox(
-                            height: 20,
-                          ),
-
-                          Padding(
-                            padding: const EdgeInsets.only(top: 2.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Obx(
-                                  () => Radio<int>(
-                                    fillColor: MaterialStateProperty.all(
-                                        Color(0xff4956b2)),
-                                    value: 1,
-                                    groupValue:
-                                        controller.selectedDiscountValue.value,
-                                    onChanged: (value) {
-                                      controller.selectedDiscountValue.value =
-                                          value!;
-                                    },
-                                  ),
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    'Sign up by Business Rep',
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.1725,
-                                      color: Color(0xff4956b2),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Row(
-                                    // crossAxisAlignment: WrapCrossAlignment.center,
-                                    children: [
-                                      Obx(
-                                        () => Radio<int>(
-                                          fillColor: MaterialStateProperty.all(
-                                              Color(0xff4956b2)),
-                                          value: 2,
-                                          groupValue: controller
-                                              .selectedDiscountValue.value,
-                                          onChanged: (value) {
-                                            controller.selectedDiscountValue
-                                                .value = value!;
-                                          },
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text('Sign up by Vendor',
-                                            softWrap: true,
-                                            style: GoogleFonts.roboto(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              height: 1.1725,
-                                              color: Color(0xff4956b2),
-                                            )),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // GetBuilder<SellerRegistController>(builder: (c) {
-                          //   return Row(
-                          //     children: [
-                          //       Container(
-                          //         height: 20,
-                          //         width: 20,
-                          //         decoration: BoxDecoration(
-                          //             color: Colors.white,
-                          //             borderRadius: BorderRadius.circular(5)),
-                          //         child: Checkbox(
-                          //           checkColor: Color(0xff4956b2),
-                          //           activeColor:
-                          //               Color.fromARGB(255, 255, 255, 255),
-                          //           fillColor: MaterialStateProperty.all(
-                          //               Color.fromARGB(255, 255, 255, 255)),
-                          //           value: c.isChecked,
-                          //           onChanged: (value) {
-                          //             c.checkBox(value);
-                          //           },
-                          //         ),
-                          //       ),
-                          //       SizedBox(
-                          //         width: 8,
-                          //       ),
-                          //       Text("Signing up by Business Representative",
-                          //           style: GoogleFonts.roboto(
-                          //               fontSize: 16,
-                          //               fontWeight: FontWeight.w400,
-                          //               height: 1.1725,
-                          //               color: Color(0xff4956b2)))
-                          //     ],
-                          //   );
-                          // }),
-                          SizedBox(
-                            height: 25,
-                          ),
-                          GetBuilder<SellerRegistController>(builder: (c) {
-                            return Visibility(
-                              visible: c.selectedDiscountValue.value == 1
-                                  ? true
-                                  : false,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 14.0),
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Select Business Representative',
-                                          style: GoogleFonts.roboto(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.1725,
-                                            color: Color(0xff4956b2),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Obx(() {
-                                    return FutureBuilder(
-                                        future: controller.getReps(),
-                                        builder: (context, snapshot) {
-                                          return Container(
-                                              width: 100.w,
-                                              height: 50,
-                                              child: DropdownButtonFormField(
-                                                isExpanded: true,
-                                                isDense: true,
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 18,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1)),
-                                                decoration: InputDecoration(
-                                                    hintStyle:
-                                                        GoogleFonts.roboto(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      height: 1.1725,
-                                                      color: Color.fromARGB(
-                                                          93, 0, 0, 0),
-                                                    ),
-                                                    hintText:
-                                                        "Select Representative",
-                                                    enabled: true,
-                                                    enabledBorder: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                16),
-                                                        borderSide: BorderSide(
-                                                            width: 0,
-                                                            color: Color.fromARGB(
-                                                                255, 199, 199, 179))),
-                                                    filled: true,
-                                                    focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            width: 0,
-                                                            color: Color.fromARGB(
-                                                                255, 255, 255, 255)),
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                                16)),
-                                                    fillColor: Color.fromARGB(
-                                                        153, 255, 255, 255),
-                                                    focusColor: Color.fromARGB(255, 231, 231, 231)),
-                                                value: controller.selectRepId,
-                                                onChanged: (value) async {
-                                                  controller.selectRepId =
-                                                      value;
-                                                },
-                                                items: controller.repsList
-                                                    .map((data) {
-                                                  return DropdownMenuItem(
-                                                      value: data['id'],
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 5.0),
-                                                        child: Text(
-                                                          data['phone'],
-                                                          overflow: TextOverflow
-                                                              .visible,
-                                                        ),
-                                                      ));
-                                                }).toList(),
-                                              ));
-                                        });
-                                  })
-                                ],
-                              ),
                             );
                           }),
                         ],

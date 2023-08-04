@@ -7,10 +7,10 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
 
 import '../../../data/urls.dart';
+import '../../bottom_bar/views/bottom_bar_view.dart';
 import '../../request_pending/views/request_pending_view.dart';
 import '../models/login_respose_model.dart';
 
@@ -38,7 +38,7 @@ class LoginController extends GetxController {
         if (loginResponseModel.isApproved == true &&
             loginResponseModel.haveShop == true) {
           prefs.setInt("userId", loginResponseModel.userId!);
-          Get.offAll(InvoiceView());
+          Get.offAll(BottombarView());
           MotionToast.success(
             dismissable: true,
             enableAnimation: false,
