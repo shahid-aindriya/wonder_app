@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,9 +36,10 @@ class InvoicePaymentController extends GetxController {
   String? parentId;
   double? firstMonthCommission;
   double? fieldVisitCommission;
-  double? getUserCommission;
+  dynamic getUserCommission;
 
   bulkApproval(RxList<VerifiedInvoiceData> verifiedList) async {
+    listCount.value = verifiedList.value.length;
     expiryDays = await firebaseDatabaseController.getExpireDays();
     DateTime today = DateTime.now();
     DateTime expiryDate = today.add(Duration(days: expiryDays as int));
@@ -151,10 +154,15 @@ class InvoicePaymentController extends GetxController {
     }
     for (int i = 0; i < verifiedList.value.length; i++) {
       double progressValue = (i + 1) / verifiedList.value.length;
+      // count.value++;
       updateProgress(progressValue);
+      update();
     }
+    // count.value = 0;
+    // progress.value = 0.0;
+
     Get.snackbar("Info ", "Success", backgroundColor: Colors.green);
-    invoiceController.verifiedInvoiceList();
+
     return;
   }
 
@@ -216,11 +224,13 @@ class InvoicePaymentController extends GetxController {
       DateTime now = DateTime.now();
       DateTime oneMonthAgo = now.subtract(Duration(days: 30));
 
-      if (verifiedInvoiceData.shopCreatedAt > oneMonthAgo) {
+      if (DateTime.parse(verifiedInvoiceData.shopCreatedAt)
+          .isAfter(oneMonthAgo)) {
         userCommission =
             calculatePercentage(firstMonthCommission, invoiceAmount);
         getUserCommission = verifiedInvoiceData.businessRepCommission;
-        userCommission = getUserCommission! + userCommission!;
+        userCommission =
+            getUserCommission == "" ? 0.0 : getUserCommission + userCommission!;
 
         firebaseDatabaseController.createUserTransaction(
             userId: verifiedInvoiceData.shopBusinessRepId,
@@ -248,8 +258,12 @@ class InvoicePaymentController extends GetxController {
   }
 
   RxDouble progress = 0.0.obs;
-
+  RxInt listCount = 0.obs;
+  RxInt count = 0.obs;
   void updateProgress(double value) {
+    log(progress.value.toString());
+    count.value = count.value + 1;
     progress.value = value;
+    update();
   }
 }

@@ -50,8 +50,8 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
   @override
   Widget build(BuildContext context) {
     widget.invoiceController.verifiedInvoiceList();
-    InvoicePaymentController invoicePaymentController =
-        InvoicePaymentController();
+    // InvoicePaymentController invoicePaymentController =
+    //     InvoicePaymentController();
     return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(

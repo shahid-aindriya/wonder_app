@@ -22,55 +22,91 @@ class ProgressIndicatorView extends StatelessWidget {
               Color.fromRGBO(228, 249, 254, 1)
             ]),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 4.w, right: 4.w),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(225, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(13)),
-                width: 100.w,
-                child: Column(
-                  children: [
-                    Container(
-                        height: 79,
-                        child: Image.asset("assets/images/image 11.png")),
-                    Text(
-                      "Bulk Approval Progressing...",
-                      style: GoogleFonts.roboto(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Color.fromARGB(255, 73, 86, 178)),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 7.w, right: 7.w),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Obx(() {
-                          return LinearProgressIndicator(
-                            value: invoicePaymentController.progress.value,
-                            backgroundColor: Colors.grey[300],
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Color.fromARGB(255, 73, 86, 178)),
-                          );
-                        }),
+      child: WillPopScope(
+        onWillPop: () async {
+          invoicePaymentController.progress.value = 0.0;
+          invoicePaymentController.count.value = 0;
+          Get.back();
+          throw Exception();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 4.w, right: 4.w),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(225, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(13)),
+                  width: 100.w,
+                  child: Column(
+                    children: [
+                      Obx(() {
+                        return Container(
+                            height: 79,
+                            child: invoicePaymentController.count.value ==
+                                    invoicePaymentController.listCount.value
+                                ? Icon(
+                                    Icons.verified,
+                                    color: Colors.green,
+                                    size: 55,
+                                  )
+                                : Image.asset("assets/images/image 11.png"));
+                      }),
+                      Obx(() {
+                        return Text(
+                          invoicePaymentController.count.value ==
+                                  invoicePaymentController.listCount.value
+                              ? "Bulk Approval Completed"
+                              : "Bulk Approval Progressing...",
+                          style: GoogleFonts.roboto(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Color.fromARGB(255, 73, 86, 178)),
+                        );
+                      }),
+                      SizedBox(
+                        height: 10,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
+                      Padding(
+                        padding: EdgeInsets.only(left: 7.w, right: 7.w),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Obx(() {
+                            return LinearProgressIndicator(
+                              value: invoicePaymentController.progress.value,
+                              backgroundColor: Colors.grey[300],
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Color.fromARGB(255, 73, 86, 178)),
+                            );
+                          }),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Obx(() {
+                            return Text(invoicePaymentController.count.value
+                                .toString());
+                          }),
+                          Text(
+                              " / ${invoicePaymentController.listCount.value.toString()}")
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
