@@ -1017,7 +1017,7 @@ class InvoiceController extends GetxController {
       preTaxAmount,
       addiTionalAmount,
       dueAmount}) {
-    num preTax = num.tryParse(preTaxAmount)!;
+    num preTax = num.tryParse(preTaxAmount.toString())!;
     checkBoxedList[index] = value!;
     update();
     if (value == true) {
@@ -1273,15 +1273,14 @@ class InvoiceController extends GetxController {
           body: jsonEncode(body));
 
       if (requests.statusCode == 201) {
-        Get.snackbar("Info ", "Success", backgroundColor: Colors.green);
         return;
       } else if (requests.statusCode == 500) {
-        Get.snackbar("Error ", "Something went wrong",
-            backgroundColor: Colors.red);
+        // Get.snackbar("Error ", "Something went wrong",
+        //     backgroundColor: Colors.red);
       }
     } catch (e) {
-      Get.snackbar("Error ", "Something went wrong",
-          backgroundColor: Colors.red);
+      // Get.snackbar("Error ", "Something went wrong",
+      //     backgroundColor: Colors.red);
     }
   }
 

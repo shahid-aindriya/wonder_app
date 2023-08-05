@@ -10,7 +10,7 @@ import 'package:upgrader/upgrader.dart';
 import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/search_invoice.dart';
-import 'package:wonder_app/app/modules/invoice/widgets/verified_invoices.dart';
+import 'package:wonder_app/app/modules/invoice/widgets/verifed_invoice/verified_invoices.dart';
 
 import '../../add_invoice/controllers/add_invoice_controller.dart';
 import '../../notifications/views/notifications_view.dart';

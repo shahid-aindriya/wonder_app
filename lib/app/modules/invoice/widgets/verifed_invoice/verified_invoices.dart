@@ -12,13 +12,14 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/bank_transactions/views/bank_transactions_view.dart';
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
+import 'package:wonder_app/app/modules/invoice/widgets/verifed_invoice/progress_indicator.dart';
 
-import '../../../data/colors.dart';
-import '../../invoice_details/views/invoice_details_view.dart';
-import '../controllers/invoice_payment_controller.dart';
-import 'buttons/pay_half_all.dart';
-import 'buttons/pay_later.dart';
-import 'buttons/pay_manually.dart';
+import '../../../../data/colors.dart';
+import '../../../invoice_details/views/invoice_details_view.dart';
+import '../../controllers/invoice_payment_controller.dart';
+import '../buttons/pay_half_all.dart';
+import '../buttons/pay_later.dart';
+import '../buttons/pay_manually.dart';
 
 class VerifiedInvoices extends StatefulWidget {
   final InvoiceController invoiceController;
@@ -1038,6 +1039,8 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                 backgroundColor: MaterialStateProperty.all(
                                     Colors.transparent)),
                             onPressed: () async {
+                              Get.to(ProgressIndicatorView());
+
                               invoicePaymentController.bulkApproval(
                                   widget.invoiceController.verifiedList);
                             },

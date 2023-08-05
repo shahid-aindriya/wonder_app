@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../model/verified_model.dart';
-import '../verified_invoices.dart';
+import '../verifed_invoice/verified_invoices.dart';
 
 class PayHalf extends StatelessWidget {
   const PayHalf({

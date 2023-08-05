@@ -1,28 +1,17 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/model/verified_model.dart';
-import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
-import '../../../data/urls.dart';
-import 'package:http/http.dart' as http;
-
-import '../widgets/firebase_database_controller.dart';
-
+import '../widgets/verifed_invoice/firebase_database_controller.dart';
 
 final InvoicePaymentController invoicePaymentController =
     Get.put(InvoicePaymentController());
-class InvoicePaymentController extends GetxController {
 
-  FirebaseDatabaseController firebaseDatabaseController = FirebaseDatabaseController();
+class InvoicePaymentController extends GetxController {
+  FirebaseDatabaseController firebaseDatabaseController =
+      FirebaseDatabaseController();
   InvoiceController invoiceController = InvoiceController();
   int? vendorId;
   int? shopId;
@@ -46,230 +35,218 @@ class InvoicePaymentController extends GetxController {
   double? firstMonthCommission;
   double? fieldVisitCommission;
   double? getUserCommission;
-  bool isSuccess = true;
- 
-  bulkApproval(RxList<VerifiedInvoiceData> verifiedList) async{
 
-    expiryDays          =   await firebaseDatabaseController.getExpireDays();
-    DateTime today      =   DateTime.now();
-    DateTime expiryDate =   today.add(Duration(days: expiryDays as int));
+  bulkApproval(RxList<VerifiedInvoiceData> verifiedList) async {
+    expiryDays = await firebaseDatabaseController.getExpireDays();
+    DateTime today = DateTime.now();
+    DateTime expiryDate = today.add(Duration(days: expiryDays as int));
 
-   
+    shopId = verifiedList[0].shopId;
+    Map<dynamic, dynamic> shopValues =
+        await firebaseDatabaseController.shopData(shopId);
 
-    shopId              =   verifiedList[0].shopId;
-    Map<dynamic, dynamic> shopValues = await firebaseDatabaseController.shopData(shopId);
+    String walletAmount = shopValues["wallet_amount"];
+    double convertAmount =
+        double.parse(walletAmount.isEmpty ? "0.0" : walletAmount);
+    String roundWalletAmount = convertAmount.toStringAsFixed(2);
+    shopWalletAmount = double.parse(roundWalletAmount);
 
-    if (shopValues != null) {
-      String walletAmount       =   shopValues["wallet_amount"];
-      double convertAmount      =   double.parse(walletAmount);
-      String roundWalletAmount  =   convertAmount.toStringAsFixed(2);
-      shopWalletAmount          =   double.parse(roundWalletAmount);
-    }
-    
-    for(var verifiedData in verifiedList){
+    for (var verifiedData in verifiedList) {
+      if (verifiedData.payHalfAmount == true &&
+          verifiedData.bulkApproveStatus == false) {
+        vendorId = verifiedData.userId;
+        shopCommission = verifiedData.shopCommission;
+        shopHalfCommission = 50;
+        customerId = verifiedData.customerId;
 
-      if(verifiedData.payHalfAmount == true && verifiedData.bulkApproveStatus == false){
+        preTaxAmount = verifiedData.preTaxAmount;
+        invoiceAmount = double.parse(preTaxAmount.toString());
 
-        vendorId            =   verifiedData.userId;
-        shopCommission      =   verifiedData.shopCommission;
-        shopHalfCommission  =   50;
-        customerId          =   verifiedData.customerId;
-      
-        preTaxAmount        =   verifiedData.preTaxAmount;
-        invoiceAmount       =   double.parse(preTaxAmount.toString());
-
-        if(verifiedData.isImport == true){
-
-          commissionAmount  =   invoiceAmount;
-
-        }else{
-
-          commissionAmount  =   calculatePercentage(shopCommission, invoiceAmount);
-
+        if (verifiedData.isImport == true) {
+          commissionAmount = invoiceAmount;
+        } else {
+          commissionAmount = calculatePercentage(shopCommission, invoiceAmount);
         }
 
-        vendorCommission    =   calculatePercentage(shopHalfCommission, commissionAmount);
-        vendorBalance       =   calculatePercentage(shopHalfCommission, commissionAmount);
-        getBalanceAmount    =   commissionAmount;
-        walletType          =   "Direct";
+        vendorCommission =
+            calculatePercentage(shopHalfCommission, commissionAmount);
+        vendorBalance =
+            calculatePercentage(shopHalfCommission, commissionAmount);
+        getBalanceAmount = commissionAmount;
+        walletType = "Direct";
 
-        if(shopWalletAmount! >= vendorCommission!){
-
-          Map<dynamic, dynamic> userData = await firebaseDatabaseController.userData(customerId);
+        if (shopWalletAmount! >= vendorCommission!) {
+          Map<dynamic, dynamic> userData =
+              await firebaseDatabaseController.userData(customerId);
 
           for (int i = 1; i <= 15; i++) {
+            String parent = "p$i";
+            parentId = userData[parent];
 
-            String parent       =   "p$i";
-            parentId            =   userData[parent];
+            if (i != 1) {
+              walletType = "In Direct";
+            }
 
             // ignore: unrelated_type_equality_checks
-            if(parentId != 0)
-            {
-              levelPercentsge   =   await firebaseDatabaseController.levelPercentsge(i+1);
-              userCommission    =   calculatePercentage(levelPercentsge, commissionAmount);
-              balanceAmount     =   getBalanceAmount! - userCommission!;
-              getBalanceAmount  =   balanceAmount;
+            if (int.tryParse(parentId.toString()) != 0) {
+              levelPercentsge =
+                  await firebaseDatabaseController.levelPercentsge(i + 1);
+              userCommission =
+                  calculatePercentage(levelPercentsge, commissionAmount);
+              balanceAmount = getBalanceAmount! - userCommission!;
+              getBalanceAmount = balanceAmount;
 
               //*************** user wallet transaction
               firebaseDatabaseController.walletTransaction(
-                userId: parentId,
+                  userId: parentId,
+                  vendorId: vendorId,
+                  shopId: shopId,
+                  amount: userCommission,
+                  invoiceId: verifiedData.id,
+                  entryType: "Credit",
+                  walletType: walletType,
+                  expiryDate: expiryDate.toString(),
+                  status: "Approve");
+
+              //*************** shop wallet transaction
+              firebaseDatabaseController.shopWalletTransaction(
+                  userId: parentId,
+                  vendorId: vendorId,
+                  shopId: shopId,
+                  amount: userCommission,
+                  invoiceId: verifiedData.id,
+                  entryType: "Debit",
+                  walletType: walletType,
+                  expiryDate: expiryDate.toString(),
+                  status: "Approve");
+            }
+          }
+
+          if (getBalanceAmount! > 0) {
+            firebaseDatabaseController.walletTransaction(
+                userId: 1,
                 vendorId: vendorId,
                 shopId: shopId,
-                amount:userCommission,
+                amount: userCommission,
                 invoiceId: verifiedData.id,
                 entryType: "Credit",
                 walletType: walletType,
                 expiryDate: expiryDate.toString(),
-                status: "Approve"
-              );
-
-              //*************** shop wallet transaction
-              firebaseDatabaseController.shopWalletTransaction(
-                userId: parentId,
-                vendorId: vendorId,
-                shopId: shopId,
-                amount:userCommission,
-                invoiceId: verifiedData.id,
-                entryType: "Debit",
-                walletType: walletType,
-                expiryDate: expiryDate.toString()
-              );
-            }
+                status: "Approve");
           }
-
-          if(getBalanceAmount! > 0){
-            firebaseDatabaseController.walletTransaction(
-              userId: 1,
-              vendorId: vendorId,
-              shopId: shopId,
-              amount:userCommission,
-              invoiceId: verifiedData.id,
-              entryType: "Credit",
-              walletType: walletType
-            );
-          }
-          updateUserRoleCommissionAndShopBalance(verifiedInvoiceData: verifiedData,vendorBalance: vendorBalance);
+          updateUserRoleCommissionAndShopBalance(
+              verifiedInvoiceData: verifiedData, vendorBalance: vendorBalance);
           invoiceController.updateInvoiceBulkStatus(verifiedData.id);
-        }
-        else{
+        } else {
           Get.snackbar("Error", "Insufficiant Balance",
               backgroundColor: Colors.red);
 
-          break;
+          return;
         }
-
-        
-      }else{
+      } else {
         Get.snackbar("Error", "Pay invoice amount",
             backgroundColor: Colors.red);
-
-        isSuccess = false; // Set the flag to false since bulk approval failed
-        break; 
+        return;
       }
     }
 
-    if(isSuccess) {
-    // The loop is finished, and bulk approval was successful, show the success message.
-      Get.snackbar("Info ", "Success", backgroundColor: Colors.green);
-    }
-
+    Get.snackbar("Info ", "Success", backgroundColor: Colors.green);
+    invoiceController.verifiedInvoiceList();
     return;
   }
 
+  updateUserRoleCommissionAndShopBalance(
+      {required VerifiedInvoiceData verifiedInvoiceData, vendorBalance}) async {
+    shopId = verifiedInvoiceData.shopId;
+    invoiceAmount = double.parse(verifiedInvoiceData.preTaxAmount.toString());
+    vendorId = verifiedInvoiceData.userId;
+    userCommission = 0.0;
 
-  updateUserRoleCommissionAndShopBalance({
-    required VerifiedInvoiceData verifiedInvoiceData,vendorBalance
-  }) async{
+    Map<dynamic, dynamic> settingsValues =
+        await firebaseDatabaseController.settingsData();
 
-    shopId              =   verifiedInvoiceData.shopId;
-    invoiceAmount       =   double.parse(verifiedInvoiceData.preTaxAmount.toString()) ;
-    vendorId            =   verifiedInvoiceData.userId;
-    userCommission      =   0.0;
+    String getfirstMonthCommission = settingsValues["field_visit_commission"];
+    double convertFirstMonthCommission = double.parse(getfirstMonthCommission);
+    String roundFirstMonthCommission =
+        convertFirstMonthCommission.toStringAsFixed(2);
+    firstMonthCommission = double.parse(roundFirstMonthCommission);
 
-    Map<dynamic, dynamic> settingsValues = await firebaseDatabaseController.settingsData();
+    String getfieldVisitCommission = settingsValues["field_visit_commission"];
+    double convertFieldVisitCommission = double.parse(getfieldVisitCommission);
+    String roundfieldVisitCommission =
+        convertFieldVisitCommission.toStringAsFixed(2);
+    fieldVisitCommission = double.parse(roundfieldVisitCommission);
 
-    if (settingsValues != null) {
-      String getfirstMonthCommission      =   settingsValues["field_visit_commission"];
-      double convertFirstMonthCommission  =   double.parse(getfirstMonthCommission);
-      String roundFirstMonthCommission    =   convertFirstMonthCommission.toStringAsFixed(2);
-      firstMonthCommission                =   double.parse(roundFirstMonthCommission);
-
-      String getfieldVisitCommission      =   settingsValues["field_visit_commission"];
-      double convertFieldVisitCommission  =   double.parse(getfieldVisitCommission);
-      String roundfieldVisitCommission    =   convertFieldVisitCommission.toStringAsFixed(2);
-      fieldVisitCommission                =   double.parse(roundfieldVisitCommission);
-
-    }
-
-    if(verifiedInvoiceData.addedByCommission != null){
-      if(verifiedInvoiceData.fieldVisitCommission == true){
-
-        userCommission    =   calculatePercentage(fieldVisitCommission, invoiceAmount);
-        getUserCommission =   verifiedInvoiceData.addedByCommission;
-        userCommission    =   getUserCommission! + userCommission!;
+    if (verifiedInvoiceData.addedByCommission != null) {
+      if (verifiedInvoiceData.fieldVisitCommission == true) {
+        userCommission =
+            calculatePercentage(fieldVisitCommission, invoiceAmount);
+        getUserCommission = verifiedInvoiceData.addedByCommission;
+        userCommission = getUserCommission! + userCommission!;
 
         firebaseDatabaseController.createUserTransaction(
-          userId: verifiedInvoiceData.shopAddedBy,
-          vendorId: verifiedInvoiceData.userId,
-          shopId: verifiedInvoiceData.shopId,
-          amount: userCommission,
-          invoiceId: verifiedInvoiceData.id,
-          entryType: "Credit",
-          walletType: "User Field Visit Commission"
-        );
-
-      }else{
-
-        userCommission    =   calculatePercentage(firstMonthCommission, invoiceAmount);
-        getUserCommission =   verifiedInvoiceData.addedByCommission;
-        userCommission    =   getUserCommission! + userCommission!;
+            userId: verifiedInvoiceData.shopAddedBy,
+            vendorId: verifiedInvoiceData.userId,
+            shopId: verifiedInvoiceData.shopId,
+            amount: userCommission,
+            invoiceId: verifiedInvoiceData.id,
+            entryType: "Credit",
+            walletType: "User Field Visit Commission");
+      } else {
+        userCommission =
+            calculatePercentage(firstMonthCommission, invoiceAmount);
+        getUserCommission = verifiedInvoiceData.addedByCommission;
+        userCommission = getUserCommission! + userCommission!;
 
         firebaseDatabaseController.createUserTransaction(
-          userId: verifiedInvoiceData.shopAddedBy,
-          vendorId: verifiedInvoiceData.userId,
-          shopId: verifiedInvoiceData.shopId,
-          amount: userCommission,
-          invoiceId: verifiedInvoiceData.id,
-          entryType: "Credit",
-          walletType: "User Field Visit Commission"
-        );
+            userId: verifiedInvoiceData.shopAddedBy,
+            vendorId: verifiedInvoiceData.userId,
+            shopId: verifiedInvoiceData.shopId,
+            amount: userCommission,
+            invoiceId: verifiedInvoiceData.id,
+            entryType: "Credit",
+            walletType: "User Field Visit Commission");
       }
     }
 
-    if(verifiedInvoiceData.shopBusinessRepId != null){
-      DateTime now          = DateTime.now();
-      DateTime oneMonthAgo  = now.subtract(Duration(days: 30));
+    if (verifiedInvoiceData.shopBusinessRepId != null) {
+      DateTime now = DateTime.now();
+      DateTime oneMonthAgo = now.subtract(Duration(days: 30));
 
-      if(verifiedInvoiceData.shopCreatedAt > oneMonthAgo){
-        userCommission      = calculatePercentage(firstMonthCommission, invoiceAmount);
-        getUserCommission   = verifiedInvoiceData.businessRepCommission;
-        userCommission      = getUserCommission! + userCommission!;
+      if (verifiedInvoiceData.shopCreatedAt > oneMonthAgo) {
+        userCommission =
+            calculatePercentage(firstMonthCommission, invoiceAmount);
+        getUserCommission = verifiedInvoiceData.businessRepCommission;
+        userCommission = getUserCommission! + userCommission!;
 
         firebaseDatabaseController.createUserTransaction(
-          userId: verifiedInvoiceData.shopBusinessRepId,
-          vendorId: verifiedInvoiceData.userId,
-          shopId: verifiedInvoiceData.shopId,
-          amount: userCommission,
-          invoiceId: verifiedInvoiceData.id,
-          entryType: "Credit",
-          walletType: "User First Month Commission"
-        );
-     
+            userId: verifiedInvoiceData.shopBusinessRepId,
+            vendorId: verifiedInvoiceData.userId,
+            shopId: verifiedInvoiceData.shopId,
+            amount: userCommission,
+            invoiceId: verifiedInvoiceData.id,
+            entryType: "Credit",
+            walletType: "User First Month Commission");
       }
     }
 
     firebaseDatabaseController.createUserTransaction(
-      vendorId: verifiedInvoiceData.userId,
-      shopId: verifiedInvoiceData.shopId,
-      amount: vendorBalance,
-      invoiceId: verifiedInvoiceData.id,
-      entryType: "Credit",
-      walletType: "Shop Due Amount"
-    );
+        vendorId: verifiedInvoiceData.userId,
+        shopId: verifiedInvoiceData.shopId,
+        amount: vendorBalance,
+        invoiceId: verifiedInvoiceData.id,
+        entryType: "Credit",
+        walletType: "Shop Due Amount");
   }
 
   double calculatePercentage(numA, numB) {
     double percentage = (numA / 100) * numB;
     return percentage;
+  }
+
+  RxDouble progress = 0.0.obs;
+
+  void updateProgress(double value) {
+    progress.value = value;
   }
 }
