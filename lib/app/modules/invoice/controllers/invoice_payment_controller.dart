@@ -149,7 +149,10 @@ class InvoicePaymentController extends GetxController {
         return;
       }
     }
-
+    for (int i = 0; i < verifiedList.value.length; i++) {
+      double progressValue = (i + 1) / verifiedList.value.length;
+      updateProgress(progressValue);
+    }
     Get.snackbar("Info ", "Success", backgroundColor: Colors.green);
     invoiceController.verifiedInvoiceList();
     return;
