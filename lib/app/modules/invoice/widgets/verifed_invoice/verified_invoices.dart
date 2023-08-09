@@ -1042,7 +1042,9 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                               Get.to(ProgressIndicatorView());
 
                               invoicePaymentController.bulkApproval(
-                                  widget.invoiceController.verifiedList);
+                                  widget.invoiceController.verifiedList,
+                                  widget.invoiceController.verifiedAmountData
+                                      .first.shopWalletAmount);
                             },
                             child: Text(
                               "Approve",

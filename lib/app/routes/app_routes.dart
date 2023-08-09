@@ -37,6 +37,7 @@ abstract class Routes {
   static const BOTTOM_BAR = _Paths.BOTTOM_BAR;
   static const ORDERS = _Paths.ORDERS;
   static const PRODUCTS = _Paths.PRODUCTS;
+  static const CHOOSE_VENDOR = _Paths.CHOOSE_VENDOR;
 }
 
 abstract class _Paths {
@@ -73,4 +74,5 @@ abstract class _Paths {
   static const BOTTOM_BAR = '/bottom-bar';
   static const ORDERS = '/orders';
   static const PRODUCTS = '/products';
+  static const CHOOSE_VENDOR = '/choose-vendor';
 }

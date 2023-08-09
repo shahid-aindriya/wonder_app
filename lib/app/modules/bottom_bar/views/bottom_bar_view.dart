@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:wonder_app/app/modules/chat/views/chat_view.dart';
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 import 'package:wonder_app/app/modules/products/views/products_view.dart';
 
@@ -17,6 +18,7 @@ class BottombarView extends GetView<BottomBarController> {
       OrdersView(),
       ProductsView(),
       MyEarningsView(),
+      ChatView()
     ];
     return Container(
       decoration: BoxDecoration(
@@ -91,6 +93,14 @@ class BottombarView extends GetView<BottomBarController> {
                           size: 24,
                         ),
                         label: 'Commisson'),
+                    BottomNavigationBarItem(
+                        icon: CustomSvgIcon(
+                          assetPath: selectedPageIndex.value != 4
+                              ? 'assets/images/bottom/chat_unselected.svg'
+                              : 'assets/images/bottom/chat_selected.svg',
+                          size: 24,
+                        ),
+                        label: 'Chats'),
                   ]),
             );
           },

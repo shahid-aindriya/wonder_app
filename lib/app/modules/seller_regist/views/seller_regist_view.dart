@@ -99,28 +99,62 @@ class SellerRegistView extends GetView<SellerRegistController> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Obx(
-                                  () => Radio<int>(
-                                    toggleable: true,
-                                    fillColor: MaterialStateProperty.all(
-                                        Color(0xff4956b2)),
-                                    value: 1,
-                                    groupValue:
-                                        controller.selectedDiscountValue.value,
-                                    onChanged: (value) {
-                                      controller.changeRadioVal(value);
-                                    },
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Obx(
+                                        () => Radio<int>(
+                                          fillColor: MaterialStateProperty.all(
+                                              Color(0xff4956b2)),
+                                          value: 0,
+                                          groupValue: controller
+                                              .selectedDiscountValue.value,
+                                          onChanged: (value) {
+                                            controller.changeRadioVal(value);
+                                          },
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          'No Referral',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.1725,
+                                            color: Color(0xff4956b2),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Flexible(
-                                  child: Text(
-                                    'Sign up by Business Rep',
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      height: 1.1725,
-                                      color: Color(0xff4956b2),
-                                    ),
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Obx(
+                                        () => Radio<int>(
+                                          fillColor: MaterialStateProperty.all(
+                                              Color(0xff4956b2)),
+                                          value: 1,
+                                          groupValue: controller
+                                              .selectedDiscountValue.value,
+                                          onChanged: (value) {
+                                            controller.changeRadioVal(value);
+                                          },
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          'Referred by Business Rep',
+                                          style: GoogleFonts.roboto(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.1725,
+                                            color: Color(0xff4956b2),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 Expanded(
@@ -129,7 +163,6 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                     children: [
                                       Obx(
                                         () => Radio<int>(
-                                          toggleable: true,
                                           fillColor: MaterialStateProperty.all(
                                               Color(0xff4956b2)),
                                           value: 2,
@@ -141,10 +174,10 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                         ),
                                       ),
                                       Flexible(
-                                        child: Text('Sign up by Vendor',
+                                        child: Text('Referred by Vendor',
                                             softWrap: true,
                                             style: GoogleFonts.roboto(
-                                              fontSize: 16,
+                                              fontSize: 13,
                                               fontWeight: FontWeight.w500,
                                               height: 1.1725,
                                               color: Color(0xff4956b2),

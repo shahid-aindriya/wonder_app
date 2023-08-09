@@ -9,11 +9,14 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/urls.dart';
 import '../../add_invoice/controllers/add_invoice_controller.dart';
+import '../../connections/views/connections_view.dart';
 import '../../login/views/login_view.dart';
 import '../../my_shops/views/my_shops_view.dart';
 import '../../profile_view/views/profile_view_view.dart';
 import '../../support_request/views/support_request_view.dart';
 import '../../terms_conditions/views/terms_conditions_view.dart';
+import '../../vendors_added/views/vendors_added_view.dart';
+import '../../wonder_list/views/wonder_list_view.dart';
 import '../views/invoice_view.dart';
 
 class DrawerTab extends StatelessWidget {
@@ -154,7 +157,7 @@ class DrawerTab extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                // Get.to(WonderListView());
+                Get.to(WonderListView());
               },
               leading: SvgPicture.asset(
                 "assets/images/Basket.svg",
@@ -169,7 +172,7 @@ class DrawerTab extends StatelessWidget {
               ),
               trailing: IconButton(
                   onPressed: () {
-                    // Get.to(WonderListView());
+                    Get.to(WonderListView());
                   },
                   icon: Icon(Icons.arrow_forward_ios_outlined)),
             ),
@@ -204,7 +207,7 @@ class DrawerTab extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                // Get.to(VendorsAddedView());
+                Get.to(VendorsAddedView());
               },
               leading: SvgPicture.asset(
                 "assets/images/vendorList.svg",
@@ -219,7 +222,7 @@ class DrawerTab extends StatelessWidget {
               ),
               trailing: IconButton(
                   onPressed: () {
-                    // Get.to(VendorsAddedView());
+                    Get.to(VendorsAddedView());
                   },
                   icon: Icon(Icons.arrow_forward_ios_outlined)),
             ),
@@ -229,7 +232,7 @@ class DrawerTab extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                // Get.to(ConnectionsView());
+                Get.to(ConnectionsView());
               },
               leading: SvgPicture.asset(
                 "assets/images/drawer/AddressBook.svg",
@@ -244,7 +247,7 @@ class DrawerTab extends StatelessWidget {
               ),
               trailing: IconButton(
                   onPressed: () {
-                    // Get.to(ConnectionsView());
+                    Get.to(ConnectionsView());
                   },
                   icon: Icon(Icons.arrow_forward_ios_outlined)),
             ),

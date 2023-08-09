@@ -13,17 +13,21 @@ class SplashScreenController extends GetxController {
   Future<int?> checkLogin() async {
     final pref = await SharedPreferences.getInstance();
     final loggedName = pref.getInt('userId');
-    if (loggedName == null) {
-      gotoLogin();
+    bool alreadyCleared = pref.getBool('dataCleared1') ?? false;
+
+    if (loggedName == null || !alreadyCleared) {
+      await pref.clear();
+      await pref.setBool('dataCleared1', true);
+      await gotoLogin();
     } else {
       await Future.delayed(const Duration(seconds: 4));
-      Get.off(BottombarView());
+      Get.offAll(BottombarView());
     }
     return loggedName;
   }
 
   Future<void> gotoLogin() async {
     await Future.delayed(const Duration(seconds: 1));
-    Get.off(LoginView());
+    Get.offAll(LoginView());
   }
 }

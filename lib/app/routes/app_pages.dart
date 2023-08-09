@@ -10,6 +10,8 @@ import '../modules/bottom_bar/bindings/bottom_bar_binding.dart';
 import '../modules/bottom_bar/views/bottom_bar_view.dart';
 import '../modules/chat/bindings/chat_binding.dart';
 import '../modules/chat/views/chat_view.dart';
+import '../modules/choose_vendor/bindings/choose_vendor_binding.dart';
+import '../modules/choose_vendor/views/choose_vendor_view.dart';
 import '../modules/connections/bindings/connections_binding.dart';
 import '../modules/connections/views/connections_view.dart';
 import '../modules/gst_details/bindings/gst_details_binding.dart';
@@ -237,8 +239,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.PRODUCTS,
-      page: () =>  ProductsView(),
+      page: () => ProductsView(),
       binding: ProductsBinding(),
+    ),
+    GetPage(
+      name: _Paths.CHOOSE_VENDOR,
+      page: () =>  ChooseVendorView(),
+      binding: ChooseVendorBinding(),
     ),
   ];
 }

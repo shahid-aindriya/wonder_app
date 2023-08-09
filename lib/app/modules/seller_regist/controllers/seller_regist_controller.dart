@@ -177,9 +177,6 @@ class SellerRegistController extends GetxController {
     if (value != null) {
       selectedDiscountValue.value = value;
       update();
-    } else {
-      selectedDiscountValue.value = 0;
-      update();
     }
   }
 

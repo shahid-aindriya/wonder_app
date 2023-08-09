@@ -691,7 +691,12 @@ class InvoiceController extends GetxController {
       return true;
     }
     var body = {"shop_id": selectShopId, "page": currentVerifiedCount.value};
+    // var bulkBody = {"shop_id": selectShopId};
     // listOfId.clear();
+    // final bulkRequest = await http.post(
+    //     Uri.parse("${baseUrl.value}vendor-bulk-verified-invoice-list/"),
+    //     headers: headers.value,
+    //     body: jsonEncode(bulkBody));
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-verified-invoice-list/"),
         body: jsonEncode(body));

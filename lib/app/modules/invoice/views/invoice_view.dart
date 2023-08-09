@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +13,7 @@ import 'package:wonder_app/app/modules/invoice/widgets/search_invoice.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/verifed_invoice/verified_invoices.dart';
 
 import '../../add_invoice/controllers/add_invoice_controller.dart';
+import '../../choose_vendor/views/choose_vendor_view.dart';
 import '../../notifications/views/notifications_view.dart';
 import '../controllers/invoice_controller.dart';
 import '../widgets/drawer_tab.dart';
@@ -24,8 +25,6 @@ import '../widgets/wallet_tab.dart';
 final InvoiceController invoiceController = Get.put(InvoiceController());
 
 class InvoiceView extends GetView<InvoiceController> {
- 
-
   final AddInvoiceController addInvoiceController =
       Get.put(AddInvoiceController());
 
@@ -83,7 +82,7 @@ class InvoiceView extends GetView<InvoiceController> {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Container(
-                            width: 60.w,
+                            width: 50.w,
                             height: 50,
                             child: Shimmer(
                               color: Color.fromARGB(255, 185, 84, 84),
@@ -115,7 +114,7 @@ class InvoiceView extends GetView<InvoiceController> {
                         }
                         return Obx(() {
                           return Container(
-                              width: 60.w,
+                              width: 50.w,
                               child: DropdownButtonFormField(
                                 isExpanded: true,
                                 isDense: true,
@@ -194,6 +193,22 @@ class InvoiceView extends GetView<InvoiceController> {
                               ));
                         });
                       }),
+                ),
+                Container(
+                  child: InkWell(
+                    onTap: () {
+                      Get.to(ChooseVendorView());
+                    },
+                    child: SvgPicture.asset(
+                      "assets/images/rupee_icon.svg",
+                      color: Color.fromARGB(
+                        255,
+                        255,
+                        184,
+                        0,
+                      ),
+                    ),
+                  ),
                 ),
                 Container(
                   decoration: BoxDecoration(),
