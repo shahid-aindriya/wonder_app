@@ -43,7 +43,7 @@ class InvoicePaymentController extends GetxController {
         RxList<VerifiedInvoiceData>.from(
       verifiedList.take(verifiedList.length < 20 ? verifiedList.length : 20),
     );
-    listCount.value = selectedItems.length;
+
     expiryDays = await firebaseDatabaseController.getExpireDays();
     DateTime today = DateTime.now();
     DateTime expiryDate = today.add(Duration(days: expiryDays as int));
@@ -58,86 +58,59 @@ class InvoicePaymentController extends GetxController {
     //     double.parse(walletAmount.isEmpty ? "0.0" : walletAmount);
     // String roundWalletAmount = convertAmount.toStringAsFixed(2);
     shopWalletAmount = double.parse(walletAmount2.toString());
-    for (int i = 0; i < selectedItems.value.length; i++) {
-      double progressValue = (i + 1) / selectedItems.value.length;
-      // count.value++;
-      updateProgress(progressValue);
-      for (var verifiedData in selectedItems) {
-        if ((verifiedData.payHalfAmount == true) &&
-            (verifiedData.bulkApproveStatus == false)) {
-          vendorId = verifiedData.userId;
-          shopCommission = verifiedData.shopCommission;
-          shopHalfCommission = 50;
-          customerId = verifiedData.customerId;
 
-          preTaxAmount = verifiedData.preTaxAmount;
-          invoiceAmount = double.parse(preTaxAmount.toString());
+    // updateProgress(progressValue);
+    for (var verifiedData in selectedItems) {
+      if ((verifiedData.payHalfAmount == true) &&
+          (verifiedData.bulkApproveStatus == false)) {
+        listCount.value++;
 
-          if (verifiedData.isImport == true) {
-            commissionAmount = invoiceAmount;
-          } else {
-            commissionAmount =
-                calculatePercentage(shopCommission, invoiceAmount);
-          }
+        vendorId = verifiedData.userId;
+        shopCommission = verifiedData.shopCommission;
+        shopHalfCommission = 50;
+        customerId = verifiedData.customerId;
 
-          vendorCommission =
-              calculatePercentage(shopHalfCommission, commissionAmount);
-          vendorBalance =
-              calculatePercentage(shopHalfCommission, commissionAmount);
-          getBalanceAmount = commissionAmount;
-          walletType = "Direct";
-          // log(shopWalletAmount.toString());
-          // log(vendorCommission.toString());
-          if (shopWalletAmount! >= vendorCommission!) {
-            Map<dynamic, dynamic> userData =
-                await firebaseDatabaseController.userData(customerId);
+        preTaxAmount = verifiedData.preTaxAmount;
+        invoiceAmount = double.parse(preTaxAmount.toString());
 
-            for (int i = 1; i <= 15; i++) {
-              String parent = "p$i";
-              parentId = userData[parent];
+        if (verifiedData.isImport == true) {
+          commissionAmount = invoiceAmount;
+        } else {
+          commissionAmount = calculatePercentage(shopCommission, invoiceAmount);
+        }
 
-              if (i != 1) {
-                walletType = "In Direct";
-              }
+        vendorCommission =
+            calculatePercentage(shopHalfCommission, commissionAmount);
+        vendorBalance =
+            calculatePercentage(shopHalfCommission, commissionAmount);
+        getBalanceAmount = commissionAmount;
+        walletType = "Direct";
+        // log(shopWalletAmount.toString());
+        // log(vendorCommission.toString());
+        if (shopWalletAmount! >= vendorCommission!) {
+          Map<dynamic, dynamic> userData =
+              await firebaseDatabaseController.userData(customerId);
 
-              // ignore: unrelated_type_equality_checks
-              if (int.tryParse(parentId.toString()) != 0) {
-                levelPercentsge =
-                    await firebaseDatabaseController.levelPercentsge(i + 1);
-                userCommission =
-                    calculatePercentage(levelPercentsge, commissionAmount);
-                balanceAmount = getBalanceAmount! - userCommission!;
-                getBalanceAmount = balanceAmount;
+          for (int i = 1; i <= 15; i++) {
+            String parent = "p$i";
+            parentId = userData[parent];
 
-                //*************** user wallet transaction
-                firebaseDatabaseController.walletTransaction(
-                    userId: parentId,
-                    vendorId: vendorId,
-                    shopId: shopId,
-                    amount: userCommission,
-                    invoiceId: verifiedData.id,
-                    entryType: "Credit",
-                    walletType: walletType,
-                    expiryDate: expiryDate.toString(),
-                    status: "Approve");
-
-                //*************** shop wallet transaction
-                firebaseDatabaseController.shopWalletTransaction(
-                    userId: parentId,
-                    vendorId: vendorId,
-                    shopId: shopId,
-                    amount: userCommission,
-                    invoiceId: verifiedData.id,
-                    entryType: "Debit",
-                    walletType: walletType,
-                    expiryDate: expiryDate.toString(),
-                    status: "Approve");
-              }
+            if (i != 1) {
+              walletType = "In Direct";
             }
 
-            if (getBalanceAmount! > 0) {
+            // ignore: unrelated_type_equality_checks
+            if (int.tryParse(parentId.toString()) != 0) {
+              levelPercentsge =
+                  await firebaseDatabaseController.levelPercentsge(i + 1);
+              userCommission =
+                  calculatePercentage(levelPercentsge, commissionAmount);
+              balanceAmount = getBalanceAmount! - userCommission!;
+              getBalanceAmount = balanceAmount;
+
+              //*************** user wallet transaction
               firebaseDatabaseController.walletTransaction(
-                  userId: 1,
+                  userId: parentId,
                   vendorId: vendorId,
                   shopId: shopId,
                   amount: userCommission,
@@ -146,30 +119,66 @@ class InvoicePaymentController extends GetxController {
                   walletType: walletType,
                   expiryDate: expiryDate.toString(),
                   status: "Approve");
+
+              //*************** shop wallet transaction
+              firebaseDatabaseController.shopWalletTransaction(
+                  userId: parentId,
+                  vendorId: vendorId,
+                  shopId: shopId,
+                  amount: userCommission,
+                  invoiceId: verifiedData.id,
+                  entryType: "Debit",
+                  walletType: walletType,
+                  expiryDate: expiryDate.toString(),
+                  status: "Approve");
             }
-            updateUserRoleCommissionAndShopBalance(
-                verifiedInvoiceData: verifiedData,
-                vendorBalance: vendorBalance);
-            log("message");
-            invoiceController.updateInvoiceBulkStatus(verifiedData.id);
-          } else {
-            Get.snackbar("Error", "Insufficiant Balance",
-                backgroundColor: Colors.red);
-
-            return;
           }
-        }
-        //  else {
-        //   Get.snackbar("Error", "Pay invoice amount",
-        //       backgroundColor: Colors.red);
-        //   return;
-        // }
-      }
 
+          if (getBalanceAmount! > 0) {
+            firebaseDatabaseController.walletTransaction(
+                userId: 1,
+                vendorId: vendorId,
+                shopId: shopId,
+                amount: getBalanceAmount,
+                invoiceId: verifiedData.id,
+                entryType: "Credit",
+                walletType: walletType,
+                expiryDate: expiryDate.toString(),
+                status: "Approve");
+          }
+          updateUserRoleCommissionAndShopBalance(
+              verifiedInvoiceData: verifiedData, vendorBalance: vendorBalance);
+          log("message");
+          invoiceController.updateInvoiceBulkStatus(verifiedData.id);
+        } else {
+          Get.back();
+          Get.snackbar("Error", "Insufficiant Balance",
+              backgroundColor: Colors.red);
+
+          return;
+        }
+      }
+      //  else {
+      //   Get.snackbar("Error", "Pay invoice amount",
+      //       backgroundColor: Colors.red);
+      //   return;
+      // }
+    }
+
+    for (int i = 0; i < listCount.value; i++) {
+      double progressValue = (i + 1) / listCount.value;
+      // count.value++;
+      count.value = count.value + 1;
+      progress.value = progressValue;
       // update();
     }
     invoiceController.verifiedList.clear();
     await invoiceController.verifiedInvoiceList();
+    progress.value = 0.0;
+    count.value = 0;
+    listCount.value = 0;
+    update();
+    Get.back();
 
     // count.value = 0;
     // progress.value = 0.0;

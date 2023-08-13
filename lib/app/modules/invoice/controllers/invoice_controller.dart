@@ -210,7 +210,7 @@ class InvoiceController extends GetxController {
         Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
         headers: headers,
         body: jsonEncode(invoiceBody));
-    log(request.statusCode.toString());
+    log(request.body.toString());
     if (request.statusCode == 201) {
       final invoiceData = invoiceDataFromJson(request.body);
       invoiceTotalpage.value = invoiceData.totalPages;

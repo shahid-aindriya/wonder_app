@@ -128,35 +128,35 @@ class SellerRegistView extends GetView<SellerRegistController> {
                                     ],
                                   ),
                                 ),
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      Obx(
-                                        () => Radio<int>(
-                                          fillColor: MaterialStateProperty.all(
-                                              Color(0xff4956b2)),
-                                          value: 1,
-                                          groupValue: controller
-                                              .selectedDiscountValue.value,
-                                          onChanged: (value) {
-                                            controller.changeRadioVal(value);
-                                          },
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          'Referred by Business Rep',
-                                          style: GoogleFonts.roboto(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500,
-                                            height: 1.1725,
-                                            color: Color(0xff4956b2),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                // Expanded(
+                                //   child: Row(
+                                //     children: [
+                                //       Obx(
+                                //         () => Radio<int>(
+                                //           fillColor: MaterialStateProperty.all(
+                                //               Color(0xff4956b2)),
+                                //           value: 1,
+                                //           groupValue: controller
+                                //               .selectedDiscountValue.value,
+                                //           onChanged: (value) {
+                                //             controller.changeRadioVal(value);
+                                //           },
+                                //         ),
+                                //       ),
+                                //       Flexible(
+                                //         child: Text(
+                                //           'Referred by Business Rep',
+                                //           style: GoogleFonts.roboto(
+                                //             fontSize: 13,
+                                //             fontWeight: FontWeight.w500,
+                                //             height: 1.1725,
+                                //             color: Color(0xff4956b2),
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
                                 Expanded(
                                   child: Row(
                                     // crossAxisAlignment: WrapCrossAlignment.center,

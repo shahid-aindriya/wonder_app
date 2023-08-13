@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../controllers/invoice_payment_controller.dart';
+import '../../views/invoice_view.dart';
 
 class ProgressIndicatorView extends StatelessWidget {
   ProgressIndicatorView({super.key});
@@ -24,9 +25,12 @@ class ProgressIndicatorView extends StatelessWidget {
       ),
       child: WillPopScope(
         onWillPop: () async {
+          invoiceController.verifiedList.clear();
+          await invoiceController.verifiedInvoiceList();
           invoicePaymentController.progress.value = 0.0;
           invoicePaymentController.count.value = 0;
           invoicePaymentController.listCount.value = 0;
+
           Get.back();
           throw Exception();
         },
@@ -47,8 +51,10 @@ class ProgressIndicatorView extends StatelessWidget {
                       Obx(() {
                         return Container(
                             height: 79,
-                            child: invoicePaymentController.count.value ==
-                                    invoicePaymentController.listCount.value
+                            child: (invoicePaymentController.count.value ==
+                                        invoicePaymentController
+                                            .listCount.value &&
+                                    invoicePaymentController.count.value != 0)
                                 ? Icon(
                                     Icons.verified,
                                     color: Colors.green,
@@ -58,8 +64,10 @@ class ProgressIndicatorView extends StatelessWidget {
                       }),
                       Obx(() {
                         return Text(
-                          invoicePaymentController.count.value ==
-                                  invoicePaymentController.listCount.value
+                          (invoicePaymentController.count.value ==
+                                      invoicePaymentController
+                                          .listCount.value &&
+                                  invoicePaymentController.count.value != 0)
                               ? "Bulk Approval Completed"
                               : "Bulk Approval Progressing...",
                           style: GoogleFonts.roboto(
@@ -111,42 +119,44 @@ class ProgressIndicatorView extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border(),
-                    gradient: LinearGradient(
-                      begin: Alignment(-0.934, -1),
-                      end: Alignment(1.125, 1.333),
-                      colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
-                      stops: <double>[0, 1],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0x3f000000),
-                        offset: Offset(0, 0.7870440483),
-                        blurRadius: 2.7546541691,
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                      padding: const EdgeInsets.only(left: 5, right: 5),
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              elevation: MaterialStateProperty.all(0),
-                              backgroundColor: MaterialStateProperty.all(
-                                  Colors.transparent)),
-                          onPressed: () async {
-                            invoicePaymentController.progress.value = 0.0;
-                            invoicePaymentController.count.value = 0;
-                            invoicePaymentController.listCount.value = 0;
-                            Get.back();
-                          },
-                          child: Text(
-                            "Go Back",
-                            style: GoogleFonts.roboto(color: Colors.white),
-                          ))))
+              // Container(
+              //     height: 40,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(10),
+              //       border: Border(),
+              //       gradient: LinearGradient(
+              //         begin: Alignment(-0.934, -1),
+              //         end: Alignment(1.125, 1.333),
+              //         colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+              //         stops: <double>[0, 1],
+              //       ),
+              //       boxShadow: [
+              //         BoxShadow(
+              //           color: Color(0x3f000000),
+              //           offset: Offset(0, 0.7870440483),
+              //           blurRadius: 2.7546541691,
+              //         ),
+              //       ],
+              //     ),
+              //     child: Padding(
+              //         padding: const EdgeInsets.only(left: 5, right: 5),
+              //         child: ElevatedButton(
+              //             style: ButtonStyle(
+              //                 elevation: MaterialStateProperty.all(0),
+              //                 backgroundColor: MaterialStateProperty.all(
+              //                     Colors.transparent)),
+              //             onPressed: () async {
+              //               invoicePaymentController.progress.value = 0.0;
+              //               invoicePaymentController.count.value = 0;
+              //               invoicePaymentController.listCount.value = 0;
+              //               invoiceController.verifiedList.clear();
+              //               await invoiceController.verifiedInvoiceList();
+              //               Get.back();
+              //             },
+              //             child: Text(
+              //               "Go Back",
+              //               style: GoogleFonts.roboto(color: Colors.white),
+              //             ))))
             ],
           ),
         ),

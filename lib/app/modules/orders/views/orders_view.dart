@@ -20,7 +20,8 @@ class OrdersView extends GetView<OrdersController> {
   final AddInvoiceController addInvoiceController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Scaffold();
+    Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment(2, 1.0548897981643677),

@@ -233,15 +233,21 @@ class InvoiceTab extends GetView<InvoiceController> {
                                                 bottom: 3,
                                                 left: 4,
                                                 right: 4),
-                                            child: SvgPicture.asset(datas
-                                                        .status ==
-                                                    "Pending"
-                                                ? "assets/images/pending.svg"
+                                            child: datas.status == "Approve"
+                                                ? SvgPicture.asset(
+                                                    "assets/images/aporved.svg",
+                                                    color: Colors.green,
+                                                  )
                                                 : datas.status == "Reject"
-                                                    ? "assets/images/rejected.svg"
-                                                    : datas.status == "Verified"
-                                                        ? "assets/images/verified.svg"
-                                                        : "assets/images/aporved.svg"),
+                                                    ? SvgPicture.asset(
+                                                        "assets/images/rejected.svg",
+                                                        color: Colors.red,
+                                                      )
+                                                    : SvgPicture.asset(datas
+                                                                .status ==
+                                                            "Pending"
+                                                        ? "assets/images/pending.svg"
+                                                        : "assets/images/verified.svg"),
                                           ),
                                         ),
                                       ),

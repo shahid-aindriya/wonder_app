@@ -11,6 +11,8 @@ class ProductsController extends GetxController {
     switchValue.value = value;
   }
 
+ List<String> unitList = ['Number', 'Digit'];
+
   List<String> categoryList = ['Detergents', 'Soaps'];
 
   List<String> sortList = ['Availability', 'Relevence'];
