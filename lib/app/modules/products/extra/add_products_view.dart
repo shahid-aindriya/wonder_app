@@ -1,13 +1,20 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../controllers/products_controller.dart';
+import 'buttons/add_button.dart';
+import 'buttons/remove_button.dart';
 
 class AddProductsView extends StatelessWidget {
   AddProductsView({super.key});
-  final ProductsController productsController = Get.put(ProductsController());
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -70,7 +77,12 @@ class AddProductsView extends StatelessWidget {
                         "Title",
                         style: GoogleFonts.roboto(fontSize: 12),
                       ),
-                      Container(height: 35, child: TextField()),
+                      Container(
+                          height: 35,
+                          child: TextFormField(
+                            controller:
+                                productsController.nameEditingController,
+                          )),
                       SizedBox(
                         height: 20,
                       ),
@@ -78,114 +90,356 @@ class AddProductsView extends StatelessWidget {
                         "Short Description",
                         style: GoogleFonts.roboto(fontSize: 12),
                       ),
-                      Container(height: 35, child: TextField()),
+                      Container(
+                          height: 35,
+                          child: TextFormField(
+                            controller:
+                                productsController.descriptionEditingController,
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Selling Price",
+                        style: GoogleFonts.roboto(fontSize: 12),
+                      ),
+                      Container(
+                          height: 35,
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller:
+                                productsController.priceEditingController,
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Quantity",
+                        style: GoogleFonts.roboto(fontSize: 12),
+                      ),
+                      Container(
+                          height: 35,
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller:
+                                productsController.quantityEditingController,
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Tags",
+                        style: GoogleFonts.roboto(fontSize: 12),
+                      ),
+                      Container(
+                          height: 35,
+                          child: TextFormField(
+                            controller: productsController.tagsController,
+                          )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Delivery Charge",
+                        style: GoogleFonts.roboto(fontSize: 12),
+                      ),
+                      Container(
+                          height: 35,
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller:
+                                productsController.deliveryChargeController,
+                          )),
                       SizedBox(
                         height: 20,
                       ),
                       DropdownAndTextfield(
-                          droDownList: productsController.unitList,
-                          firstName: "Selling Price",
-                          secondName: "Unit",
-                          productsController: productsController),
+                        keyBoardType: TextInputType.number,
+                        droDownList: productsController.typeList,
+                        firstName: "Tax",
+                        secondName: "Tax Type",
+                        value: productsController.taxType,
+                        textEditingController:
+                            productsController.taxEditingController,
+                        productsController: productsController,
+                        ontap: (p0) {
+                          productsController.taxType = p0;
+                        },
+                      ),
                       SizedBox(
                         height: 20,
                       ),
                       DropdownAndTextfield(
-                          droDownList: productsController.unitList,
-                          firstName: "Tax",
-                          secondName: "Tax Type",
-                          productsController: productsController),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      DropdownAndTextfield(
-                          droDownList: productsController.unitList,
-                          firstName: "Discount",
-                          secondName: "Discount Type",
-                          productsController: productsController),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      NameAndDropDown(
+                        keyBoardType: TextInputType.number,
+                        droDownList: productsController.typeList,
+                        firstName: "Discount",
+                        secondName: "Discount Type",
+                        value: productsController.discType,
+                        textEditingController:
+                            productsController.discountController,
                         productsController: productsController,
-                        dropDownList: productsController.unitList,
-                        name: "Category",
+                        ontap: (p0) {
+                          productsController.discType = p0;
+                        },
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      NameAndDropDown(
-                        productsController: productsController,
-                        dropDownList: productsController.unitList,
-                        name: "Sub-Category",
+                      FutureBuilder(
+                          future: productsController.getCategories(),
+                          builder: (constext, snap) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Category",
+                                  style: GoogleFonts.roboto(fontSize: 12),
+                                ),
+                                Container(
+                                    height: 35,
+                                    child: Obx(() {
+                                      return DropdownButtonFormField(
+                                        value: productsController.catId,
+                                        items: productsController.categoryLists
+                                            .map((data) {
+                                          return DropdownMenuItem(
+                                              value: data.id,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 5.0),
+                                                child: Text(
+                                                  data.name,
+                                                  overflow:
+                                                      TextOverflow.visible,
+                                                ),
+                                              ));
+                                        }).toList(),
+                                        onChanged: (value) {
+                                          productsController.catId = value;
+                                          productsController
+                                              .getSubCategory(value);
+                                        },
+                                      );
+                                    })),
+                              ],
+                            );
+                          }),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Sub-Category",
+                            style: GoogleFonts.roboto(fontSize: 12),
+                          ),
+                          Container(
+                              height: 35,
+                              child: Obx(() {
+                                return DropdownButtonFormField(
+                                  value: productsController.subCatId,
+                                  items: productsController.subCategoryLists
+                                      .map((data) {
+                                    return DropdownMenuItem(
+                                        value: data.id,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          child: Text(
+                                            data.name,
+                                            overflow: TextOverflow.visible,
+                                          ),
+                                        ));
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    productsController.subCatId = value;
+                                  },
+                                );
+                              })),
+                        ],
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      NameAndDropDown(
-                        productsController: productsController,
-                        dropDownList: productsController.unitList,
-                        name: "Attribute",
-                      ),
+                      Obx(() {
+                        return ListView.separated(
+                            separatorBuilder: (context, index) {
+                              return SizedBox(
+                                height: 10,
+                              );
+                            },
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount:
+                                productsController.controllers.value.length,
+                            itemBuilder: (contsext, index) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(7)),
+                                child: FutureBuilder(
+                                    future:
+                                        productsController.getAllAttribute(),
+                                    builder: (constext, snap) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 20.0,
+                                            right: 4.w,
+                                            left: 4.w,
+                                            bottom: 20),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Attribute",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12),
+                                            ),
+                                            Container(
+                                                height: 35,
+                                                child: Obx(() {
+                                                  return DropdownButtonFormField(
+                                                    items: productsController
+                                                        .attributeLists.value
+                                                        .map((data) {
+                                                      return DropdownMenuItem(
+                                                          value: data.id,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    bottom:
+                                                                        5.0),
+                                                            child: Text(
+                                                              data.title,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .visible,
+                                                            ),
+                                                          ));
+                                                    }).toList(),
+                                                    onChanged: (value) {
+                                                      productsController
+                                                          .getIdOfAttributes(
+                                                              value, index);
+                                                    },
+                                                  );
+                                                })),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              "value",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12),
+                                            ),
+                                            Container(
+                                                height: 35,
+                                                child: TextField(
+                                                  controller: productsController
+                                                      .controllers.value[index],
+                                                  onChanged: (value) {
+                                                    String selectedAttributeId =
+                                                        productsController
+                                                            .idOfAttribute[
+                                                                index]["id"]
+                                                            .toString();
+                                                    // Call the function to add the id and value to the list
+                                                    productsController
+                                                        .addIdAndValue(
+                                                            selectedAttributeId,
+                                                            value);
+                                                  },
+                                                )),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                              );
+                            });
+                      }),
                       SizedBox(
-                        height: 20,
+                        height: 15,
                       ),
-                      NameAndDropDown(
-                        productsController: productsController,
-                        dropDownList: productsController.unitList,
-                        name: "Color",
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          AddButton(
+                              onClick: () {
+                                productsController.controllers
+                                    .add(TextEditingController());
+                              },
+                              productsController: productsController),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Obx(() {
+                            return RemoveButton(
+                                onTap: () {
+                                  productsController.idOfAttribute.removeLast();
+                                  productsController.controllers.removeLast();
+                                },
+                                visibility:
+                                    productsController.controllers.length > 1
+                                        ? true
+                                        : false,
+                                productsController: productsController);
+                          }),
+                        ],
                       ),
                       SizedBox(
                         height: 25,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(7)),
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 20.0, right: 4.w, left: 4.w, bottom: 20),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Variant",
-                                          style:
-                                              GoogleFonts.roboto(fontSize: 12),
-                                        ),
-                                        Container(
-                                            height: 35, child: TextField()),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 20),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Variant price",
-                                          style:
-                                              GoogleFonts.roboto(fontSize: 12),
-                                        ),
-                                        Container(
-                                            height: 35, child: TextField()),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      )
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //       color: Colors.white,
+                      //       borderRadius: BorderRadius.circular(7)),
+                      //   child: Padding(
+                      //     padding: EdgeInsets.only(
+                      //         top: 20.0, right: 4.w, left: 4.w, bottom: 20),
+                      //     child: Column(
+                      //       children: [
+                      //         Row(
+                      //           children: [
+                      //             Expanded(
+                      //               child: Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   Text(
+                      //                     "Variant",
+                      //                     style:
+                      //                         GoogleFonts.roboto(fontSize: 12),
+                      //                   ),
+                      //                   Container(
+                      //                       height: 35, child: TextField()),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //             SizedBox(width: 20),
+                      //             Expanded(
+                      //               child: Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.start,
+                      //                 children: [
+                      //                   Text(
+                      //                     "Variant price",
+                      //                     style:
+                      //                         GoogleFonts.roboto(fontSize: 12),
+                      //                   ),
+                      //                   Container(
+                      //                       height: 35, child: TextField()),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
@@ -205,9 +459,174 @@ class AddProductsView extends StatelessWidget {
                   padding: EdgeInsets.only(
                       top: 20.0, right: 4.w, left: 4.w, bottom: 20),
                   child: Column(
-                    children: [],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Return",
+                        style: GoogleFonts.roboto(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: 15),
+                      NameAndDropDown(
+                          productsController: productsController,
+                          name: "Return Availability",
+                          ontap: (p0) {
+                            log(p0.toString());
+                            productsController.returnAvailability = p0;
+                          },
+                          dropDownList: productsController.availabilityList),
+                      SizedBox(height: 15),
+                      FutureBuilder(
+                          future: productsController.getAllReturn(),
+                          builder: (constext, snap) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Return Reasons",
+                                  style: GoogleFonts.roboto(fontSize: 12),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                GetBuilder<ProductsController>(
+                                    builder: (contexst) {
+                                  return Container(
+                                      child: MultiSelectDialogField(
+                                    listType: MultiSelectListType.CHIP,
+                                    items: contexst.returnReasons,
+                                    title: Text('Select Options'),
+                                    selectedItemsTextStyle:
+                                        TextStyle(color: Colors.white),
+                                    selectedColor:
+                                        Color.fromARGB(255, 170, 86, 177),
+                                    decoration: BoxDecoration(
+                                        color: Color.fromARGB(255, 167, 54, 178)
+                                            .withOpacity(0.1)),
+                                    buttonText: Text('Select'),
+                                    onConfirm: (selectedItems) {
+                                      // Handle selected items
+                                      contexst.getIdOfReturns(selectedItems);
+                                      print('Selected Items: $selectedItems');
+                                    },
+                                  ));
+                                }),
+                              ],
+                            );
+                          }),
+                    ],
                   ),
                 ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 4.w, top: 15, bottom: 15),
+              child: Text("Product Image"),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 8.w, bottom: 20),
+              child: GetBuilder<ProductsController>(builder: (c) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 30.w,
+                      height: 120,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      child: c.profileImage != ""
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.memory(
+                                Base64Decoder().convert(c.profileImage),
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () {
+                                c.showPopup(context);
+                              },
+                              child: Center(
+                                child: Icon(
+                                  Icons.add_circle_outline_outlined,
+                                  color: Color.fromARGB(255, 125, 129, 234),
+                                ),
+                              ),
+                            ),
+                    ),
+                    Visibility(
+                      visible: c.profileImage == "" ? false : true,
+                      child: InkWell(
+                        onTap: () {
+                          c.removeImage();
+                        },
+                        child: Icon(
+                          Icons.remove_circle,
+                          color: Color.fromARGB(255, 227, 58, 46),
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              }),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border(),
+                        gradient: LinearGradient(
+                          begin: Alignment(-0.934, -1),
+                          end: Alignment(1.125, 1.333),
+                          colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+                          stops: <double>[0, 1],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x3f000000),
+                            offset: Offset(0, 0.7870440483),
+                            blurRadius: 2.7546541691,
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: Obx(() {
+                            return ElevatedButton(
+                                style: ButtonStyle(
+                                    elevation: MaterialStateProperty.all(0),
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.transparent)),
+                                onPressed: productsController.addLoading.value
+                                    ? null
+                                    : () async {
+                                        productsController.addProducts(context);
+                                      },
+                                child: productsController.addLoading.value
+                                    ? Row(
+                                        children: [
+                                          CircularProgressIndicator(
+                                            color: Colors.white,
+                                          ),
+                                          Text("  Processing",
+                                              style: GoogleFonts.roboto(
+                                                  color: Colors.white))
+                                        ],
+                                      )
+                                    : Text(
+                                        "Add",
+                                        style: GoogleFonts.roboto(
+                                            color: Colors.white),
+                                      ));
+                          }))),
+                ],
               ),
             )
           ],
@@ -218,16 +637,20 @@ class AddProductsView extends StatelessWidget {
 }
 
 class NameAndDropDown extends StatelessWidget {
-  const NameAndDropDown({
-    super.key,
-    required this.productsController,
-    required this.name,
-    required this.dropDownList,
-  });
+  NameAndDropDown(
+      {super.key,
+      required this.productsController,
+      required this.name,
+      required this.dropDownList,
+      this.value,
+      this.type,
+      this.ontap});
   final String name;
+  final type;
   final ProductsController productsController;
   final List dropDownList;
-
+  Function(dynamic)? ontap;
+  dynamic value;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -240,6 +663,7 @@ class NameAndDropDown extends StatelessWidget {
         Container(
             height: 35,
             child: DropdownButtonFormField(
+              value: value,
               items: dropDownList.map((data) {
                 return DropdownMenuItem(
                     value: data,
@@ -251,7 +675,7 @@ class NameAndDropDown extends StatelessWidget {
                       ),
                     ));
               }).toList(),
-              onChanged: (value) {},
+              onChanged: ontap,
             )),
       ],
     );
@@ -263,11 +687,19 @@ class DropdownAndTextfield extends StatelessWidget {
       {super.key,
       required this.productsController,
       this.firstName,
+      required this.textEditingController,
       this.secondName,
-      required this.droDownList});
+      required this.value,
+      required this.droDownList,
+      this.keyBoardType,
+      required this.ontap});
   final firstName;
   final secondName;
+  final value;
+  final TextEditingController textEditingController;
   final ProductsController productsController;
+  final Function(dynamic) ontap;
+  TextInputType? keyBoardType;
   List droDownList;
   @override
   Widget build(BuildContext context) {
@@ -281,7 +713,12 @@ class DropdownAndTextfield extends StatelessWidget {
                 firstName,
                 style: GoogleFonts.roboto(fontSize: 12),
               ),
-              Container(height: 35, child: TextField()),
+              Container(
+                  height: 35,
+                  child: TextFormField(
+                    keyboardType: keyBoardType ?? TextInputType.emailAddress,
+                    controller: textEditingController,
+                  )),
             ],
           ),
         ),
@@ -297,6 +734,7 @@ class DropdownAndTextfield extends StatelessWidget {
               Container(
                   height: 35,
                   child: DropdownButtonFormField(
+                    value: value,
                     items: droDownList.map((data) {
                       return DropdownMenuItem(
                           value: data,
@@ -308,7 +746,7 @@ class DropdownAndTextfield extends StatelessWidget {
                             ),
                           ));
                     }).toList(),
-                    onChanged: (value) {},
+                    onChanged: ontap,
                   )),
             ],
           ),

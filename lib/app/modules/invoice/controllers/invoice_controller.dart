@@ -116,7 +116,7 @@ class InvoiceController extends GetxController {
         body: jsonEncode(body),
         headers: headers);
     if (request.statusCode == 201) {
-      log(request.body);
+      // log(request.body);
       final data = jsonDecode(request.body);
       if (data["add_invoice"] == true) {
         isAddInvoiceTrue.value = true;
@@ -210,7 +210,7 @@ class InvoiceController extends GetxController {
         Uri.parse("${baseUrl.value}vendor-invoice-filter-by-shop/"),
         headers: headers,
         body: jsonEncode(invoiceBody));
-    log(request.body.toString());
+    // log(request.body.toString());
     if (request.statusCode == 201) {
       final invoiceData = invoiceDataFromJson(request.body);
       invoiceTotalpage.value = invoiceData.totalPages;
@@ -708,6 +708,7 @@ class InvoiceController extends GetxController {
 
       totalAmount.value = verifiedAmountData.first.totalAmount;
       totalVerifiedCount.value = verfiedModel.totalPages;
+      log(currentVerifiedCount.value.toString());
       if (currentVerifiedCount.value == 1) {
         verifiedList.assignAll(verfiedModel.invoiceData);
         checkBoxedList = RxList.filled(verifiedList.length, false);
@@ -1027,22 +1028,35 @@ class InvoiceController extends GetxController {
     update();
     if (value == true) {
       // log(commissionAmount.toString());
-      additionSelectAmount.value =
-          additionSelectAmount.value + commissionAmount;
-      selecteddCommission.value = selecteddCommission.value + commissionAmount;
+      final numberAdd = additionSelectAmount.value + commissionAmount;
+
+      additionSelectAmount.value = double.parse(formatNumber(numberAdd));
+      // log(additionSelectAmount.toString());
+      final selectedNumber = selecteddCommission.value + commissionAmount;
+
+      selecteddCommission.value = double.parse(formatNumber(selectedNumber));
+
+      final totalValue = totalSelectedCommissionAmount.value + preTax;
       totalSelectedCommissionAmount.value =
-          totalSelectedCommissionAmount.value + preTax;
-      dueSelectAmount.value = dueSelectAmount.value + dueAmount;
+          double.parse(formatNumber(totalValue));
+      final dueAmounts = dueSelectAmount.value + dueAmount;
+      dueSelectAmount.value = double.parse(formatNumber(dueAmounts));
       selecteddCommissionCount.value++;
       update();
     } else {
-      selecteddCommission.value = selecteddCommission.value - commissionAmount;
+      final selectedNumber = selecteddCommission.value - commissionAmount;
+      final totalValue = totalSelectedCommissionAmount.value - preTax;
+      final dueAmounts = dueSelectAmount.value - dueAmount;
+      final numberAdd = additionSelectAmount.value - commissionAmount;
+      selecteddCommission.value = double.parse(formatNumber(selectedNumber));
+
       totalSelectedCommissionAmount.value =
-          totalSelectedCommissionAmount.value - preTax;
-      selecteddCommission.value = selecteddCommission.value - commissionAmount;
-      dueSelectAmount.value = dueSelectAmount.value - dueAmount;
-      additionSelectAmount.value =
-          additionSelectAmount.value - commissionAmount;
+          double.parse(formatNumber(totalValue));
+
+      dueSelectAmount.value = double.parse(formatNumber(dueAmounts));
+
+      additionSelectAmount.value = double.parse(formatNumber(numberAdd));
+      log(additionSelectAmount.toString());
       selecteddCommissionCount.value--;
       update();
     }
@@ -1054,8 +1068,13 @@ class InvoiceController extends GetxController {
     // log("selecteddCommission:-${selecteddCommission.value.toString()}");
     // log("totalValue:-${totalSelectedCommissionAmount.value.toString()}");
     // log("walletAmount:-${walletAmount.toString()}");
-    log(value.toString());
+    // log(value.toString());
     update();
+  }
+
+  String formatNumber(input) {
+    String formattedNumber = input.toStringAsFixed(2);
+    return formattedNumber;
   }
 
   openCheckoutForAllPay3(
@@ -1179,7 +1198,7 @@ class InvoiceController extends GetxController {
         Uri.parse("${baseUrl.value}shop-list-due-transactions/"),
         headers: headers,
         body: jsonEncode(body));
-    log(request.body);
+    // log(request.body);
     if (request.statusCode == 201) {
       final data = jsonDecode(request.body);
       dueTotalCount.value = data["total_pages"];
@@ -1262,8 +1281,10 @@ class InvoiceController extends GetxController {
   void toggleIdSelection(int itemId) {
     if (idOfVerifiedList.contains(itemId)) {
       idOfVerifiedList.remove(itemId);
+      update();
     } else {
       idOfVerifiedList.add(itemId);
+      update();
     }
   }
 
@@ -1303,5 +1324,61 @@ class InvoiceController extends GetxController {
       }
     }
     return null;
+  }
+
+  payByWallet() async {
+    log(idOfVerifiedList.toString());
+    var body = idOfVerifiedList.toString();
+    try {
+      final requests = await http.post(
+          Uri.parse("${baseUrl.value}pay-invoice-amount-using-shop-wallet/"),
+          headers: headers,
+          body: jsonEncode(body));
+      log(requests.body);
+      if (requests.statusCode == 201) {
+        final data = jsonDecode(requests.body);
+        if (data['success'] == true) {
+          await verifiedInvoiceList();
+          checkButton.value = false;
+          selecteddCommission.value = 0;
+          selecteddCommissionCount.value = 0;
+          checkBoxedList = RxList.filled(checkBoxedList.length, false);
+          idOfVerifiedList.clear();
+          totalSelectedCommissionAmount.value = 0;
+          dueSelectAmount.value = 0;
+          additionSelectAmount.value = 0;
+          Get.snackbar("Success", "Successfully completed",
+              backgroundColor: Colors.green);
+          return;
+        } else {
+          checkButton.value = false;
+          selecteddCommission.value = 0;
+          selecteddCommissionCount.value = 0;
+          checkBoxedList = RxList.filled(checkBoxedList.length, false);
+          idOfVerifiedList.clear();
+          totalSelectedCommissionAmount.value = 0;
+          dueSelectAmount.value = 0;
+          additionSelectAmount.value = 0;
+          Get.snackbar("Error", "Can't complete request right now",
+              backgroundColor: Colors.red);
+          return;
+        }
+      } else if (requests.statusCode == 500) {
+        checkButton.value = false;
+        selecteddCommission.value = 0;
+        selecteddCommissionCount.value = 0;
+        checkBoxedList = RxList.filled(checkBoxedList.length, false);
+        idOfVerifiedList.clear();
+        totalSelectedCommissionAmount.value = 0;
+        dueSelectAmount.value = 0;
+        additionSelectAmount.value = 0;
+        Get.snackbar("Error ", "Something went wrong",
+            backgroundColor: Colors.red);
+        return;
+      }
+    } catch (e) {
+      // Get.snackbar("Error ", "Something went wrong",
+      //     backgroundColor: Colors.red);
+    }
   }
 }

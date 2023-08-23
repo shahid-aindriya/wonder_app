@@ -88,9 +88,10 @@ class InvoicePaymentController extends GetxController {
         // log(shopWalletAmount.toString());
         // log(vendorCommission.toString());
         if (shopWalletAmount! >= vendorCommission!) {
+          log("custId:  ${customerId.toString()}");
           Map<dynamic, dynamic> userData =
               await firebaseDatabaseController.userData(customerId);
-
+          // log("userData:${userData.toString()}");
           for (int i = 1; i <= 15; i++) {
             String parent = "p$i";
             parentId = userData[parent];

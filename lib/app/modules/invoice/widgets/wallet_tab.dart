@@ -280,6 +280,8 @@ class WalletTab extends GetView<InvoiceController> {
                               invoiceController.walletTransactionLists.length) {
                             var data =
                                 invoiceController.walletTransactionLists[index];
+                            double number = double.parse(data.amount);
+                            String formattedNumber = number.toStringAsFixed(2);
                             return Padding(
                               padding: EdgeInsets.only(
                                   top: 15, right: 5.w, left: 5.w),
@@ -325,8 +327,8 @@ class WalletTab extends GetView<InvoiceController> {
                                         Text(
                                           (data.amount == "0" ||
                                                   data.entryType == 'Credit')
-                                              ? "+${data.amount}"
-                                              : "-${data.amount}",
+                                              ? "+$formattedNumber"
+                                              : "-$formattedNumber",
                                           style: GoogleFonts.roboto(
                                               color: data.entryType == "Debit"
                                                   ? Color.fromARGB(

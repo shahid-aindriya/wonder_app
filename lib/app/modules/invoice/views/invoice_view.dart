@@ -15,6 +15,7 @@ import 'package:wonder_app/app/modules/invoice/widgets/verifed_invoice/verified_
 import '../../add_invoice/controllers/add_invoice_controller.dart';
 import '../../choose_vendor/views/choose_vendor_view.dart';
 import '../../notifications/views/notifications_view.dart';
+import '../../products/controllers/products_controller.dart';
 import '../controllers/invoice_controller.dart';
 import '../widgets/drawer_tab.dart';
 import '../widgets/due.dart';
@@ -176,6 +177,8 @@ class InvoiceView extends GetView<InvoiceController> {
                                   await invoiceController
                                       .ondropDownChangedInvoice(value);
                                   await invoiceController.getDueData();
+                                  await productsController
+                                      .getListOfPrdoucts(value);
                                 },
                                 items: addInvoiceController.shopLists.value
                                     .map((data) {

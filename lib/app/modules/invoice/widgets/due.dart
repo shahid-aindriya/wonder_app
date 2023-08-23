@@ -190,6 +190,9 @@ class Due extends GetView<InvoiceController> {
                             itemBuilder: (context, index) {
                               if (index < invoiceController.dueList.length) {
                                 final data = invoiceController.dueList[index];
+                                double number = double.parse(data['amount']);
+                                String formattedNumber =
+                                    number.toStringAsFixed(2);
                                 return Padding(
                                   padding: EdgeInsets.only(
                                       top: 15, right: 5.w, left: 5.w),
@@ -230,8 +233,8 @@ class Due extends GetView<InvoiceController> {
                                           children: [
                                             Text(
                                               data['entry_type'] != "Credit"
-                                                  ? "+${data['amount']}"
-                                                  : "-${data['amount']}",
+                                                  ? "+$formattedNumber"
+                                                  : "-$formattedNumber",
                                               style: GoogleFonts.roboto(
                                                   color: data['entry_type'] !=
                                                           "Credit"

@@ -20,6 +20,8 @@ import '../../controllers/invoice_payment_controller.dart';
 import '../buttons/pay_half_all.dart';
 import '../buttons/pay_later.dart';
 import '../buttons/pay_manually.dart';
+import '../buttons/shop_balance.dart';
+import '../buttons/withdraw_button.dart';
 
 class VerifiedInvoices extends StatefulWidget {
   final InvoiceController invoiceController;
@@ -311,144 +313,44 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                         width: 40.w,
                                         child: Column(
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 5.w, right: 5.w),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
+                                            ShopBalance(amount: amount),
+                                            WithdrawButton(amount: amount),
+                                            Obx(() {
+                                              return Visibility(
+                                                visible: invoiceController
+                                                        .idOfVerifiedList
+                                                        .isEmpty
+                                                    ? false
+                                                    : true,
+                                                child: ElevatedButton(
+                                                    onPressed: () {
+                                                      invoiceController
+                                                          .payByWallet();
+                                                    },
+                                                    style: ButtonStyle(
+                                                        shape: MaterialStateProperty.all(
+                                                            RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10))),
+                                                        backgroundColor:
+                                                            MaterialStateProperty
+                                                                .all(Colors
+                                                                    .white)),
+                                                    child: Text(
+                                                      "Pay by walllet",
+                                                      style: GoogleFonts.roboto(
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                           color: Color.fromARGB(
                                                               255,
-                                                              229,
-                                                              223,
-                                                              227)),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 8.0,
-                                                                bottom: 8,
-                                                                left: 10,
-                                                                right: 10),
-                                                        child: AutoSizeText(
-                                                          maxLines: 1,
-                                                          "₹${amount.shopBalance}",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          maxFontSize: 23,
-                                                          minFontSize: 16,
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                                  color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          73,
-                                                                          117,
-                                                                          231),
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 5.w,
-                                                  right: 5.w,
-                                                  top: 20),
-                                              child: Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Container(
-                                                        height: 40,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          border: Border(),
-                                                          gradient:
-                                                              LinearGradient(
-                                                            begin: Alignment(
-                                                                -0.934, -1),
-                                                            end: Alignment(
-                                                                1.125, 1.333),
-                                                            colors: <Color>[
-                                                              Color(0xe53f46bd),
-                                                              Color(0xe5417de8)
-                                                            ],
-                                                            stops: <double>[
-                                                              0,
-                                                              1
-                                                            ],
-                                                          ),
-                                                          boxShadow: [
-                                                            BoxShadow(
-                                                              color: Color(
-                                                                  0x3f000000),
-                                                              offset: Offset(0,
-                                                                  0.7870440483),
-                                                              blurRadius:
-                                                                  2.7546541691,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    left: 5,
-                                                                    right: 5),
-                                                            child: Obx(() {
-                                                              return ElevatedButton(
-                                                                  style: ButtonStyle(
-                                                                      elevation:
-                                                                          MaterialStateProperty.all(
-                                                                              0),
-                                                                      backgroundColor:
-                                                                          MaterialStateProperty.all(Colors
-                                                                              .transparent)),
-                                                                  onPressed: (invoiceController.isWithdrawSend.value ==
-                                                                              true ||
-                                                                          amount.shopBalance ==
-                                                                              0)
-                                                                      ? null
-                                                                      : () async {
-                                                                          invoiceController
-                                                                              .sentWithdrawRequest(context);
-                                                                        },
-                                                                  child: invoiceController
-                                                                              .isWithdrawSend
-                                                                              .value ==
-                                                                          true
-                                                                      ? Row(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.center,
-                                                                          children: [
-                                                                            CircularProgressIndicator(
-                                                                              color: Colors.white,
-                                                                            ),
-                                                                          ],
-                                                                        )
-                                                                      : Text(
-                                                                          "Withdraw",
-                                                                          style:
-                                                                              GoogleFonts.roboto(color: Colors.white),
-                                                                        ));
-                                                            }))),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
+                                                              73,
+                                                              86,
+                                                              178)),
+                                                    )),
+                                              );
+                                            })
                                           ],
                                         ),
                                       ),
@@ -690,16 +592,8 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                           color: Colors.white,
                                                           width: 1),
                                                       borderRadius:
-                                                          BorderRadius.only(
-                                                        topLeft:
-                                                            Radius.circular(14),
-                                                        topRight:
-                                                            Radius.circular(14),
-                                                        bottomLeft:
-                                                            Radius.circular(14),
-                                                        bottomRight:
-                                                            Radius.circular(14),
-                                                      ),
+                                                          BorderRadius.circular(
+                                                              14),
                                                       gradient: LinearGradient(
                                                           begin: Alignment(
                                                               1.1437236070632935,
@@ -758,10 +652,10 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                                     .toggleIdSelection(
                                                                         datas
                                                                             .id);
-                                                                log(widget
-                                                                    .invoiceController
-                                                                    .idOfVerifiedList
-                                                                    .toString());
+                                                                // log(widget
+                                                                //     .invoiceController
+                                                                //     .idOfVerifiedList
+                                                                //     .toString());
                                                               },
                                                             ),
                                                           );
