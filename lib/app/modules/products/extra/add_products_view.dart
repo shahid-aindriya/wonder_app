@@ -91,8 +91,9 @@ class AddProductsView extends StatelessWidget {
                         style: GoogleFonts.roboto(fontSize: 12),
                       ),
                       Container(
-                          height: 35,
+                          height: 40,
                           child: TextFormField(
+                            maxLines: 1,
                             controller:
                                 productsController.descriptionEditingController,
                           )),
@@ -150,22 +151,22 @@ class AddProductsView extends StatelessWidget {
                             controller:
                                 productsController.deliveryChargeController,
                           )),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      DropdownAndTextfield(
-                        keyBoardType: TextInputType.number,
-                        droDownList: productsController.typeList,
-                        firstName: "Tax",
-                        secondName: "Tax Type",
-                        value: productsController.taxType,
-                        textEditingController:
-                            productsController.taxEditingController,
-                        productsController: productsController,
-                        ontap: (p0) {
-                          productsController.taxType = p0;
-                        },
-                      ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
+                      // DropdownAndTextfield(
+                      //   keyBoardType: TextInputType.number,
+                      //   droDownList: productsController.typeList,
+                      //   firstName: "Tax",
+                      //   secondName: "Tax Type",
+                      //   value: productsController.taxType,
+                      //   textEditingController:
+                      //       productsController.taxEditingController,
+                      //   productsController: productsController,
+                      //   ontap: (p0) {
+                      //     productsController.taxType = p0;
+                      //   },
+                      // ),
                       SizedBox(
                         height: 20,
                       ),
@@ -185,45 +186,119 @@ class AddProductsView extends StatelessWidget {
                       SizedBox(
                         height: 20,
                       ),
-                      FutureBuilder(
-                          future: productsController.getCategories(),
-                          builder: (constext, snap) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Category",
-                                  style: GoogleFonts.roboto(fontSize: 12),
+                      Row(
+                        children: [
+                          FutureBuilder(
+                              future: productsController.getCategories(),
+                              builder: (constext, snap) {
+                                return Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Category",
+                                        style: GoogleFonts.roboto(fontSize: 12),
+                                      ),
+                                      Container(
+                                          height: 35,
+                                          child: Obx(() {
+                                            return DropdownButtonFormField(
+                                              value: productsController.catId,
+                                              items: productsController
+                                                  .categoryLists
+                                                  .map((data) {
+                                                return DropdownMenuItem(
+                                                    value: data.id,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 5.0),
+                                                      child: Text(
+                                                        data.name,
+                                                        overflow: TextOverflow
+                                                            .visible,
+                                                      ),
+                                                    ));
+                                              }).toList(),
+                                              onChanged: (value) {
+                                                productsController.catId =
+                                                    value;
+                                                productsController
+                                                    .getSubCategory(value);
+                                                productsController
+                                                    .calculateCommission(value);
+                                              },
+                                            );
+                                          })),
+                                    ],
+                                  ),
+                                );
+                              }),
+                          Obx(() {
+                            return Visibility(
+                              visible: productsController.commission.isEmpty
+                                  ? false
+                                  : true,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Commission",
+                                      style: GoogleFonts.roboto(fontSize: 12),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                            onTap: () {
+                                              productsController
+                                                  .selectQuantity(false);
+                                            },
+                                            child: Icon(
+                                              (Icons.remove),
+                                            )),
+                                        const SizedBox(width: 5),
+                                        Container(
+                                          height: 20,
+                                          width: 30,
+                                          color: Colors.white,
+                                          child: Center(
+                                            child: Obx(() {
+                                              return Text(
+                                                productsController
+                                                    .quantityVal.value
+                                                    .toString()
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              );
+                                            }),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        InkWell(
+                                            onTap: () {
+                                              productsController
+                                                  .selectQuantity(true);
+                                            },
+                                            child: Icon(
+                                              (Icons.add),
+                                            )),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                Container(
-                                    height: 35,
-                                    child: Obx(() {
-                                      return DropdownButtonFormField(
-                                        value: productsController.catId,
-                                        items: productsController.categoryLists
-                                            .map((data) {
-                                          return DropdownMenuItem(
-                                              value: data.id,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 5.0),
-                                                child: Text(
-                                                  data.name,
-                                                  overflow:
-                                                      TextOverflow.visible,
-                                                ),
-                                              ));
-                                        }).toList(),
-                                        onChanged: (value) {
-                                          productsController.catId = value;
-                                          productsController
-                                              .getSubCategory(value);
-                                        },
-                                      );
-                                    })),
-                              ],
+                              ),
                             );
                           }),
+                        ],
+                      ),
                       SizedBox(
                         height: 20,
                       ),
@@ -257,6 +332,37 @@ class AddProductsView extends StatelessWidget {
                                   },
                                 );
                               })),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Delivery type",
+                            style: GoogleFonts.roboto(fontSize: 12),
+                          ),
+                          Container(
+                              height: 35,
+                              child: DropdownButtonFormField(
+                                value: productsController.deliveryTypeId,
+                                items: productsController.deliveryTypeList
+                                    .map((data) {
+                                  return DropdownMenuItem(
+                                      value: data,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 5.0),
+                                        child: Text(
+                                          data,
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                      ));
+                                }).toList(),
+                                onChanged: (value) {},
+                              )),
                         ],
                       ),
                       SizedBox(
@@ -546,7 +652,7 @@ class AddProductsView extends StatelessWidget {
                             )
                           : InkWell(
                               onTap: () {
-                                c.showPopup(context);
+                                c.showPopup(context, "Add");
                               },
                               child: Center(
                                 child: Icon(

@@ -18,6 +18,7 @@ import 'package:wonder_app/app/modules/request_pending/views/request_pending_vie
 
 import '../../../data/urls.dart';
 import '../../invoice_details/models/invoice_approval_model.dart';
+import '../../my_shops/model/shops_list_model.dart';
 import '../../profile_view/model/userdata_response.dart';
 import '../model/search_invoice_model.dart';
 import '../model/search_transaction_model.dart';
@@ -105,6 +106,32 @@ class InvoiceController extends GetxController {
   //     log(e.toString());
   //   }
   // }
+
+  var shopLists = RxList<ShopDatum>().obs;
+  Future<dynamic> getListOfShops() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getInt("userId");
+    var body = {"user_id": userId.toString()};
+
+    try {
+      var request = await http.post(
+          Uri.parse("${baseUrl.value}vendor-all-shop/"),
+          headers: headers,
+          body: jsonEncode(body));
+      // log(request.statusCode.toString());
+      if (request.statusCode == 201) {
+        final shopsListModel = shopsListModelFromJson(request.body);
+        // log(shopsListModel.shopData[0].licenseImage.toString());
+        shopLists.value.assignAll(shopsListModel.shopData);
+
+        update();
+        return shopsListModel.shopData;
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Something went wrong",
+          backgroundColor: Colors.red);
+    }
+  }
 
   var isAddInvoiceTrue = false.obs;
   checkVerifiedVendor() async {

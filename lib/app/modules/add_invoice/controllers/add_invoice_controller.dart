@@ -18,6 +18,8 @@ import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 import '../../../data/urls.dart';
 import '../../my_shops/model/shops_list_model.dart';
 
+
+
 class AddInvoiceController extends GetxController {
   //TODO: Implement AddInvoiceController
   @override
@@ -33,7 +35,7 @@ class AddInvoiceController extends GetxController {
   @override
   void onClose() {}
   void increment() => count.value++;
-  var shopLists = RxList<ShopDatum>().obs;
+
   String? selectUserId;
   dynamic selectShopId;
   final TextEditingController searchUserController = TextEditingController();
@@ -197,30 +199,7 @@ class AddInvoiceController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<dynamic> getListOfShops() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getInt("userId");
-    var body = {"user_id": userId.toString()};
-
-    try {
-      var request = await http.post(
-          Uri.parse("${baseUrl.value}vendor-all-shop/"),
-          headers: headers,
-          body: jsonEncode(body));
-      // log(request.statusCode.toString());
-      if (request.statusCode == 201) {
-        final shopsListModel = shopsListModelFromJson(request.body);
-        // log(shopsListModel.shopData[0].licenseImage.toString());
-        shopLists.value.assignAll(shopsListModel.shopData);
-
-        update();
-        return shopsListModel.shopData;
-      }
-    } catch (e) {
-      Get.snackbar("Error", "Something went wrong",
-          backgroundColor: Colors.red);
-    }
-  }
+ 
 
   testComporessList(Uint8List list) async {
     var result = await FlutterImageCompress.compressWithList(

@@ -13,6 +13,7 @@ import '../../login/views/login_view.dart';
 import '../../my_shops/views/my_shops_view.dart';
 import '../../profile_view/views/profile_view_view.dart';
 import '../../support_request/views/support_request_view.dart';
+import '../../taxes/views/taxes_view.dart';
 import '../../terms_conditions/views/terms_conditions_view.dart';
 import '../views/invoice_view.dart';
 
@@ -304,6 +305,31 @@ class DrawerTab extends StatelessWidget {
               padding: EdgeInsets.only(top: 6.0),
               child: Divider(color: Colors.white, thickness: 2),
             ),
+            ListTile(
+              onTap: () {
+                Get.to(TaxesView());
+              },
+              leading: SvgPicture.asset(
+                "assets/images/drawer/taxes.svg",
+                fit: BoxFit.contain,
+              ),
+              title: Text(
+                "Taxes",
+                style: GoogleFonts.roboto(
+                    color: Color.fromARGB(177, 0, 0, 0),
+                    fontSize: 17,
+                    fontWeight: FontWeight.normal),
+              ),
+              trailing: IconButton(
+                  onPressed: () {
+                    Get.to(TaxesView());
+                  },
+                  icon: Icon(Icons.arrow_forward_ios_outlined)),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 6.0),
+              child: Divider(color: Colors.white, thickness: 2),
+            ),
             InkWell(
               onTap: () async {
                 if (!await launchUrl(
@@ -385,7 +411,7 @@ class DrawerTab extends StatelessWidget {
                 await prefs.clear();
                 invoiceController.invoiceLists.value.clear();
                 invoiceController.walletTransactionLists.clear();
-                addInvoiceController.shopLists.value.clear();
+                invoiceController.shopLists.value.clear();
                 invoiceController.selectShopId = null;
                 await DefaultCacheManager().emptyCache();
 

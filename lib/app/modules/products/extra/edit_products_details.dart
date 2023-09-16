@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:wonder_app/app/data/urls.dart';
 
 import '../controllers/products_controller.dart';
@@ -68,7 +69,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
       ),
       child: WillPopScope(
         onWillPop: () {
+          productsController.listCount.value = 0;
           productsController.editControllers.clear();
+          productsController.subCategoryLists.clear();
+          productsController.editAttributesList.clear();
           Get.back();
           throw Exception();
         },
@@ -83,7 +87,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                     borderRadius: BorderRadius.circular(10)),
                 child: IconButton(
                     onPressed: () {
+                      productsController.listCount.value = 0;
                       productsController.editControllers.clear();
+                      productsController.subCategoryLists.clear();
+                      productsController.editAttributesList.clear();
                       Get.back();
                     },
                     icon: Icon(
@@ -118,9 +125,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                 quantityEditingController.text = data.quantity;
                 discountController.text = data.discount;
                 tagsController.text = data.tags;
-                taxEditingController.text = data.tax;
-                editTaxType = data.taxType == "null" ? null : data.taxType;
+                // taxEditingController.text = data.tax;
+                // editTaxType = data.taxType == "null" ? null : data.taxType;
                 editCatId = data.categoryId;
+                productsController.editCalculateCommission(editCatId);
                 editSubCatId = data.subCategoryId;
                 editDiscountType =
                     data.discountType == "null" ? null : data.discountType;
@@ -147,7 +155,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                         }
 
                         productsController.editIdOfReturn = data.reasonIds
-                            .map((item) => int.tryParse(item["id"].toString()))
+                            .map((item) => int.tryParse(item.id.toString()))
                             .where((value) => value != null)
                             .map((value) =>
                                 value!) // Convert nullable int to non-nullable
@@ -230,72 +238,74 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                           child: TextFormField(
                                             controller: tagsController,
                                           )),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Tax",
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 12),
-                                                ),
-                                                Container(
-                                                    height: 35,
-                                                    child: TextFormField(
-                                                      controller:
-                                                          taxEditingController,
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Tax Type",
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 12),
-                                                ),
-                                                Container(
-                                                    height: 35,
-                                                    child:
-                                                        DropdownButtonFormField(
-                                                      value: editTaxType,
-                                                      items: productsController
-                                                          .typeList
-                                                          .map((data) {
-                                                        return DropdownMenuItem(
-                                                            value: data,
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      bottom:
-                                                                          5.0),
-                                                              child: Text(
-                                                                data,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .visible,
-                                                              ),
-                                                            ));
-                                                      }).toList(),
-                                                      onChanged: (value) {},
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      // SizedBox(
+                                      //   height: 20,
+                                      // ),
+                                      // Row(
+                                      //   children: [
+                                      //     Expanded(
+                                      //       child: Column(
+                                      //         crossAxisAlignment:
+                                      //             CrossAxisAlignment.start,
+                                      //         children: [
+                                      //           Text(
+                                      //             "Tax",
+                                      //             style: GoogleFonts.roboto(
+                                      //                 fontSize: 12),
+                                      //           ),
+                                      //           Container(
+                                      //               height: 35,
+                                      //               child: TextFormField(
+                                      //                 controller:
+                                      //                     taxEditingController,
+                                      //               )),
+                                      //         ],
+                                      //       ),
+                                      //     ),
+                                      //     SizedBox(width: 20),
+                                      //     Expanded(
+                                      //       child: Column(
+                                      //         crossAxisAlignment:
+                                      //             CrossAxisAlignment.start,
+                                      //         children: [
+                                      //           Text(
+                                      //             "Tax Type",
+                                      //             style: GoogleFonts.roboto(
+                                      //                 fontSize: 12),
+                                      //           ),
+                                      //           Container(
+                                      //               height: 35,
+                                      //               child:
+                                      //                   DropdownButtonFormField(
+                                      //                 value: editTaxType,
+                                      //                 items: productsController
+                                      //                     .typeList
+                                      //                     .map((data) {
+                                      //                   return DropdownMenuItem(
+                                      //                       value: data,
+                                      //                       child: Padding(
+                                      //                         padding:
+                                      //                             const EdgeInsets
+                                      //                                     .only(
+                                      //                                 bottom:
+                                      //                                     5.0),
+                                      //                         child: Text(
+                                      //                           data,
+                                      //                           overflow:
+                                      //                               TextOverflow
+                                      //                                   .visible,
+                                      //                         ),
+                                      //                       ));
+                                      //                 }).toList(),
+                                      //                 onChanged: (value) {
+                                      //                   editTaxType = value;
+                                      //                 },
+                                      //               )),
+                                      //         ],
+                                      //       ),
+                                      //     ),
+                                      //   ],
+                                      // ),
                                       SizedBox(
                                         height: 20,
                                       ),
@@ -355,7 +365,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                               ),
                                                             ));
                                                       }).toList(),
-                                                      onChanged: (value) {},
+                                                      onChanged: (value) {
+                                                        editDiscountType =
+                                                            value;
+                                                      },
                                                     )),
                                               ],
                                             ),
@@ -365,56 +378,127 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                       SizedBox(
                                         height: 20,
                                       ),
-                                      FutureBuilder(
-                                          future: productsController
-                                              .getCategories(),
-                                          builder: (constext, snap) {
-                                            return Column(
+                                      Row(
+                                        children: [
+                                          FutureBuilder(
+                                              future: productsController
+                                                  .getCategories(),
+                                              builder: (constext, snap) {
+                                                return Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "Category",
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                                fontSize: 12),
+                                                      ),
+                                                      Container(
+                                                          height: 35,
+                                                          child: Obx(() {
+                                                            return DropdownButtonFormField(
+                                                              value: editCatId,
+                                                              items: productsController
+                                                                  .categoryLists
+                                                                  .map((data) {
+                                                                return DropdownMenuItem(
+                                                                    value:
+                                                                        data.id,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          bottom:
+                                                                              5.0),
+                                                                      child:
+                                                                          Text(
+                                                                        data.name,
+                                                                        overflow:
+                                                                            TextOverflow.visible,
+                                                                      ),
+                                                                    ));
+                                                              }).toList(),
+                                                              onChanged:
+                                                                  (value) {
+                                                                productsController
+                                                                        .catId =
+                                                                    value;
+                                                                productsController
+                                                                    .getSubCategory(
+                                                                        value);
+                                                              },
+                                                            );
+                                                          })),
+                                                    ],
+                                                  ),
+                                                );
+                                              }),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 20),
+                                            child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "Category",
+                                                  "Commission",
                                                   style: GoogleFonts.roboto(
                                                       fontSize: 12),
                                                 ),
-                                                Container(
-                                                    height: 35,
-                                                    child: Obx(() {
-                                                      return DropdownButtonFormField(
-                                                        value: editCatId,
-                                                        items:
-                                                            productsController
-                                                                .categoryLists
-                                                                .map((data) {
-                                                          return DropdownMenuItem(
-                                                              value: data.id,
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        bottom:
-                                                                            5.0),
-                                                                child: Text(
-                                                                  data.name,
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .visible,
-                                                                ),
-                                                              ));
-                                                        }).toList(),
-                                                        onChanged: (value) {
+                                                SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    InkWell(
+                                                        onTap: () {
                                                           productsController
-                                                              .catId = value;
-                                                          productsController
-                                                              .getSubCategory(
-                                                                  value);
+                                                              .editSelectQuantity(
+                                                                  false);
                                                         },
-                                                      );
-                                                    })),
+                                                        child: Icon(
+                                                          (Icons.remove),
+                                                        )),
+                                                    const SizedBox(width: 5),
+                                                    Container(
+                                                      height: 20,
+                                                      width: 30,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Obx(() {
+                                                          return Text(
+                                                            productsController
+                                                                .editQuantityVal
+                                                                .value
+                                                                .toString(),
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          );
+                                                        }),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                    InkWell(
+                                                        onTap: () {
+                                                          productsController
+                                                              .editSelectQuantity(
+                                                                  true);
+                                                        },
+                                                        child: Icon(
+                                                          (Icons.add),
+                                                        )),
+                                                  ],
+                                                ),
                                               ],
-                                            );
-                                          }),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                       SizedBox(
                                         height: 20,
                                       ),
@@ -472,7 +556,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                             physics:
                                                 NeverScrollableScrollPhysics(),
                                             itemCount: productsController
-                                                .listCount.value,
+                                                .editAttributesList.length,
                                             itemBuilder: (contsext, index) {
                                               return Container(
                                                 decoration: BoxDecoration(
@@ -484,6 +568,66 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                     future: productsController
                                                         .getAllAttribute(),
                                                     builder: (constext, snap) {
+                                                      if (snap.connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
+                                                        return Container(
+                                                          width: 60.w,
+                                                          height: 50,
+                                                          child: Shimmer(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    185,
+                                                                    84,
+                                                                    84),
+                                                            child: ListTile(
+                                                              dense: true,
+                                                              leading: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  CircleAvatar(
+                                                                    backgroundColor:
+                                                                        Color.fromARGB(
+                                                                            255,
+                                                                            220,
+                                                                            216,
+                                                                            216),
+                                                                    radius: 20,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              title: Container(
+                                                                height: 20,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        220,
+                                                                        216,
+                                                                        216),
+                                                              ),
+                                                              subtitle:
+                                                                  Container(
+                                                                height: 16,
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                        top: 8),
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        220,
+                                                                        216,
+                                                                        216),
+                                                              ),
+                                                            ),
+                                                            direction:
+                                                                ShimmerDirection
+                                                                    .fromRTLB(),
+                                                          ),
+                                                        );
+                                                      }
                                                       return Padding(
                                                         padding:
                                                             EdgeInsets.only(
@@ -573,6 +717,42 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                                         index);
                                                                   },
                                                                 )),
+                                                            SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                RemoveButton(
+                                                                    onTap: () {
+                                                                      log(widget
+                                                                          .id
+                                                                          .toString());
+                                                                      productsController.deleteAttribute(
+                                                                          productsController
+                                                                              .editAttributesList
+                                                                              .value[index]
+                                                                              .id,
+                                                                          widget.id);
+                                                                      // products Controller.idOfAttribute.removeLast();
+                                                                      // productsController
+                                                                      //     .listCount
+                                                                      //     .value--;
+                                                                      // productsController
+                                                                      //     .editControllers
+                                                                      //     .removeLast();
+
+                                                                      // productsController
+                                                                      //     .editAttributesList
+                                                                      //     .value
+                                                                      //     .removeLast();
+                                                                    },
+                                                                    productsController:
+                                                                        productsController),
+                                                              ],
+                                                            ),
                                                           ],
                                                         ),
                                                       );
@@ -611,82 +791,11 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                           SizedBox(
                                             width: 10,
                                           ),
-                                          Obx(() {
-                                            return RemoveButton(
-                                                onTap: () {
-                                                  // products Controller.idOfAttribute.removeLast();
-                                                  productsController
-                                                      .listCount.value--;
-                                                  productsController
-                                                      .editControllers
-                                                      .removeLast();
-
-                                                  productsController
-                                                      .editAttributesList
-                                                      .removeLast();
-                                                },
-                                                visibility: productsController
-                                                            .editControllers
-                                                            .length >
-                                                        1
-                                                    ? true
-                                                    : false,
-                                                productsController:
-                                                    productsController);
-                                          }),
                                         ],
                                       ),
                                       SizedBox(
                                         height: 25,
                                       ),
-                                      // Container(
-                                      //   decoration: BoxDecoration(
-                                      //       color: Colors.white,
-                                      //       borderRadius: BorderRadius.circular(7)),
-                                      //   child: Padding(
-                                      //     padding: EdgeInsets.only(
-                                      //         top: 20.0, right: 4.w, left: 4.w, bottom: 20),
-                                      //     child: Column(
-                                      //       children: [
-                                      //         Row(
-                                      //           children: [
-                                      //             Expanded(
-                                      //               child: Column(
-                                      //                 crossAxisAlignment:
-                                      //                     CrossAxisAlignment.start,
-                                      //                 children: [
-                                      //                   Text(
-                                      //                     "Variant",
-                                      //                     style:
-                                      //                         GoogleFonts.roboto(fontSize: 12),
-                                      //                   ),
-                                      //                   Container(
-                                      //                       height: 35, child: TextField()),
-                                      //                 ],
-                                      //               ),
-                                      //             ),
-                                      //             SizedBox(width: 20),
-                                      //             Expanded(
-                                      //               child: Column(
-                                      //                 crossAxisAlignment:
-                                      //                     CrossAxisAlignment.start,
-                                      //                 children: [
-                                      //                   Text(
-                                      //                     "Variant price",
-                                      //                     style:
-                                      //                         GoogleFonts.roboto(fontSize: 12),
-                                      //                   ),
-                                      //                   Container(
-                                      //                       height: 35, child: TextField()),
-                                      //                 ],
-                                      //               ),
-                                      //             ),
-                                      //           ],
-                                      //         )
-                                      //       ],
-                                      //     ),
-                                      //   ),
-                                      // )
                                     ],
                                   ),
                                 ),
@@ -819,17 +928,17 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                           borderRadius:
                                               BorderRadius.circular(10),
                                           color: Colors.white),
-                                      child: c.profileImage != ""
+                                      child: c.editImage != ""
                                           ? InkWell(
                                               onTap: () {
-                                                c.showPopup(context);
+                                                c.showPopup(context, "Edit");
                                               },
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                                 child: Image.memory(
                                                   Base64Decoder()
-                                                      .convert(c.profileImage),
+                                                      .convert(c.editImage),
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -837,7 +946,8 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                           : data.featuredImage.isNotEmpty
                                               ? InkWell(
                                                   onTap: () {
-                                                    c.showPopup(context);
+                                                    c.showPopup(
+                                                        context, "Edit");
                                                   },
                                                   child: ClipRRect(
                                                     borderRadius:
@@ -851,7 +961,8 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                 )
                                               : InkWell(
                                                   onTap: () {
-                                                    c.showPopup(context);
+                                                    c.showPopup(
+                                                        context, "Edit");
                                                   },
                                                   child: Center(
                                                     child: Icon(
@@ -864,8 +975,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                 ),
                                     ),
                                     Visibility(
-                                      visible:
-                                          c.profileImage == "" ? false : true,
+                                      visible: c.editImage == "" ? false : true,
                                       child: InkWell(
                                         onTap: () {
                                           c.removeImage();
@@ -918,47 +1028,58 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                         MaterialStateProperty
                                                             .all(0),
                                                     backgroundColor:
-                                                        MaterialStateProperty.all(
-                                                            Colors
+                                                        MaterialStateProperty
+                                                            .all(Colors
                                                                 .transparent)),
-                                                onPressed:
-                                                    productsController
-                                                            .addLoading.value
-                                                        ? null
-                                                        : () async {
-                                                            productsController.editProductDetails(
-                                                                categoryId: editCatId
-                                                                    .toString(),
-                                                                discType: editDiscountType
-                                                                    .toString(),
-                                                                discount: discountController
-                                                                    .text
-                                                                    .toString(),
-                                                                name: nameEditingController
-                                                                    .text
-                                                                    .toString(),
-                                                                price: priceEditingController
-                                                                    .text
-                                                                    .toString(),
-                                                                productId: widget.id
-                                                                    .toString(),
-                                                                quantity: quantityEditingController
-                                                                    .text
-                                                                    .toString(),
-                                                                shortDescription:
-                                                                    descriptionEditingController
-                                                                        .text
-                                                                        .toString(),
-                                                                subCatId: editSubCatId
-                                                                    .toString(),
-                                                                tax: taxEditingController
-                                                                    .text
-                                                                    .toString(),
-                                                                taxType: editTaxType
-                                                                    .toString());
-                                                          },
+                                                onPressed: productsController
+                                                        .editLoading.value
+                                                    ? null
+                                                    : () async {
+                                                        productsController
+                                                            .editProductDetails(
+                                                          context: context,
+                                                          tags: tagsController
+                                                              .text
+                                                              .toString(),
+                                                          categoryId: editCatId
+                                                              .toString(),
+                                                          discType:
+                                                              editDiscountType
+                                                                  .toString(),
+                                                          discount:
+                                                              discountController
+                                                                  .text
+                                                                  .toString(),
+                                                          name:
+                                                              nameEditingController
+                                                                  .text
+                                                                  .toString(),
+                                                          price:
+                                                              priceEditingController
+                                                                  .text
+                                                                  .toString(),
+                                                          productId: widget.id
+                                                              .toString(),
+                                                          quantity:
+                                                              quantityEditingController
+                                                                  .text
+                                                                  .toString(),
+                                                          shortDescription:
+                                                              descriptionEditingController
+                                                                  .text
+                                                                  .toString(),
+                                                          subCatId: editSubCatId
+                                                              .toString(),
+                                                          // tax:
+                                                          //     taxEditingController
+                                                          //         .text
+                                                          //         .toString(),
+                                                          // taxType: editTaxType
+                                                          //     .toString()
+                                                        );
+                                                      },
                                                 child: productsController
-                                                        .addLoading.value
+                                                        .editLoading.value
                                                     ? Row(
                                                         children: [
                                                           CircularProgressIndicator(

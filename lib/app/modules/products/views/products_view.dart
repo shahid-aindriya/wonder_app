@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:wonder_app/app/data/urls.dart';
+import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 
 import '../../../data/colors.dart';
 import '../../add_invoice/controllers/add_invoice_controller.dart';
@@ -60,7 +61,7 @@ class ProductsView extends GetView<ProductsController> {
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: FutureBuilder(
-                  future: addInvoiceController.getListOfShops(),
+                  future: invoiceController.getListOfShops(),
                   builder: (contextsd, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container(
@@ -152,8 +153,8 @@ class ProductsView extends GetView<ProductsController> {
                               await invoiceController.getDueData();
                               await productsController.getListOfPrdoucts(value);
                             },
-                            items: addInvoiceController.shopLists.value
-                                .map((data) {
+                            items:
+                                invoiceController.shopLists.value.map((data) {
                               return DropdownMenuItem(
                                   value: data.id.toString(),
                                   child: Padding(
@@ -251,7 +252,7 @@ class ProductsView extends GetView<ProductsController> {
                                 padding: const EdgeInsets.only(bottom: 5.0),
                                 child: Text(
                                   data,
-                                  overflow: TextOverflow.visible,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ));
                         }).toList(),
@@ -407,7 +408,7 @@ class ProductsView extends GetView<ProductsController> {
                                               height: 8,
                                             ),
                                             Text(
-                                              "Product id: 644565465433",
+                                              "Product id: ${data.id}",
                                               style: GoogleFonts.roboto(
                                                   fontSize: 14,
                                                   color: Colors.blueGrey),
@@ -534,15 +535,19 @@ class ProductsView extends GetView<ProductsController> {
         ),
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterFloat,
-        floatingActionButton: FloatingActionButton(
-            backgroundColor: Color.fromARGB(255, 57, 55, 166),
-            onPressed: () {
-              Get.to(AddProductsView());
-            },
-            child: Icon(
-              Icons.add,
-              size: 30,
-            )),
+        floatingActionButton: GetBuilder<InvoiceController>(builder: (context) {
+          return invoiceController.selectShopId == null
+              ? Container()
+              : FloatingActionButton(
+                  backgroundColor: Color.fromARGB(255, 57, 55, 166),
+                  onPressed: () {
+                    Get.to(AddProductsView());
+                  },
+                  child: Icon(
+                    Icons.add,
+                    size: 30,
+                  ));
+        }),
       ),
     );
   }

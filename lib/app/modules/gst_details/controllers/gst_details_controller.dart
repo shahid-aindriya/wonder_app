@@ -13,10 +13,10 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/bank_details/views/bank_details_view.dart';
-import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 import 'package:wonder_app/app/modules/store_details/controllers/store_details_controller.dart';
 
 import '../../../data/urls.dart';
+import '../../bottom_bar/views/bottom_bar_view.dart';
 import '../model/shop_add_response.dart';
 
 class GstDetailsController extends GetxController {
@@ -132,7 +132,7 @@ class GstDetailsController extends GetxController {
           storeDetailsController.shopImage = '';
           isLoading.value = false;
         } else {
-          Get.offAll(InvoiceView());
+          Get.offAll(BottombarView());
           MotionToast.error(
             dismissable: true,
             enableAnimation: false,

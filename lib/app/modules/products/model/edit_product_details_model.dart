@@ -34,24 +34,26 @@ class EditProductData {
   String price;
   String quantity;
   int categoryId;
-  String category;
-  int subCategoryId;
-  String subCategory;
+  dynamic category;
+  dynamic subCategoryId;
+  dynamic subCategory;
   String featuredImage;
-  String discount;
-  String discountType;
+  dynamic discount;
+  dynamic discountType;
   bool isFeatured;
   bool active;
   int shopId;
   int vendorId;
   dynamic description;
-  String shortDescription;
-  String tax;
+  dynamic shortDescription;
+  dynamic tax;
   dynamic taxType;
-  String tags;
+  dynamic tags;
   bool returnAvailablility;
-  String deliveryCharge;
-  List<dynamic> reasonIds;
+  dynamic deliveryCharge;
+  dynamic commission;
+  dynamic noOfReturnDays;
+  List<ReasonId> reasonIds;
   List<EditAttribute> attributes;
 
   EditProductData({
@@ -78,6 +80,8 @@ class EditProductData {
     required this.tags,
     required this.returnAvailablility,
     required this.deliveryCharge,
+    required this.commission,
+    required this.noOfReturnDays,
     required this.reasonIds,
     required this.attributes,
   });
@@ -107,9 +111,11 @@ class EditProductData {
         tags: json["tags"],
         returnAvailablility: json["return_availablility"],
         deliveryCharge: json["delivery_charge"],
-        reasonIds: List<dynamic>.from(json["reason_ids"].map((x) => x)),
-        attributes: List<EditAttribute>.from(
-            json["attributes"].map((x) => EditAttribute.fromJson(x))),
+        commission: json["commission"],
+        noOfReturnDays: json["no_of_return_days"],
+        reasonIds: List<ReasonId>.from(
+            json["reason_ids"].map((x) => ReasonId.fromJson(x))),
+        attributes: List<EditAttribute>.from(json["attributes"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -136,8 +142,10 @@ class EditProductData {
         "tags": tags,
         "return_availablility": returnAvailablility,
         "delivery_charge": deliveryCharge,
-        "reason_ids": List<dynamic>.from(reasonIds.map((x) => x)),
-        "attributes": List<dynamic>.from(attributes.map((x) => x.toJson())),
+        "commission": commission,
+        "no_of_return_days": noOfReturnDays,
+        "reason_ids": List<dynamic>.from(reasonIds.map((x) => x.toJson())),
+        "attributes": List<dynamic>.from(attributes.map((x) => x)),
       };
 }
 
@@ -166,5 +174,25 @@ class EditAttribute {
         "attribute_id": attributeId,
         "attribute": attribute,
         "value": value,
+      };
+}
+
+class ReasonId {
+  int id;
+  String title;
+
+  ReasonId({
+    required this.id,
+    required this.title,
+  });
+
+  factory ReasonId.fromJson(Map<String, dynamic> json) => ReasonId(
+        id: json["id"],
+        title: json["title"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "title": title,
       };
 }

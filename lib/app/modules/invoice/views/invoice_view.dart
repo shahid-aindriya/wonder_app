@@ -13,8 +13,8 @@ import 'package:wonder_app/app/modules/invoice/widgets/search_invoice.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/verifed_invoice/verified_invoices.dart';
 
 import '../../add_invoice/controllers/add_invoice_controller.dart';
-import '../../choose_vendor/views/choose_vendor_view.dart';
 import '../../notifications/views/notifications_view.dart';
+import '../../orders/controllers/orders_controller.dart';
 import '../../products/controllers/products_controller.dart';
 import '../controllers/invoice_controller.dart';
 import '../widgets/drawer_tab.dart';
@@ -78,7 +78,7 @@ class InvoiceView extends GetView<InvoiceController> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: FutureBuilder(
-                      future: addInvoiceController.getListOfShops(),
+                      future: invoiceController.getListOfShops(),
                       builder: (contextsd, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -179,8 +179,9 @@ class InvoiceView extends GetView<InvoiceController> {
                                   await invoiceController.getDueData();
                                   await productsController
                                       .getListOfPrdoucts(value);
+                                  await ordersController.getListOfOrders(value);
                                 },
-                                items: addInvoiceController.shopLists.value
+                                items: invoiceController.shopLists.value
                                     .map((data) {
                                   return DropdownMenuItem(
                                       value: data.id.toString(),
@@ -197,22 +198,22 @@ class InvoiceView extends GetView<InvoiceController> {
                         });
                       }),
                 ),
-                Container(
-                  child: InkWell(
-                    onTap: () {
-                      Get.to(ChooseVendorView());
-                    },
-                    child: SvgPicture.asset(
-                      "assets/images/rupee_icon.svg",
-                      color: Color.fromARGB(
-                        255,
-                        255,
-                        184,
-                        0,
-                      ),
-                    ),
-                  ),
-                ),
+                // Container(
+                //   child: InkWell(
+                //     onTap: () {
+                //       Get.to(ChooseVendorView());
+                //     },
+                //     child: SvgPicture.asset(
+                //       "assets/images/rupee_icon.svg",
+                //       color: Color.fromARGB(
+                //         255,
+                //         255,
+                //         184,
+                //         0,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Container(
                   decoration: BoxDecoration(),
                   child: InkWell(

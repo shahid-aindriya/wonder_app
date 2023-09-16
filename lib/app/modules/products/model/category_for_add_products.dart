@@ -32,12 +32,14 @@ class Category {
   int id;
   dynamic name;
   dynamic description;
+  dynamic commission;
   dynamic image;
 
   Category({
     required this.id,
     required this.name,
     required this.description,
+    required this.commission,
     required this.image,
   });
 
@@ -45,6 +47,7 @@ class Category {
         id: json["id"],
         name: json["name"],
         description: json["description"],
+        commission: json["commission"],
         image: json["image"],
       );
 
@@ -52,6 +55,7 @@ class Category {
         "id": id,
         "name": name,
         "description": description,
+        "commission": commission,
         "image": image,
       };
 }

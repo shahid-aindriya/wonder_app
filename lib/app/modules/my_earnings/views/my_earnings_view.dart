@@ -56,7 +56,7 @@ class MyEarningsView extends GetView<MyEarningsController> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: FutureBuilder(
-                    future: addInvoiceController.getListOfShops(),
+                    future: invoiceController.getListOfShops(),
                     builder: (contextsd, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container(
@@ -150,8 +150,8 @@ class MyEarningsView extends GetView<MyEarningsController> {
                                     .ondropDownChangedInvoice(value);
                                 await invoiceController.getDueData();
                               },
-                              items: addInvoiceController.shopLists.value
-                                  .map((data) {
+                              items:
+                                  invoiceController.shopLists.value.map((data) {
                                 return DropdownMenuItem(
                                     value: data.id.toString(),
                                     child: Padding(

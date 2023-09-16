@@ -56,31 +56,31 @@ class ShopDatum {
     required this.phone2,
   });
 
-  int id;
-  String name;
-  int categoryId;
-  String category;
-  String gstNumber;
-  String licenseNumber;
-  String address;
-  String location;
-  String latitude;
-  String longitude;
-  String radius;
-  bool isFeatured;
-  String featuredImage;
-  String gstImage;
-  String licenseImage;
-  String commission;
-  String walletAmount;
-  String status;
+  dynamic id;
+  dynamic name;
+  dynamic categoryId;
+  dynamic category;
+  dynamic gstNumber;
+  dynamic licenseNumber;
+  dynamic address;
+  dynamic location;
+  dynamic latitude;
+  dynamic longitude;
+  dynamic radius;
+  dynamic isFeatured;
+  dynamic featuredImage;
+  dynamic gstImage;
+  dynamic licenseImage;
+  dynamic commission;
+  dynamic walletAmount;
+  dynamic status;
   dynamic openingTime;
   dynamic closingTime;
   dynamic websiteUrl;
-  String upiId;
-  String gstPct;
-  String phone1;
-  String phone2;
+  dynamic upiId;
+  dynamic gstPct;
+  dynamic phone1;
+  dynamic phone2;
   BankData bankData;
 
   factory ShopDatum.fromJson(Map<String, dynamic> json) => ShopDatum(
@@ -151,15 +151,15 @@ class BankData {
   });
 
   dynamic bankId;
-  String name;
-  String accountNumber;
-  String accountType;
-  String ifscCode;
-  String chequeCopy;
+  dynamic name;
+  dynamic accountNumber;
+  dynamic accountType;
+  dynamic ifscCode;
+  dynamic chequeCopy;
   dynamic shopId;
-  String shopName;
+  dynamic shopName;
   dynamic vendorId;
-  String vendorName;
+  dynamic vendorName;
 
   factory BankData.fromJson(Map<String, dynamic> json) => BankData(
         bankId: json["bank_id"] ?? "null",

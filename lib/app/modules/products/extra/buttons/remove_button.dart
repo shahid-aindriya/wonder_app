@@ -6,16 +6,16 @@ class RemoveButton extends StatelessWidget {
   RemoveButton(
       {super.key,
       required this.productsController,
-      required this.visibility,
+      this.visibility,
       required this.onTap});
 
   final ProductsController productsController;
-  bool visibility;
+  dynamic visibility;
   final Function() onTap;
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: visibility,
+      visible: visibility ?? true,
       child: Container(
         height: 30,
         decoration: BoxDecoration(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
@@ -11,17 +13,17 @@ import '../../invoice/views/invoice_view.dart';
 import '../../invoice/widgets/drawer_tab.dart';
 import '../../invoice/widgets/notification_icon.dart';
 import '../../notifications/views/notifications_view.dart';
+import '../../products/controllers/products_controller.dart';
 import '../controllers/orders_controller.dart';
 import '../extra/order_details_view.dart';
 
 class OrdersView extends GetView<OrdersController> {
   OrdersView({Key? key}) : super(key: key);
-  final OrdersController ordersController = Get.put(OrdersController());
+
   final AddInvoiceController addInvoiceController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
-    Container(
+    return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment(2, 1.0548897981643677),
@@ -58,7 +60,7 @@ class OrdersView extends GetView<OrdersController> {
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: FutureBuilder(
-                    future: addInvoiceController.getListOfShops(),
+                    future: invoiceController.getListOfShops(),
                     builder: (contextsd, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Container(
@@ -151,9 +153,12 @@ class OrdersView extends GetView<OrdersController> {
                                 await invoiceController
                                     .ondropDownChangedInvoice(value);
                                 await invoiceController.getDueData();
+                                await productsController
+                                    .getListOfPrdoucts(value);
+                                await ordersController.getListOfOrders(value);
                               },
-                              items: addInvoiceController.shopLists.value
-                                  .map((data) {
+                              items:
+                                  invoiceController.shopLists.value.map((data) {
                                 return DropdownMenuItem(
                                     value: data.id.toString(),
                                     child: Padding(
@@ -189,7 +194,10 @@ class OrdersView extends GetView<OrdersController> {
           body: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 5.w, top: 20, bottom: 10),
+                padding: EdgeInsets.only(
+                  left: 5.w,
+                  top: 20,
+                ),
                 child: Row(
                   children: [
                     Text(
@@ -200,220 +208,293 @@ class OrdersView extends GetView<OrdersController> {
                   ],
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: 4.w,
-                ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          ordersController.selectCard(1);
-                        },
-                        child: Obx(() {
-                          return select_card(
-                            textColor: ordersController.selectedCard.value != 1
-                                ? Color.fromARGB(255, 81, 90, 197)
-                                : Colors.white,
-                            color: ordersController.selectedCard.value == 1
-                                ? Color.fromARGB(255, 81, 90, 197)
-                                : Colors.white,
-                            text: "All",
-                          );
-                        }),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          ordersController.selectCard(2);
-                        },
-                        child: Obx(() {
-                          return select_card(
-                            textColor: ordersController.selectedCard.value != 2
-                                ? Color.fromARGB(255, 81, 90, 197)
-                                : Colors.white,
-                            color: ordersController.selectedCard.value == 2
-                                ? Color.fromARGB(255, 81, 90, 197)
-                                : Colors.white,
-                            text: "Pending",
-                          );
-                        }),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          ordersController.selectCard(3);
-                        },
-                        child: Obx(() {
-                          return select_card(
-                            textColor: ordersController.selectedCard.value != 3
-                                ? Color.fromARGB(255, 81, 90, 197)
-                                : Colors.white,
-                            color: ordersController.selectedCard.value == 3
-                                ? Color.fromARGB(255, 81, 90, 197)
-                                : Colors.white,
-                            text: "Processing",
-                          );
-                        }),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      InkWell(
-                        onTap: () {
-                          ordersController.selectCard(4);
-                        },
-                        child: Obx(() {
-                          return select_card(
-                            textColor: ordersController.selectedCard.value != 4
-                                ? Color.fromARGB(255, 81, 90, 197)
-                                : Colors.white,
-                            color: ordersController.selectedCard.value == 4
-                                ? Color.fromARGB(255, 81, 90, 197)
-                                : Colors.white,
-                            text: "Delivered",
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(
+              //     left: 4.w,
+              //   ),
+              //   child: SingleChildScrollView(
+              //     scrollDirection: Axis.horizontal,
+              //     child: Row(
+              //       children: [
+              //         InkWell(
+              //           onTap: () {
+              //             ordersController.selectCard(1);
+              //           },
+              //           child: Obx(() {
+              //             return select_card(
+              //               textColor: ordersController.selectedCard.value != 1
+              //                   ? Color.fromARGB(255, 81, 90, 197)
+              //                   : Colors.white,
+              //               color: ordersController.selectedCard.value == 1
+              //                   ? Color.fromARGB(255, 81, 90, 197)
+              //                   : Colors.white,
+              //               text: "All",
+              //             );
+              //           }),
+              //         ),
+              //         SizedBox(
+              //           width: 10,
+              //         ),
+              //         InkWell(
+              //           onTap: () {
+              //             ordersController.selectCard(2);
+              //           },
+              //           child: Obx(() {
+              //             return select_card(
+              //               textColor: ordersController.selectedCard.value != 2
+              //                   ? Color.fromARGB(255, 81, 90, 197)
+              //                   : Colors.white,
+              //               color: ordersController.selectedCard.value == 2
+              //                   ? Color.fromARGB(255, 81, 90, 197)
+              //                   : Colors.white,
+              //               text: "Pending",
+              //             );
+              //           }),
+              //         ),
+              //         SizedBox(
+              //           width: 10,
+              //         ),
+              //         InkWell(
+              //           onTap: () {
+              //             ordersController.selectCard(3);
+              //           },
+              //           child: Obx(() {
+              //             return select_card(
+              //               textColor: ordersController.selectedCard.value != 3
+              //                   ? Color.fromARGB(255, 81, 90, 197)
+              //                   : Colors.white,
+              //               color: ordersController.selectedCard.value == 3
+              //                   ? Color.fromARGB(255, 81, 90, 197)
+              //                   : Colors.white,
+              //               text: "Processing",
+              //             );
+              //           }),
+              //         ),
+              //         SizedBox(
+              //           width: 10,
+              //         ),
+              //         InkWell(
+              //           onTap: () {
+              //             ordersController.selectCard(4);
+              //           },
+              //           child: Obx(() {
+              //             return select_card(
+              //               textColor: ordersController.selectedCard.value != 4
+              //                   ? Color.fromARGB(255, 81, 90, 197)
+              //                   : Colors.white,
+              //               color: ordersController.selectedCard.value == 4
+              //                   ? Color.fromARGB(255, 81, 90, 197)
+              //                   : Colors.white,
+              //               text: "Delivered",
+              //             );
+              //           }),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
-              Expanded(
-                child: ListView.separated(
-                    separatorBuilder: (context, index) {
-                      return SizedBox(
-                        height: 5,
-                      );
-                    },
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15.0, left: 15, right: 15, bottom: 15),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Order#786876766554",
-                                      style: GoogleFonts.roboto(fontSize: 18),
-                                    ),
-                                    Text(
-                                      "₹260",
-                                      style: GoogleFonts.roboto(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color:
-                                              Color.fromARGB(255, 81, 90, 197)),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
+              Obx(() {
+                return ordersController.ordersList.isEmpty
+                    ? Lottie.asset("assets/images/13659-no-data.json")
+                    : Expanded(
+                        child: Obx(() {
+                          return ListView.separated(
+                              separatorBuilder: (context, index) {
+                                return SizedBox(
                                   height: 5,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "12:05 PM | Jan 5",
-                                      style: GoogleFonts.roboto(
-                                          color: Colors.blueGrey, fontSize: 16),
-                                    ),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color:
-                                              Color.fromARGB(255, 81, 90, 197)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 7.0,
-                                            left: 11,
-                                            right: 11,
-                                            top: 6),
-                                        child: Text(
-                                          "Processing",
-                                          style: GoogleFonts.roboto(
-                                            color: Colors.white,
-                                            fontSize: 15,
+                                );
+                              },
+                              itemCount: ordersController.ordersList.length,
+                              itemBuilder: (context, index) {
+                                final data = ordersController.ordersList[index];
+                                String formattedDate =
+                                    DateFormat("h:mm a | MMM d").format(
+                                        DateTime.parse(
+                                            data.createdAt.toString()));
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 15.0,
+                                          left: 15,
+                                          right: 15,
+                                          bottom: 15),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Order ${data.orderNumber}",
+                                                style: GoogleFonts.roboto(
+                                                    fontSize: 18),
+                                              ),
+                                              Text(
+                                                "₹${data.price}",
+                                                style: GoogleFonts.roboto(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color.fromARGB(
+                                                        255, 81, 90, 197)),
+                                              ),
+                                            ],
                                           ),
-                                        ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                formattedDate,
+                                                style: GoogleFonts.roboto(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 16),
+                                              ),
+                                              InkWell(
+                                                onTap:
+                                                    data.status == "Completed"
+                                                        ? null
+                                                        : () {
+                                                            ordersController
+                                                                .showReturnPopUp(
+                                                                    context,
+                                                                    orderId:
+                                                                        data.id);
+                                                          },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                       color: Color.fromARGB(
+                                                          255, 81, 90, 197)),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 7.0,
+                                                            left: 11,
+                                                            right: 11,
+                                                            top: 6),
+                                                    child: Row(
+                                                      children: [
+                                                        Obx(() {
+                                                          return Text(
+                                                            ordersController
+                                                                .ordersList[
+                                                                    index]
+                                                                .status
+                                                                .toString(),
+                                                            style: GoogleFonts
+                                                                .roboto(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15,
+                                                            ),
+                                                          );
+                                                        }),
+                                                        Icon(
+                                                          Icons
+                                                              .mode_edit_outlined,
+                                                          size: 20,
+                                                          color: Colors.white,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Wrap(
+                                                crossAxisAlignment:
+                                                    WrapCrossAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    height: 6,
+                                                    width: 6,
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color:
+                                                            data.paymentMethod ==
+                                                                    "Online"
+                                                                ? Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        1,
+                                                                        134,
+                                                                        54)
+                                                                : Colors.red),
+                                                  ),
+                                                  Text(
+                                                      data.paymentMethod ==
+                                                              "Online"
+                                                          ? " Paid"
+                                                          : " Un-Paid",
+                                                      style: GoogleFonts.roboto(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color:
+                                                            data.paymentMethod ==
+                                                                    "Online"
+                                                                ? Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        1,
+                                                                        134,
+                                                                        54)
+                                                                : Colors.red,
+                                                        fontSize: 15,
+                                                      ))
+                                                ],
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  Get.to(OrderDetailsView(
+                                                    id: data.id,
+                                                  ));
+                                                },
+                                                child: Text("View Details",
+                                                    style: GoogleFonts.roboto(
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationStyle:
+                                                          TextDecorationStyle
+                                                              .solid,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: Color.fromARGB(
+                                                          255, 81, 90, 197),
+                                                      fontSize: 15,
+                                                    )),
+                                              )
+                                            ],
+                                          )
+                                        ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Wrap(
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.center,
-                                      children: [
-                                        Container(
-                                          height: 6,
-                                          width: 6,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Color.fromARGB(
-                                                  255, 1, 134, 54)),
-                                        ),
-                                        Text(" Paid",
-                                            style: GoogleFonts.roboto(
-                                              fontWeight: FontWeight.w500,
-                                              color: Color.fromARGB(
-                                                  255, 1, 134, 54),
-                                              fontSize: 15,
-                                            ))
-                                      ],
                                     ),
-                                    InkWell(
-                                      onTap: () {
-                                        Get.to(OrderDetailsView());
-                                      },
-                                      child: Text("View Details",
-                                          style: GoogleFonts.roboto(
-                                            decoration:
-                                                TextDecoration.underline,
-                                            decorationStyle:
-                                                TextDecorationStyle.solid,
-                                            fontWeight: FontWeight.w300,
-                                            color: Color.fromARGB(
-                                                255, 81, 90, 197),
-                                            fontSize: 15,
-                                          )),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                                  ),
+                                );
+                              });
+                        }),
                       );
-                    }),
-              )
+              })
             ],
           )),
     );

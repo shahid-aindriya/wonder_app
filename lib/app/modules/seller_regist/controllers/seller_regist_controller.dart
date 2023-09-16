@@ -13,6 +13,8 @@ import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:wonder_app/app/data/urls.dart';
 
+import '../model/business_rep_model.dart';
+
 class SellerRegistController extends GetxController {
   //TODO: Implement SellerRegistController
 
@@ -162,14 +164,14 @@ class SellerRegistController extends GetxController {
     update();
   }
 
-  RxList<dynamic> repsList = <dynamic>[].obs;
+  RxList<ListBusinessRep> repsList = <ListBusinessRep>[].obs;
   getReps() async {
     final request = await http
         .get(Uri.parse("${baseUrl.value}all-business-rep/"), headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
-      final data = jsonDecode(request.body);
-      repsList.assignAll(data['list_business_rep']);
+      final businessRepModel = businessRepModelFromJson(request.body);
+      repsList.assignAll(businessRepModel.listBusinessRep);
     }
   }
 

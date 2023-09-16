@@ -60,6 +60,8 @@ import '../modules/success/bindings/success_binding.dart';
 import '../modules/success/views/success_view.dart';
 import '../modules/support_request/bindings/support_request_binding.dart';
 import '../modules/support_request/views/support_request_view.dart';
+import '../modules/taxes/bindings/taxes_binding.dart';
+import '../modules/taxes/views/taxes_view.dart';
 import '../modules/terms_conditions/bindings/terms_conditions_binding.dart';
 import '../modules/terms_conditions/views/terms_conditions_view.dart';
 import '../modules/upload_manually/bindings/upload_manually_binding.dart';
@@ -244,8 +246,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CHOOSE_VENDOR,
-      page: () =>  ChooseVendorView(),
+      page: () => ChooseVendorView(),
       binding: ChooseVendorBinding(),
+    ),
+    GetPage(
+      name: _Paths.TAXES,
+      page: () => const TaxesView(),
+      binding: TaxesBinding(),
     ),
   ];
 }

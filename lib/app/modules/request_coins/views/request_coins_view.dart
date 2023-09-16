@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/modules/add_invoice/controllers/add_invoice_controller.dart';
+import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
 import '../../add_invoice/views/add_invoice_view.dart';
 import '../../add_invoice/widgets/searcg.dart';
@@ -22,7 +23,7 @@ class RequestCoinsView extends GetView<RequestCoinsController> {
   final TextEditingController selectUserId = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    addInvoiceController.getListOfShops();
+    invoiceController.getListOfShops();
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
@@ -178,7 +179,7 @@ class RequestCoinsView extends GetView<RequestCoinsController> {
                           value: value,
                         );
                       },
-                      items: addInvoiceController.shopLists.value.map((data) {
+                      items: invoiceController.shopLists.value.map((data) {
                         return DropdownMenuItem(
                             value: data.id.toString(),
                             child: Padding(

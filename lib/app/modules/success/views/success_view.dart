@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/colors.dart';
-import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
+import '../../bottom_bar/views/bottom_bar_view.dart';
 import '../controllers/success_controller.dart';
 
 class SuccessView extends GetView<SuccessController> {
@@ -141,7 +141,7 @@ class SuccessView extends GetView<SuccessController> {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.to(InvoiceView());
+                    Get.offAll(BottombarView());
                   },
                   child: Container(
                     width: 185,

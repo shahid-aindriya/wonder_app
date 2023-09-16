@@ -37,7 +37,7 @@ class AddButton extends StatelessWidget {
               elevation: MaterialStateProperty.all(0),
               backgroundColor: MaterialStateProperty.all(Colors.transparent)),
           onPressed: onClick,
-          child: Text("Add")),
+          child: Text("Add Attribute")),
     );
   }
 }

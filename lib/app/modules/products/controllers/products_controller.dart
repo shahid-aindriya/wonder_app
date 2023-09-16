@@ -38,6 +38,29 @@ class ProductsController extends GetxController {
   }
 
   void increment() => count.value++;
+
+  RxInt quantityVal = (-1).obs;
+  RxString commission = ''.obs;
+  selectQuantity(value) {
+    if (value == false &&
+        quantityVal.value > 1 &&
+        quantityVal.value > int.tryParse(commission.value.toString())!) {
+      quantityVal.value--;
+    } else if (value == true) {
+      quantityVal.value++;
+    }
+  }
+
+  calculateCommission(id) {
+    for (var element in categoryLists) {
+      if (id == element.id) {
+        commission.value = element.commission.toString();
+
+        quantityVal.value = int.tryParse(element.commission.toString())!;
+      }
+    }
+  }
+
   var switchValue = false.obs;
   switchChange(value, id) async {
     final body = {"product_id": id, "active": value == true ? "true" : "false"};
@@ -57,26 +80,40 @@ class ProductsController extends GetxController {
   List<String> availabilityList = ['Available', 'Not-Available'];
   List<String> typeList = ['% Percentage', 'Amount'];
   List<String> categoryList = ['Detergents', 'Soaps'];
-
+  List<String> deliveryTypeList = ['Vendor On Delivery', 'Wonder on Delivery'];
   List<String> sortList = ['Availability', 'Relevence'];
   dynamic selectedValue;
   dynamic sortValue;
 
   dynamic compressedImage;
   String profileImage = '';
+  String editImage = "";
   File? image;
-  pickimage(bool value) async {
+  File? editImageFile;
+  pickimage(bool value, addEdit) async {
     final pimage = await ImagePicker().pickImage(
         source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
-    } else {
+    } else if (addEdit == "Add") {
       image = File(pimage.path);
       final ims = await sellerRegistController.cropsImage(pimage.path);
       if (ims != null) {
         final bytes = File(ims.path).readAsBytesSync();
         compressedImage = testComporessList(bytes);
         profileImage = base64Encode(await compressedImage);
+        update();
+        return;
+      } else {
+        return null;
+      }
+    } else {
+      editImageFile = File(pimage.path);
+      final ims = await sellerRegistController.cropsImage(pimage.path);
+      if (ims != null) {
+        final bytes = File(ims.path).readAsBytesSync();
+        compressedImage = testComporessList(bytes);
+        editImage = base64Encode(await compressedImage);
         update();
         return;
       } else {
@@ -100,7 +137,7 @@ class ProductsController extends GetxController {
     return result.toList();
   }
 
-  showPopup(context) {
+  showPopup(context, addEdit) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -112,7 +149,7 @@ class ProductsController extends GetxController {
                   leading: Icon(Icons.camera_alt),
                   title: Text('Take a photo'),
                   onTap: () {
-                    pickimage(true);
+                    pickimage(true, addEdit);
                     // Handle the 'Take a photo' option
                     Navigator.of(context).pop();
                   },
@@ -121,7 +158,7 @@ class ProductsController extends GetxController {
                   leading: Icon(Icons.image),
                   title: Text('Choose from gallery'),
                   onTap: () {
-                    pickimage(false);
+                    pickimage(false, addEdit);
                     // Handle the 'Choose from gallery' option
                     Navigator.of(context).pop();
                   },
@@ -136,6 +173,7 @@ class ProductsController extends GetxController {
 
   removeImage() {
     profileImage = "";
+    editImage = "";
     update();
   }
 
@@ -144,7 +182,7 @@ class ProductsController extends GetxController {
     final request = await http.get(
         Uri.parse("${baseUrl.value}get-all-product-categories/"),
         headers: headers.value);
-    // log(request.body);
+    log(request.body);
     if (request.statusCode == 201) {
       final categoryForAddingProducts =
           categoryForAddingProductsFromJson(request.body);
@@ -159,13 +197,13 @@ class ProductsController extends GetxController {
         Uri.parse("${baseUrl.value}get-all-product-sub-categories/"),
         body: jsonEncode(body),
         headers: headers.value);
-    // log(request.body);
+    log(request.body);
     if (request.statusCode == 201) {
       subCatId = null;
       final subCategoryForAddingProducts =
           subCategoryForAddingProductsFromJson(request.body);
       subCategoryLists.assignAll(subCategoryForAddingProducts.categories);
-      subCatId = subCategoryLists.first.id;
+      subCatId = subCategoryLists.isNotEmpty ? subCategoryLists.first.id : null;
       update();
     }
   }
@@ -274,6 +312,8 @@ class ProductsController extends GetxController {
   dynamic catId;
   dynamic subCatId;
   dynamic returnAvailability;
+  dynamic deliveryTypeId;
+
   var addLoading = false.obs;
   addProducts(context) async {
     final request = http.MultipartRequest(
@@ -284,21 +324,25 @@ class ProductsController extends GetxController {
     request.fields['name'] = nameEditingController.text.toString();
     request.fields['shop_id'] = invoiceController.selectShopId.toString();
     request.fields['category_id'] = catId.toString();
-    request.fields['sub_category_id'] = subCatId.toString();
+    subCatId == null
+        ? null
+        : request.fields['sub_category_id'] = subCatId.toString();
     request.fields['price'] = priceEditingController.text.toString();
     request.fields['quantity'] = quantityEditingController.text.toString();
     request.fields['short_description'] =
         descriptionEditingController.text.toString();
-    request.fields['tax'] = taxEditingController.text.toString();
+    // request.fields['tax'] = taxEditingController.text.toString();
     request.fields['discount'] = discountController.text.toString();
     request.fields['discount_type'] = discType.toString();
-    request.fields['tax_type'] = taxType.toString();
+    // request.fields['tax_type'] = taxType.toString();
     request.fields['return_reason_ids'] = idOfREturnLists.join(",");
     request.fields['attributes'] = jsonEncode(idOfAttribute);
     request.fields['return_availablility'] = returnAvailability.toString();
     request.fields['tags'] = tagsController.text.toString();
-    request.fields['delivery_charge'] =
-        deliveryChargeController.text.toString();
+    request.fields['tags'] = tagsController.text.toString();
+    commission.isEmpty
+        ? null
+        : request.fields['commission'] = quantityVal.value.toString();
     image != null
         ? request.files
             .add(await http.MultipartFile.fromPath("image", image!.path))
@@ -404,7 +448,8 @@ class ProductsController extends GetxController {
       }
 
       editAttributesList.assignAll(editProductsList.first.attributes);
-      listCount.value = editAttributesList.length;
+
+      listCount.value = editAttributesList.value.length;
       // for (var itemData in editProductsList.first.attributes) {
       //   var attributeId = itemData.attributeId;
       //   var value = itemData.value;
@@ -468,25 +513,50 @@ class ProductsController extends GetxController {
     update(); // Assuming this triggers a rebuild of the UI using GetX
   }
 
-  editProductDetails({
-    productId,
-    name,
-    price,
-    categoryId,
-    subCatId,
-    quantity,
-    shortDescription,
-    tax,
-    taxType,
-    discount,
-    discType,
-  }) async {
+  RxInt editQuantityVal = (-1).obs;
+  RxString editCommission = ''.obs;
+  editSelectQuantity(value) {
+    if (value == false &&
+        editQuantityVal.value > 1 &&
+        editQuantityVal.value >
+            int.tryParse(editCommission.value.toString())!) {
+      quantityVal.value--;
+    } else if (value == true) {
+      editQuantityVal.value++;
+    }
+  }
+
+  editCalculateCommission(id) {
+    for (var element in categoryLists) {
+      if (id == element.id) {
+        editCommission.value = element.commission.toString();
+
+        editQuantityVal.value = int.tryParse(element.commission.toString())!;
+      }
+    }
+  }
+
+  var editLoading = false.obs;
+  editProductDetails(
+      {productId,
+      name,
+      price,
+      categoryId,
+      subCatId,
+      quantity,
+      shortDescription,
+      // tax,
+      // taxType,
+      discount,
+      discType,
+      context,
+      tags}) async {
     final request = http.MultipartRequest(
       'POST',
       Uri.parse("${baseUrl.value}vendor-edit-shop-product/"),
     );
-
-    log(editAttributesList.toString());
+    editLoading.value = true;
+    log("attribute:${editAttributesList.value}");
     request.fields["product_id"] = productId;
     request.fields["name"] = name;
     request.fields["shop_id"] = invoiceController.selectShopId;
@@ -495,17 +565,79 @@ class ProductsController extends GetxController {
     request.fields["price"] = price;
     request.fields["quantity"] = quantity;
     request.fields["short_description"] = shortDescription;
-    request.fields["tax"] = "12";
-    request.fields["tax_type"] = taxType;
+    // request.fields["tax"] = tax;
+    // request.fields["tax_type"] = taxType;
     request.fields["discount"] = discount;
     request.fields["discount_type"] = discType;
-
+    request.fields["tags"] = tags;
+    editCommission.value.isEmpty
+        ? null
+        : request.fields['commission'] = editQuantityVal.value.toString();
     request.fields["return_reason_ids"] = editIdOfReturn.join(",");
     request.fields["attributes"] = jsonEncode(editAttributesList.value);
-
+    editImageFile != null
+        ? request.files.add(
+            await http.MultipartFile.fromPath("image", editImageFile!.path))
+        : null;
     final response = await request.send();
     final responseBody = await response.stream.bytesToString();
     log(response.statusCode.toString());
     log(responseBody.toString());
+    if (response.statusCode == 201) {
+      editLoading.value = false;
+      await getListOfPrdoucts(invoiceController.selectShopId);
+      productsController.listCount.value = 0;
+      productsController.editControllers.clear();
+      productsController.subCategoryLists.clear();
+      productsController.editAttributesList.clear();
+      Get.back();
+      MotionToast.success(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Success ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('Product updated Successfully'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(context);
+    } else {
+      editLoading.value = false;
+      Get.back();
+      MotionToast.error(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Error ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('Something went wrong'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(context);
+    }
+    editLoading.value = false;
+  }
+
+  deleteAttribute(id, productId) async {
+    log(productId.toString());
+    final body = {"attribute_id": id};
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-delete-product-attribute/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(request.body);
+    if (request.statusCode == 201) {
+      await getProductDetails(productId);
+    }
   }
 }

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/data/urls.dart';
+import 'package:wonder_app/app/modules/orders/controllers/orders_controller.dart';
 import 'package:wonder_app/app/modules/orders/views/orders_view.dart';
 
 class OrderDetailsView extends StatelessWidget {
-  const OrderDetailsView({super.key});
-
+  OrderDetailsView({super.key, required this.id});
+  final id;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,278 +57,342 @@ class OrderDetailsView extends StatelessWidget {
         ),
         body: ListView(
           children: [
-            Padding(
-              padding:
-                  EdgeInsets.only(left: 5.w, top: 20, bottom: 10, right: 5.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Order Details",
-                    style: GoogleFonts.roboto(
-                        fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                  select_card(
-                      color: Colors.white,
-                      text: "Download Invoice",
-                      textColor: Color.fromARGB(255, 81, 90, 197))
-                ],
-              ),
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.only(left: 4.w, right: 4.w, top: 20, bottom: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(117, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: 15.0, left: 4.w, right: 4.w, bottom: 20),
-                  child: Column(
+            FutureBuilder(
+                future: ordersController.orderDetails(id),
+                builder: (conte, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                        ],
+                      ),
+                    );
+                  }
+                  if (ordersController.orderDetailsList.isEmpty) {
+                    return Lottie.asset("assets/images/13659-no-data.json");
+                  }
+                  final data = ordersController.orderDetailsList.first;
+                  String formattedDate = DateFormat("h:mm a | MMM d")
+                      .format(DateTime.parse(data.createdAt.toString()));
+                  return Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Order#53153134645",
-                            style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black,
-                                fontSize: 18),
-                          ),
-                          Text("12:05 PM | Jan 5",
-                              style: GoogleFonts.roboto(
-                                  color: Colors.grey, fontSize: 14))
-                        ],
-                      ),
-                      Divider(
-                        thickness: 1,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.location_on_outlined),
-                          Text("   Delivery Address",
-                              style: GoogleFonts.roboto(fontSize: 14))
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Text("Thomas Anderson",
-                              style: GoogleFonts.roboto(
-                                  fontSize: 16, fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                      Text(
-                        "Gh 11321 Building, Buckingham Street, Borivali South, Mumbai , 400 004+91 85416 66564",
-                        style: GoogleFonts.roboto(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 16,
-                            wordSpacing: 1.4,
-                            height: 1.5),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.only(left: 4.w, right: 4.w, top: 10, bottom: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(117, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: 15.0, left: 4.w, right: 4.w, bottom: 20),
-                  child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Order Status",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                        select_card(
-                            color: Colors.white,
-                            text: "Order Accepted",
-                            textColor: Color.fromARGB(255, 81, 90, 197))
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Delivery Partner",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                        Text(
-                          "October 10, 2023",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Order Status",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                        Text(
-                          "October 10, 2023",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Payment Method",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                        Text(
-                          "Cash on Delivery",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Amount",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                        Text(
-                          "₹260",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Color(0xff4956b2)),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Payment Status",
-                          style: GoogleFonts.roboto(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 0, 0, 0)),
-                        ),
-                      ],
-                    ),
-                  ]),
-                ),
-              ),
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.only(top: 10, left: 4.w, right: 4.w, bottom: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Column(
-                        children: [
-                          Image.asset("assets/images/image 87.png"),
-                          SizedBox(
-                            height: 10,
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 5.w, top: 20, bottom: 10, right: 5.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Surf Excel Quick wash machine Specialist powder",
+                              "Order Details",
                               style: GoogleFonts.roboto(
                                   fontSize: 16, fontWeight: FontWeight.w500),
                             ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              "500g  Pack of 1",
-                              style: GoogleFonts.roboto(
-                                  fontSize: 14, color: Colors.blueGrey),
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "₹260",
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xff4956b2)),
-                                ),
-                              ],
-                            )
+                            // select_card(
+                            //     color: Colors.white,
+                            //     text: "Download Invoice",
+                            //     textColor: Color.fromARGB(255, 81, 90, 197))
                           ],
                         ),
-                      )
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 4.w, right: 4.w, top: 20, bottom: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(117, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 15.0, left: 4.w, right: 4.w, bottom: 20),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Order ${data.orderNumber}",
+                                      style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black,
+                                          fontSize: 18),
+                                    ),
+                                    Text(formattedDate,
+                                        style: GoogleFonts.roboto(
+                                            color: Colors.grey, fontSize: 14))
+                                  ],
+                                ),
+                                Divider(
+                                  thickness: 1,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Icon(Icons.location_on_outlined),
+                                    Text("   Delivery Address",
+                                        style: GoogleFonts.roboto(fontSize: 14))
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(data.userAddressData.name,
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500)),
+                                  ],
+                                ),
+                                Text(
+                                  "${data.userAddressData.houseName}, ${data.userAddressData.roadName}, ${data.userAddressData.landMark}, ${data.userAddressData.state}, ${data.userAddressData.pinCode}, ${data.userAddressData.phoneNumber} ",
+                                  style: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 16,
+                                      wordSpacing: 1.4,
+                                      height: 1.5),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 4.w, right: 4.w, top: 10, bottom: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(117, 255, 255, 255),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 15.0, left: 4.w, right: 4.w, bottom: 20),
+                            child: Column(children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Order Status",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                  ),
+                                  InkWell(
+                                    onTap: data.status == "Completed"
+                                        ? null
+                                        : () {
+                                            ordersController.showReturnPopUp(
+                                                context,
+                                                orderId: id);
+                                          },
+                                    child: select_card(
+                                        color: Colors.white,
+                                        text: data.status,
+                                        textColor:
+                                            Color.fromARGB(255, 81, 90, 197)),
+                                  )
+                                ],
+                              ),
+                              // SizedBox(
+                              //   height: 10,
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Text(
+                              //       "Delivery Partner",
+                              //       style: GoogleFonts.roboto(
+                              //           fontSize: 16,
+                              //           color: Color.fromARGB(255, 0, 0, 0)),
+                              //     ),
+                              //     Text(
+                              //       "October 10, 2023",
+                              //       style: GoogleFonts.roboto(
+                              //           fontSize: 16,
+                              //           fontWeight: FontWeight.w500,
+                              //           color: Color.fromARGB(255, 0, 0, 0)),
+                              //     ),
+                              //   ],
+                              // ),
+                              // SizedBox(
+                              //   height: 10,
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Text(
+                              //       "Order Status",
+                              //       style: GoogleFonts.roboto(
+                              //           fontSize: 16,
+                              //           color: Color.fromARGB(255, 0, 0, 0)),
+                              //     ),
+                              //     Text(
+                              //       data.,
+                              //       style: GoogleFonts.roboto(
+                              //           fontSize: 16,
+                              //           fontWeight: FontWeight.w500,
+                              //           color: Color.fromARGB(255, 0, 0, 0)),
+                              //     ),
+                              //   ],
+                              // ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Payment Method",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                  ),
+                                  Text(
+                                    data.paymentMethod,
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Amount",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                  ),
+                                  Text(
+                                    "₹${data.price}",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff4956b2)),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Payment Status",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                  ),
+                                  Text(
+                                    data.paymentStatus.toString(),
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff4956b2)),
+                                  ),
+                                ],
+                              ),
+                            ]),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 10, left: 4.w, right: 4.w, bottom: 20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          "$baseUrlForImage${data.productImage}",
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        data.productName,
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        data.orderNumber,
+                                        style: GoogleFonts.roboto(
+                                            fontSize: 14,
+                                            color: Colors.blueGrey),
+                                      ),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "₹${data.price}",
+                                            style: GoogleFonts.roboto(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff4956b2)),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-              ),
-            ),
+                  );
+                }),
           ],
         ),
       ),
