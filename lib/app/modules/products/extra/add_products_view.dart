@@ -17,6 +17,7 @@ class AddProductsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    productsController.deliveryTypeId = productsController.deliveryTypeList[0];
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -151,6 +152,19 @@ class AddProductsView extends StatelessWidget {
                             controller:
                                 productsController.deliveryChargeController,
                           )),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Net-Weight",
+                        style: GoogleFonts.roboto(fontSize: 12),
+                      ),
+                      Container(
+                          height: 35,
+                          child: TextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: productsController.netWeightController,
+                          )),
                       // SizedBox(
                       //   height: 20,
                       // ),
@@ -272,7 +286,6 @@ class AddProductsView extends StatelessWidget {
                                               return Text(
                                                 productsController
                                                     .quantityVal.value
-                                                    .toString()
                                                     .toString(),
                                                 style: TextStyle(
                                                     fontWeight:
@@ -361,7 +374,9 @@ class AddProductsView extends StatelessWidget {
                                         ),
                                       ));
                                 }).toList(),
-                                onChanged: (value) {},
+                                onChanged: (value) {
+                                  productsController.deliveryTypeId = value;
+                                },
                               )),
                         ],
                       ),

@@ -18,8 +18,7 @@ class MyEarningsView extends GetView<MyEarningsController> {
   final AddInvoiceController addInvoiceController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
-    Container(
+    return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment(2, 1.0548897981643677),

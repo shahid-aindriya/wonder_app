@@ -321,214 +321,228 @@ class ProductsView extends GetView<ProductsController> {
               child: Obx(() {
                 return productsController.productsLists.isEmpty
                     ? Lottie.asset("assets/images/13659-no-data.json")
-                    : ListView.builder(
-                        itemCount: productsController.productsLists.length,
-                        itemBuilder: (context, index) {
-                          final data = productsController.productsLists[index];
-                          return Padding(
-                            padding:
-                                EdgeInsets.only(top: 10, left: 4.w, right: 4.w),
-                            child: InkWell(
-                              onTap: () {
-                                Get.to(EditProductDetails(
-                                  id: data.id,
-                                ));
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Column(
+                    : RefreshIndicator(
+                        onRefresh: () async {
+                          await productsController.getListOfPrdoucts(
+                              invoiceController.selectShopId);
+                        },
+                        child: ListView.builder(
+                            itemCount: productsController.productsLists.length,
+                            itemBuilder: (contexts, index) {
+                              final data =
+                                  productsController.productsLists[index];
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    top: 10, left: 4.w, right: 4.w),
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.to(EditProductDetails(
+                                      id: data.id,
+                                    ));
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
                                         children: [
-                                          Container(
-                                            width: 20.w,
-                                            height: 80,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(
-                                                "$baseUrlForImage${data.featuredImage}",
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              productsController
-                                                  .removeItem(data.id);
-                                            },
-                                            child: Container(
-                                              decoration: BoxDecoration(
+                                          Column(
+                                            children: [
+                                              Container(
+                                                width: 20.w,
+                                                height: 80,
+                                                child: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
-                                                  color: Color.fromARGB(
-                                                      255, 81, 90, 197)),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 7.0,
-                                                    left: 11,
-                                                    right: 11,
-                                                    top: 6),
-                                                child: Text(
-                                                  "Remove item",
-                                                  style: GoogleFonts.roboto(
-                                                    color: Colors.white,
-                                                    fontSize: 15,
+                                                  child: Image.network(
+                                                    "$baseUrlForImage${data.featuredImage}",
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  productsController
+                                                      .dialogPopForAddInvoice(
+                                                          data.id, context);
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      color: Color.fromARGB(
+                                                          255, 81, 90, 197)),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 7.0,
+                                                            left: 11,
+                                                            right: 11,
+                                                            top: 6),
+                                                    child: Text(
+                                                      "Remove item",
+                                                      style: GoogleFonts.roboto(
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          SizedBox(width: 10),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  data.name,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Text(
+                                                  "Product id: ${data.id}",
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 14,
+                                                      color: Colors.blueGrey),
+                                                ),
+                                                SizedBox(
+                                                  height: 12,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Expanded(
+                                                      child: Column(
+                                                        children: [
+                                                          Text("Selling Price",
+                                                              style: GoogleFonts
+                                                                  .roboto(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .blueGrey)),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Text(
+                                                            "₹${data.price}",
+                                                            style: GoogleFonts.roboto(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        81,
+                                                                        90,
+                                                                        197)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        children: [
+                                                          Text("Quantity",
+                                                              style: GoogleFonts
+                                                                  .roboto(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .blueGrey)),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          Text(
+                                                            data.quantity,
+                                                            style: GoogleFonts.roboto(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        81,
+                                                                        90,
+                                                                        197)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        children: [
+                                                          Text("Status",
+                                                              style: GoogleFonts
+                                                                  .roboto(
+                                                                      fontSize:
+                                                                          12,
+                                                                      color: Colors
+                                                                          .blueGrey)),
+                                                          Container(
+                                                            height: 25,
+                                                            child: Obx(() {
+                                                              return Switch
+                                                                  .adaptive(
+                                                                activeColor: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        81,
+                                                                        90,
+                                                                        197),
+                                                                value: productsController
+                                                                    .productsLists[
+                                                                        index]
+                                                                    .active,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  productsController
+                                                                      .switchChange(
+                                                                          value,
+                                                                          data.id);
+                                                                },
+                                                              );
+                                                            }),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
                                             ),
                                           )
                                         ],
                                       ),
-                                      SizedBox(width: 10),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              data.name,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: GoogleFonts.roboto(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            SizedBox(
-                                              height: 8,
-                                            ),
-                                            Text(
-                                              "Product id: ${data.id}",
-                                              style: GoogleFonts.roboto(
-                                                  fontSize: 14,
-                                                  color: Colors.blueGrey),
-                                            ),
-                                            SizedBox(
-                                              height: 12,
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      Text("Selling Price",
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .blueGrey)),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        "₹${data.price}",
-                                                        style:
-                                                            GoogleFonts.roboto(
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        81,
-                                                                        90,
-                                                                        197)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      Text("Quantity",
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .blueGrey)),
-                                                      SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      Text(
-                                                        data.quantity,
-                                                        style:
-                                                            GoogleFonts.roboto(
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        81,
-                                                                        90,
-                                                                        197)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    children: [
-                                                      Text("Status",
-                                                          style: GoogleFonts
-                                                              .roboto(
-                                                                  fontSize: 12,
-                                                                  color: Colors
-                                                                      .blueGrey)),
-                                                      Container(
-                                                        height: 25,
-                                                        child: Obx(() {
-                                                          return Switch
-                                                              .adaptive(
-                                                            activeColor:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    81,
-                                                                    90,
-                                                                    197),
-                                                            value: productsController
-                                                                .productsLists[
-                                                                    index]
-                                                                .active,
-                                                            onChanged: (value) {
-                                                              productsController
-                                                                  .switchChange(
-                                                                      value,
-                                                                      data.id);
-                                                            },
-                                                          );
-                                                        }),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          );
-                        });
+                              );
+                            }),
+                      );
               }),
             )
           ],

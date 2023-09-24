@@ -29,21 +29,21 @@ class EditProductListModel {
 
 class EditProductData {
   int id;
-  String name;
-  String sku;
-  String price;
-  String quantity;
-  int categoryId;
+  dynamic name;
+  dynamic sku;
+  dynamic price;
+  dynamic quantity;
+  dynamic categoryId;
   dynamic category;
   dynamic subCategoryId;
   dynamic subCategory;
-  String featuredImage;
+  dynamic featuredImage;
   dynamic discount;
   dynamic discountType;
   bool isFeatured;
   bool active;
-  int shopId;
-  int vendorId;
+  dynamic shopId;
+  dynamic vendorId;
   dynamic description;
   dynamic shortDescription;
   dynamic tax;
@@ -111,11 +111,12 @@ class EditProductData {
         tags: json["tags"],
         returnAvailablility: json["return_availablility"],
         deliveryCharge: json["delivery_charge"],
-        commission: json["commission"],
+        commission: json["commission"] ?? "0",
         noOfReturnDays: json["no_of_return_days"],
         reasonIds: List<ReasonId>.from(
             json["reason_ids"].map((x) => ReasonId.fromJson(x))),
-        attributes: List<EditAttribute>.from(json["attributes"].map((x) => x)),
+        attributes: List<EditAttribute>.from(
+            json["attributes"].map((x) => EditAttribute.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -145,7 +146,7 @@ class EditProductData {
         "commission": commission,
         "no_of_return_days": noOfReturnDays,
         "reason_ids": List<dynamic>.from(reasonIds.map((x) => x.toJson())),
-        "attributes": List<dynamic>.from(attributes.map((x) => x)),
+        "attributes": List<dynamic>.from(attributes.map((x) => x.toJson())),
       };
 }
 
@@ -178,8 +179,8 @@ class EditAttribute {
 }
 
 class ReasonId {
-  int id;
-  String title;
+  dynamic id;
+  dynamic title;
 
   ReasonId({
     required this.id,

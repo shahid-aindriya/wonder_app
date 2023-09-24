@@ -42,7 +42,9 @@ class _EditProductDetailsState extends State<EditProductDetails> {
   final TextEditingController discountController = TextEditingController();
 
   final TextEditingController tagsController = TextEditingController();
-
+  final TextEditingController deliveryChargeController =
+      TextEditingController();
+  final TextEditingController netWeightController = TextEditingController();
   dynamic editTaxType;
 
   dynamic editDiscountType;
@@ -125,10 +127,11 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                 quantityEditingController.text = data.quantity;
                 discountController.text = data.discount;
                 tagsController.text = data.tags;
+                deliveryChargeController.text = data.deliveryCharge.toString();
                 // taxEditingController.text = data.tax;
                 // editTaxType = data.taxType == "null" ? null : data.taxType;
                 editCatId = data.categoryId;
-                productsController.editCalculateCommission(editCatId);
+                // productsController.editCalculateCommission(editCatId);
                 editSubCatId = data.subCategoryId;
                 editDiscountType =
                     data.discountType == "null" ? null : data.discountType;
@@ -237,6 +240,34 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                           height: 35,
                                           child: TextFormField(
                                             controller: tagsController,
+                                          )),
+
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        "Delivery Charge",
+                                        style: GoogleFonts.roboto(fontSize: 12),
+                                      ),
+                                      Container(
+                                          height: 35,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            controller:
+                                                deliveryChargeController,
+                                          )),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        "Net-Weight",
+                                        style: GoogleFonts.roboto(fontSize: 12),
+                                      ),
+                                      Container(
+                                          height: 35,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            controller: netWeightController,
                                           )),
                                       // SizedBox(
                                       //   height: 20,
@@ -423,9 +454,12 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                               }).toList(),
                                                               onChanged:
                                                                   (value) {
-                                                                productsController
-                                                                        .catId =
+                                                                editCatId =
                                                                     value;
+
+                                                                productsController
+                                                                    .editCalculateCommission(
+                                                                        value);
                                                                 productsController
                                                                     .getSubCategory(
                                                                         value);
@@ -436,67 +470,79 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                   ),
                                                 );
                                               }),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 20),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Commission",
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 12),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Row(
+                                          Obx(() {
+                                            return Visibility(
+                                              visible: productsController
+                                                          .editCommission
+                                                          .value ==
+                                                      "0"
+                                                  ? false
+                                                  : true,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 20),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    InkWell(
-                                                        onTap: () {
-                                                          productsController
-                                                              .editSelectQuantity(
-                                                                  false);
-                                                        },
-                                                        child: Icon(
-                                                          (Icons.remove),
-                                                        )),
-                                                    const SizedBox(width: 5),
-                                                    Container(
-                                                      height: 20,
-                                                      width: 30,
-                                                      color: Colors.white,
-                                                      child: Center(
-                                                        child: Obx(() {
-                                                          return Text(
-                                                            productsController
-                                                                .editQuantityVal
-                                                                .value
-                                                                .toString(),
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          );
-                                                        }),
-                                                      ),
+                                                    Text(
+                                                      "Commission",
+                                                      style: GoogleFonts.roboto(
+                                                          fontSize: 12),
                                                     ),
-                                                    const SizedBox(width: 5),
-                                                    InkWell(
-                                                        onTap: () {
-                                                          productsController
-                                                              .editSelectQuantity(
-                                                                  true);
-                                                        },
-                                                        child: Icon(
-                                                          (Icons.add),
-                                                        )),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        InkWell(
+                                                            onTap: () {
+                                                              productsController
+                                                                  .editSelectQuantity(
+                                                                      false);
+                                                            },
+                                                            child: Icon(
+                                                              (Icons.remove),
+                                                            )),
+                                                        const SizedBox(
+                                                            width: 5),
+                                                        Container(
+                                                          height: 20,
+                                                          width: 30,
+                                                          color: Colors.white,
+                                                          child: Center(
+                                                            child: Obx(() {
+                                                              return Text(
+                                                                productsController
+                                                                    .editQuantityVal
+                                                                    .value
+                                                                    .toString(),
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              );
+                                                            }),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 5),
+                                                        InkWell(
+                                                            onTap: () {
+                                                              productsController
+                                                                  .editSelectQuantity(
+                                                                      true);
+                                                            },
+                                                            child: Icon(
+                                                              (Icons.add),
+                                                            )),
+                                                      ],
+                                                    ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
-                                          )
+                                              ),
+                                            );
+                                          })
                                         ],
                                       ),
                                       SizedBox(

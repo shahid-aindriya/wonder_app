@@ -1,5 +1,4 @@
 import 'package:chat_bubbles/bubbles/bubble_normal.dart';
-import 'package:chat_bubbles/date_chips/date_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -102,7 +101,7 @@ class ChatBox extends StatelessWidget {
                   //   return
                   return Column(
                     children: [
-                      DateChip(date: DateTime.now()),
+                      // DateChip(date: DateTime.now()),
                       BubbleNormal(
                         sent: true,
                         delivered: true,

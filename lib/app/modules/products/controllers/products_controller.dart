@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -307,6 +308,7 @@ class ProductsController extends GetxController {
   final TextEditingController tagsController = TextEditingController();
   final TextEditingController deliveryChargeController =
       TextEditingController();
+  final TextEditingController netWeightController = TextEditingController();
   dynamic taxType;
   dynamic discType;
   dynamic catId;
@@ -339,7 +341,10 @@ class ProductsController extends GetxController {
     request.fields['attributes'] = jsonEncode(idOfAttribute);
     request.fields['return_availablility'] = returnAvailability.toString();
     request.fields['tags'] = tagsController.text.toString();
-    request.fields['tags'] = tagsController.text.toString();
+    request.fields['delivery_type'] = deliveryTypeId.toString();
+    request.fields['delivery_charge'] =
+        deliveryChargeController.text.toString();
+    request.fields['product_weight'] = netWeightController.text.toString();
     commission.isEmpty
         ? null
         : request.fields['commission'] = quantityVal.value.toString();
@@ -363,6 +368,8 @@ class ProductsController extends GetxController {
       idOfREturnLists.clear();
       idOfAttribute.clear();
       tagsController.clear();
+      deliveryChargeController.clear();
+      netWeightController.clear();
       profileImage = "";
       update();
       await getListOfPrdoucts(invoiceController.selectShopId);
@@ -418,8 +425,9 @@ class ProductsController extends GetxController {
     }
   }
 
-  removeItem(id) async {
+  removeItem(id, context) async {
     final body = {"product_id": id};
+    isRemoveLoading.value = true;
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-delete-shop-product/"),
         body: jsonEncode(body),
@@ -427,6 +435,41 @@ class ProductsController extends GetxController {
     log(request.body);
     if (request.statusCode == 201) {
       await getListOfPrdoucts(invoiceController.selectShopId);
+      isRemoveLoading.value = false;
+      Get.back();
+      MotionToast.success(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Success ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('Removed Successfully'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(context);
+    } else {
+      isRemoveLoading.value = false;
+      Get.back();
+      MotionToast.error(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Error ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('Something Went Wrong'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(context);
     }
   }
 
@@ -443,13 +486,18 @@ class ProductsController extends GetxController {
       editProductsList.assign(editProductListModel.productData);
       editControllers.clear();
 
-      if (editProductsList.first.subCategoryId.toString().isNotEmpty) {
-        getSubCategory(editProductsList.first.subCategoryId.toString());
+      if (editProductsList.first.subCategoryId != null) {
+        getSubCategory(editProductsList.first.categoryId);
       }
 
       editAttributesList.assignAll(editProductsList.first.attributes);
 
       listCount.value = editAttributesList.value.length;
+      editQuantityVal.value =
+          int.tryParse(editProductListModel.productData.commission.toString())!;
+      editCommission.value =
+          editProductListModel.productData.commission.toString();
+
       // for (var itemData in editProductsList.first.attributes) {
       //   var attributeId = itemData.attributeId;
       //   var value = itemData.value;
@@ -520,7 +568,7 @@ class ProductsController extends GetxController {
         editQuantityVal.value > 1 &&
         editQuantityVal.value >
             int.tryParse(editCommission.value.toString())!) {
-      quantityVal.value--;
+      editQuantityVal.value--;
     } else if (value == true) {
       editQuantityVal.value++;
     }
@@ -561,7 +609,7 @@ class ProductsController extends GetxController {
     request.fields["name"] = name;
     request.fields["shop_id"] = invoiceController.selectShopId;
     request.fields["category_id"] = categoryId;
-    request.fields["sub_category_id"] = subCatId;
+    subCatId == null ? null : request.fields["sub_category_id"] = subCatId;
     request.fields["price"] = price;
     request.fields["quantity"] = quantity;
     request.fields["short_description"] = shortDescription;
@@ -639,5 +687,96 @@ class ProductsController extends GetxController {
     if (request.statusCode == 201) {
       await getProductDetails(productId);
     }
+  }
+
+  final isRemoveLoading = false.obs;
+  dialogPopForAddInvoice(context, id) {
+    Get.defaultDialog(
+      title: "CONFIRMATION MESSAGE",
+      titleStyle: GoogleFonts.roboto(
+          color: Color.fromARGB(255, 63, 70, 189),
+          fontWeight: FontWeight.bold,
+          fontSize: 18),
+      content: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          text: 'Are you sure you want to delete?',
+          style: GoogleFonts.roboto(color: Colors.black, fontSize: 16),
+        ),
+      ),
+      contentPadding: EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 10),
+      confirm: Container(
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: LinearGradient(
+              begin: Alignment(0.8374384045600891, 0.11822659522294998),
+              end: Alignment(-0.11822660267353058, 0.10431758314371109),
+              colors: [
+                Color.fromRGBO(63, 70, 189, 1),
+                Color.fromRGBO(65, 125, 232, 1)
+              ]),
+        ),
+        child: Obx(() {
+          return ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.transparent),
+                  elevation: MaterialStateProperty.all(0)),
+              onPressed: isRemoveLoading.value == true
+                  ? null
+                  : () async {
+                      await removeItem(id, context);
+                    },
+              child: isRemoveLoading.value == true
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text("Processing",
+                            style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400))
+                      ],
+                    )
+                  : Text("Confirm",
+                      style: GoogleFonts.roboto(
+                          fontSize: 16, fontWeight: FontWeight.w400)));
+        }),
+      ),
+      cancel: Obx(() {
+        return Visibility(
+          visible: isRemoveLoading.value == true ? false : true,
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color.fromARGB(255, 236, 236, 236)),
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(Size(100, 40)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.transparent),
+                    elevation: MaterialStateProperty.all(0)),
+                onPressed: () {
+                  Get.back();
+                },
+                child: Text(
+                  "Cancel",
+                  style: GoogleFonts.roboto(
+                      color: Color.fromARGB(255, 81, 90, 197),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400),
+                )),
+          ),
+        );
+      }),
+    );
   }
 }

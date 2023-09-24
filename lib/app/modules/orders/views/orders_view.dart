@@ -299,200 +299,215 @@ class OrdersView extends GetView<OrdersController> {
               Obx(() {
                 return ordersController.ordersList.isEmpty
                     ? Lottie.asset("assets/images/13659-no-data.json")
-                    : Expanded(
-                        child: Obx(() {
-                          return ListView.separated(
-                              separatorBuilder: (context, index) {
-                                return SizedBox(
-                                  height: 5,
-                                );
-                              },
-                              itemCount: ordersController.ordersList.length,
-                              itemBuilder: (context, index) {
-                                final data = ordersController.ordersList[index];
-                                String formattedDate =
-                                    DateFormat("h:mm a | MMM d").format(
-                                        DateTime.parse(
-                                            data.createdAt.toString()));
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.white),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 15.0,
-                                          left: 15,
-                                          right: 15,
-                                          bottom: 15),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Order ${data.orderNumber}",
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 18),
-                                              ),
-                                              Text(
-                                                "₹${data.price}",
-                                                style: GoogleFonts.roboto(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Color.fromARGB(
-                                                        255, 81, 90, 197)),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                formattedDate,
-                                                style: GoogleFonts.roboto(
-                                                    color: Colors.blueGrey,
-                                                    fontSize: 16),
-                                              ),
-                                              InkWell(
-                                                onTap:
-                                                    data.status == "Completed"
-                                                        ? null
-                                                        : () {
-                                                            ordersController
-                                                                .showReturnPopUp(
-                                                                    context,
-                                                                    orderId:
-                                                                        data.id);
-                                                          },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                       color: Color.fromARGB(
+                    : RefreshIndicator(
+                        onRefresh: () async {
+                          await ordersController
+                              .getListOfOrders(invoiceController.selectShopId);
+                        },
+                        child: Expanded(
+                          child: Obx(() {
+                            return ListView.separated(
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    height: 5,
+                                  );
+                                },
+                                itemCount: ordersController.ordersList.length,
+                                itemBuilder: (context, index) {
+                                  final data =
+                                      ordersController.ordersList[index];
+                                  String formattedDate =
+                                      DateFormat("h:mm a | MMM d").format(
+                                          DateTime.parse(
+                                              data.createdAt.toString()));
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 15.0,
+                                            left: 15,
+                                            right: 15,
+                                            bottom: 15),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "Order ${data.orderNumber}",
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 18),
+                                                ),
+                                                Text(
+                                                  "₹${data.price}",
+                                                  style: GoogleFonts.roboto(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Color.fromARGB(
                                                           255, 81, 90, 197)),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            bottom: 7.0,
-                                                            left: 11,
-                                                            right: 11,
-                                                            top: 6),
-                                                    child: Row(
-                                                      children: [
-                                                        Obx(() {
-                                                          return Text(
-                                                            ordersController
-                                                                .ordersList[
-                                                                    index]
-                                                                .status
-                                                                .toString(),
-                                                            style: GoogleFonts
-                                                                .roboto(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 15,
-                                                            ),
-                                                          );
-                                                        }),
-                                                        Icon(
-                                                          Icons
-                                                              .mode_edit_outlined,
-                                                          size: 20,
-                                                          color: Colors.white,
-                                                        )
-                                                      ],
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  formattedDate,
+                                                  style: GoogleFonts.roboto(
+                                                      color: Colors.blueGrey,
+                                                      fontSize: 16),
+                                                ),
+                                                InkWell(
+                                                  onTap:
+                                                      data.status == "Completed"
+                                                          ? null
+                                                          : () {
+                                                              ordersController
+                                                                  .showReturnPopUp(
+                                                                      context,
+                                                                      orderId:
+                                                                          data.id);
+                                                            },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Color.fromARGB(
+                                                            255, 81, 90, 197)),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 7.0,
+                                                              left: 11,
+                                                              right: 11,
+                                                              top: 6),
+                                                      child: Row(
+                                                        children: [
+                                                          Obx(() {
+                                                            return Text(
+                                                              ordersController
+                                                                  .ordersList[
+                                                                      index]
+                                                                  .status
+                                                                  .toString(),
+                                                              style: GoogleFonts
+                                                                  .roboto(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 15,
+                                                              ),
+                                                            );
+                                                          }),
+                                                          Icon(
+                                                            Icons
+                                                                .mode_edit_outlined,
+                                                            size: 20,
+                                                            color: Colors.white,
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
+                                                )
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Wrap(
+                                                  crossAxisAlignment:
+                                                      WrapCrossAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      height: 6,
+                                                      width: 6,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              data.paymentMethod ==
+                                                                      "Online"
+                                                                  ? Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          1,
+                                                                          134,
+                                                                          54)
+                                                                  : Colors.red),
+                                                    ),
+                                                    Text(
+                                                        data.paymentMethod ==
+                                                                "Online"
+                                                            ? " Paid"
+                                                            : " Un-Paid",
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color:
+                                                              data.paymentMethod ==
+                                                                      "Online"
+                                                                  ? Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          1,
+                                                                          134,
+                                                                          54)
+                                                                  : Colors.red,
+                                                          fontSize: 15,
+                                                        ))
+                                                  ],
                                                 ),
-                                              )
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Wrap(
-                                                crossAxisAlignment:
-                                                    WrapCrossAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    height: 6,
-                                                    width: 6,
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color:
-                                                            data.paymentMethod ==
-                                                                    "Online"
-                                                                ? Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        1,
-                                                                        134,
-                                                                        54)
-                                                                : Colors.red),
-                                                  ),
-                                                  Text(
-                                                      data.paymentMethod ==
-                                                              "Online"
-                                                          ? " Paid"
-                                                          : " Un-Paid",
+                                                InkWell(
+                                                  onTap: () {
+                                                    Get.to(OrderDetailsView(
+                                                      id: data.id,
+                                                    ));
+                                                  },
+                                                  child: Text("View Details",
                                                       style: GoogleFonts.roboto(
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        decorationStyle:
+                                                            TextDecorationStyle
+                                                                .solid,
                                                         fontWeight:
-                                                            FontWeight.w500,
-                                                        color:
-                                                            data.paymentMethod ==
-                                                                    "Online"
-                                                                ? Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        1,
-                                                                        134,
-                                                                        54)
-                                                                : Colors.red,
+                                                            FontWeight.w300,
+                                                        color: Color.fromARGB(
+                                                            255, 81, 90, 197),
                                                         fontSize: 15,
-                                                      ))
-                                                ],
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  Get.to(OrderDetailsView(
-                                                    id: data.id,
-                                                  ));
-                                                },
-                                                child: Text("View Details",
-                                                    style: GoogleFonts.roboto(
-                                                      decoration: TextDecoration
-                                                          .underline,
-                                                      decorationStyle:
-                                                          TextDecorationStyle
-                                                              .solid,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      color: Color.fromARGB(
-                                                          255, 81, 90, 197),
-                                                      fontSize: 15,
-                                                    )),
-                                              )
-                                            ],
-                                          )
-                                        ],
+                                                      )),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              });
-                        }),
+                                  );
+                                });
+                          }),
+                        ),
                       );
               })
             ],

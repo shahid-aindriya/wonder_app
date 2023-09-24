@@ -1,19 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:wonder_app/app/modules/chat/extra/broadcast_list.dart';
 import 'package:wonder_app/app/modules/chat/extra/chat_box.dart';
 
 import '../controllers/chat_controller.dart';
 
 class ChatView extends GetView<ChatController> {
-  const ChatView({Key? key}) : super(key: key);
+  ChatView({Key? key}) : super(key: key);
+  final ChatController chatController = Get.put(ChatController());
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
-    Container(
+    return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
             begin: Alignment(2, 1.0548897981643677),
@@ -116,84 +116,121 @@ class ChatView extends GetView<ChatController> {
                 ],
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding:
-                          EdgeInsets.only(left: 4.w, right: 4.w, bottom: 10),
-                      child: InkWell(
-                        onTap: () {
-                          index != 0
-                              ? Get.to(ChatBox())
-                              : Get.to(BroadCastList());
-                        },
-                        child: Container(
-                          width: 100.w,
-                          decoration: index == 0
-                              ? BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Color.fromRGBO(
-                                            0, 0, 0, 0.05000000074505806),
-                                        offset: Offset(0, 2),
-                                        blurRadius: 6)
-                                  ],
-                                  color: Color.fromRGBO(199, 201, 255, 1),
-                                )
-                              : BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  gradient: LinearGradient(
-                                      begin: Alignment(1.4153012037277222,
-                                          0.15562866628170013),
-                                      end: Alignment(-0.15562868118286133,
-                                          0.044075123965740204),
-                                      colors: [
-                                        Color.fromRGBO(255, 255, 255, 0.75),
-                                        Color.fromRGBO(
-                                            255, 255, 255, 0.6800000071525574)
-                                      ]),
+            StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                stream: FirebaseFirestore.instance
+                    .collection('chat_with_wonder_friend')
+                    .doc("1")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  chatController.getData();
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return Text('No document data available.');
+                  }
+                  // Access the document snapshot data
+                  DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+                      snapshot.data!;
+                  Map<String, dynamic>? documentData = documentSnapshot.data();
+
+                  if (documentData == null) {
+                    return Text('No document data available.');
+                  }
+
+                  // Print or use the data from the document snapshot
+                  // print('Document Data: $documentData');
+
+                  // Map<String, dynamic>? chatData = snapshot.data?.data();
+                  // log(snapshot.data.toString());
+                  // int itemCount = chatData != null ? chatData.length : 0;
+
+                  return Expanded(
+                    child: ListView.builder(
+                        itemCount: 1,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                left: 4.w, right: 4.w, bottom: 10),
+                            child: InkWell(
+                              onTap: () {
+                                // index != 0
+                                // ?
+                                Get.to(ChatBox());
+                                // : Get.to(BroadCastList());
+                              },
+                              child: Container(
+                                width: 100.w,
+                                decoration: index == 0
+                                    ? BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Color.fromRGBO(
+                                                  0, 0, 0, 0.05000000074505806),
+                                              offset: Offset(0, 2),
+                                              blurRadius: 6)
+                                        ],
+                                        color: Color.fromRGBO(199, 201, 255, 1),
+                                      )
+                                    : BoxDecoration(
+                                        borderRadius: BorderRadius.circular(14),
+                                        gradient: LinearGradient(
+                                            begin: Alignment(1.4153012037277222,
+                                                0.15562866628170013),
+                                            end: Alignment(-0.15562868118286133,
+                                                0.044075123965740204),
+                                            colors: [
+                                              Color.fromRGBO(
+                                                  255, 255, 255, 0.75),
+                                              Color.fromRGBO(255, 255, 255,
+                                                  0.6800000071525574)
+                                            ]),
+                                      ),
+                                child: ListTile(
+                                  leading: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.person),
+                                    ],
+                                  ),
+                                  title: Text(
+                                      index == 0
+                                          ? "Broadcast List"
+                                          : "Rakesh Sharma",
+                                      style: GoogleFonts.roboto(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600)),
+                                  subtitle: Text(
+                                      index == 0
+                                          ? "Black T-shirt plane round neck..."
+                                          : "what will be the offer price?",
+                                      style: GoogleFonts.roboto(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      )),
+                                  trailing: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "10:15 pm",
+                                        style: GoogleFonts.roboto(
+                                            color: Colors.black,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                          child: ListTile(
-                            leading: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.person),
-                              ],
+                              ),
                             ),
-                            title: Text(
-                                index == 0 ? "Broadcast List" : "Rakesh Sharma",
-                                style: GoogleFonts.roboto(
-                                    fontSize: 16, fontWeight: FontWeight.w600)),
-                            subtitle: Text(
-                                index == 0
-                                    ? "Black T-shirt plane round neck..."
-                                    : "what will be the offer price?",
-                                style: GoogleFonts.roboto(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                )),
-                            trailing: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "10:15 pm",
-                                  style: GoogleFonts.roboto(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-            ),
+                          );
+                        }),
+                  );
+                }),
           ],
         ),
       ),
