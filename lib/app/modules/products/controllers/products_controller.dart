@@ -16,6 +16,7 @@ import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
 import '../../seller_regist/controllers/seller_regist_controller.dart';
+import '../model/attribute_add_model.dart';
 import '../model/attribute_model.dart';
 import '../model/category_for_add_products.dart';
 import '../model/edit_product_details_model.dart';
@@ -23,8 +24,6 @@ import '../model/edit_product_details_model.dart';
 import '../model/product_list.dart';
 import '../model/return_reasons_model.dart';
 import '../model/sub_category_for_add_products.dart';
-
-final ProductsController productsController = Get.put(ProductsController());
 
 class ProductsController extends GetxController {
   //TODO: Implement ProductsController
@@ -89,13 +88,27 @@ class ProductsController extends GetxController {
   dynamic compressedImage;
   String profileImage = '';
   String editImage = "";
+  String attributeImage = "";
   File? image;
   File? editImageFile;
-  pickimage(bool value, addEdit) async {
+  File? attributeFileImage;
+  pickimage(bool value, addEdit, {dynamic attriubte}) async {
     final pimage = await ImagePicker().pickImage(
         source: value == true ? ImageSource.camera : ImageSource.gallery);
     if (pimage == null) {
       return;
+    } else if (attriubte != null) {
+      attributeFileImage = File(pimage.path);
+      final ims = await sellerRegistController.cropsImage(pimage.path);
+      if (ims != null) {
+        final bytes = File(ims.path).readAsBytesSync();
+        compressedImage = testComporessList(bytes);
+        attributeImage = base64Encode(await compressedImage);
+        update();
+        return;
+      } else {
+        return null;
+      }
     } else if (addEdit == "Add") {
       image = File(pimage.path);
       final ims = await sellerRegistController.cropsImage(pimage.path);
@@ -138,7 +151,7 @@ class ProductsController extends GetxController {
     return result.toList();
   }
 
-  showPopup(context, addEdit) {
+  showPopup(context, addEdit, {dynamic attriubte}) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -150,7 +163,7 @@ class ProductsController extends GetxController {
                   leading: Icon(Icons.camera_alt),
                   title: Text('Take a photo'),
                   onTap: () {
-                    pickimage(true, addEdit);
+                    pickimage(true, addEdit, attriubte: attriubte);
                     // Handle the 'Take a photo' option
                     Navigator.of(context).pop();
                   },
@@ -159,7 +172,7 @@ class ProductsController extends GetxController {
                   leading: Icon(Icons.image),
                   title: Text('Choose from gallery'),
                   onTap: () {
-                    pickimage(false, addEdit);
+                    pickimage(false, addEdit, attriubte: attriubte);
                     // Handle the 'Choose from gallery' option
                     Navigator.of(context).pop();
                   },
@@ -172,9 +185,15 @@ class ProductsController extends GetxController {
     );
   }
 
-  removeImage() {
+  removeImage({value}) {
+    if (value == true) {
+      attributeImage = "";
+      update();
+      return;
+    }
     profileImage = "";
     editImage = "";
+
     update();
   }
 
@@ -295,7 +314,10 @@ class ProductsController extends GetxController {
 
   RxInt attriCount = 1.obs;
   final controllers = <TextEditingController>[].obs;
-
+  final TextEditingController valueAttributeController =
+      TextEditingController();
+  final TextEditingController quantityAttributeController =
+      TextEditingController();
   final TextEditingController nameEditingController = TextEditingController();
   final TextEditingController priceEditingController = TextEditingController();
   final TextEditingController skuEditingController = TextEditingController();
@@ -338,7 +360,7 @@ class ProductsController extends GetxController {
     request.fields['discount_type'] = discType.toString();
     // request.fields['tax_type'] = taxType.toString();
     request.fields['return_reason_ids'] = idOfREturnLists.join(",");
-    request.fields['attributes'] = jsonEncode(idOfAttribute);
+    request.fields['attributes'] = jsonEncode(attributeAddList.value);
     request.fields['return_availablility'] = returnAvailability.toString();
     request.fields['tags'] = tagsController.text.toString();
     request.fields['delivery_type'] = deliveryTypeId.toString();
@@ -366,6 +388,7 @@ class ProductsController extends GetxController {
       taxEditingController.clear();
       discountController.clear();
       idOfREturnLists.clear();
+      attributeAddList.clear();
       idOfAttribute.clear();
       tagsController.clear();
       deliveryChargeController.clear();
@@ -431,7 +454,7 @@ class ProductsController extends GetxController {
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-delete-shop-product/"),
         body: jsonEncode(body),
-        headers: headers);
+        headers: headers.value);
     log(request.body);
     if (request.statusCode == 201) {
       await getListOfPrdoucts(invoiceController.selectShopId);
@@ -598,7 +621,10 @@ class ProductsController extends GetxController {
       discount,
       discType,
       context,
-      tags}) async {
+      tags,
+      deliveryType,
+      deliveryCharge,
+      netWeight}) async {
     final request = http.MultipartRequest(
       'POST',
       Uri.parse("${baseUrl.value}vendor-edit-shop-product/"),
@@ -622,6 +648,9 @@ class ProductsController extends GetxController {
         ? null
         : request.fields['commission'] = editQuantityVal.value.toString();
     request.fields["return_reason_ids"] = editIdOfReturn.join(",");
+    request.fields['delivery_type'] = deliveryType;
+    request.fields['delivery_charge'] = deliveryCharge;
+    request.fields['product_weight'] = netWeight;
     request.fields["attributes"] = jsonEncode(editAttributesList.value);
     editImageFile != null
         ? request.files.add(
@@ -634,10 +663,11 @@ class ProductsController extends GetxController {
     if (response.statusCode == 201) {
       editLoading.value = false;
       await getListOfPrdoucts(invoiceController.selectShopId);
-      productsController.listCount.value = 0;
-      productsController.editControllers.clear();
-      productsController.subCategoryLists.clear();
-      productsController.editAttributesList.clear();
+      listCount.value = 0;
+      editControllers.clear();
+      subCategoryLists.clear();
+      editAttributesList.clear();
+
       Get.back();
       MotionToast.success(
         dismissable: true,
@@ -778,5 +808,47 @@ class ProductsController extends GetxController {
         );
       }),
     );
+  }
+
+  RxList<AttriubuteAddModel> attributeAddList = <AttriubuteAddModel>[].obs;
+  dynamic attributeId;
+  void addAttributeToList() {
+    log(attributeFileImage!.path);
+    final newProduct = AttriubuteAddModel(
+      Id: attributeId,
+      value: valueAttributeController.text,
+      quantity: quantityAttributeController.text,
+      image: attributeFileImage!.path,
+    );
+
+    attributeAddList.add(newProduct);
+
+    valueAttributeController.clear();
+    quantityAttributeController.clear();
+    attributeImage = "";
+    update();
+  }
+
+  dynamic editAttributeId;
+  final TextEditingController editValueAttributeController =
+      TextEditingController();
+  final TextEditingController editQuantityAttributeController =
+      TextEditingController();
+
+  void editAttributeToList() {
+    log(attributeFileImage!.path);
+    final newProduct = EditAttribute(
+      attributeId: editAttributeId,
+      value: editValueAttributeController.text,
+      quantity: editQuantityAttributeController.text,
+      fileImage: attributeFileImage!.path,
+    );
+
+    editAttributesList.add(newProduct);
+
+    editValueAttributeController.clear();
+    editQuantityAttributeController.clear();
+    attributeImage = "";
+    update();
   }
 }

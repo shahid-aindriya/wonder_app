@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -938,7 +936,7 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                               invoicePaymentController.bulkApproval(
                                   widget.invoiceController.verifiedList,
                                   widget.invoiceController.verifiedAmountData
-                                      .first.shopWalletAmount);
+                                      .first.totalAmount);
                             },
                             child: Text(
                               "Approve",

@@ -6,21 +6,21 @@ import 'package:lottie/lottie.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:wonder_app/app/data/urls.dart';
-import 'package:wonder_app/app/modules/invoice/controllers/invoice_controller.dart';
 
 import '../../../data/colors.dart';
-import '../../add_invoice/controllers/add_invoice_controller.dart';
 import '../../invoice/views/invoice_view.dart';
-import '../../invoice/widgets/drawer_tab.dart';
 import '../../invoice/widgets/notification_icon.dart';
+import '../../my_earnings/controllers/my_earnings_controller.dart';
 import '../../notifications/views/notifications_view.dart';
 import '../controllers/products_controller.dart';
 import '../extra/add_products_view.dart';
 import '../extra/edit_products_details.dart';
 
+final ProductsController productsController = Get.put(ProductsController());
+
 class ProductsView extends GetView<ProductsController> {
   ProductsView({Key? key}) : super(key: key);
-  final AddInvoiceController addInvoiceController = Get.find();
+  // final AddInvoiceController addInvoiceController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class ProductsView extends GetView<ProductsController> {
             ]),
       ),
       child: Scaffold(
-        drawer: DrawerTab(addInvoiceController: addInvoiceController),
+        // drawer: DrawerTab(addInvoiceController: addInvoiceController),
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           leading: Builder(builder: (contezxt) {
@@ -132,6 +132,8 @@ class ProductsView extends GetView<ProductsController> {
                             onChanged: (value) async {
                               invoiceController.invoiceListsFilter.value
                                   .clear();
+                              invoiceController.invoiceListsFilter.value
+                                  .clear();
                               invoiceController.walletTransactionLists.clear();
                               invoiceController.invoiceLists.value.clear();
                               invoiceController.walletCurrentpage.value = 1;
@@ -147,6 +149,7 @@ class ProductsView extends GetView<ProductsController> {
                                 value: value,
                               );
                               await invoiceController.checkVerifiedVendor();
+                              await myEarningsController.getMyEarnings(value);
                               await invoiceController.onDropDownChanged(value);
                               await invoiceController
                                   .ondropDownChangedInvoice(value);
@@ -367,10 +370,14 @@ class ProductsView extends GetView<ProductsController> {
                                                 height: 10,
                                               ),
                                               InkWell(
-                                                onTap: () {
-                                                  productsController
+                                                onTap: () async {
+                                                  await productsController
                                                       .dialogPopForAddInvoice(
-                                                          data.id, context);
+                                                    context,
+                                                    data.id,
+                                                  );
+                                                  // productsController.removeItem(
+                                                  //     data.id, context);
                                                 },
                                                 child: Container(
                                                   decoration: BoxDecoration(
@@ -549,8 +556,8 @@ class ProductsView extends GetView<ProductsController> {
         ),
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterFloat,
-        floatingActionButton: GetBuilder<InvoiceController>(builder: (context) {
-          return invoiceController.selectShopId == null
+        floatingActionButton: Obx(() {
+          return invoiceController.newShopId.value.isEmpty
               ? Container()
               : FloatingActionButton(
                   backgroundColor: Color.fromARGB(255, 57, 55, 166),

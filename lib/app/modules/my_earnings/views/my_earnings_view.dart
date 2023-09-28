@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -11,6 +13,7 @@ import '../../invoice/views/invoice_view.dart';
 import '../../invoice/widgets/drawer_tab.dart';
 import '../../invoice/widgets/notification_icon.dart';
 import '../../notifications/views/notifications_view.dart';
+import '../../products/views/products_view.dart';
 import '../controllers/my_earnings_controller.dart';
 
 class MyEarningsView extends GetView<MyEarningsController> {
@@ -143,11 +146,14 @@ class MyEarningsView extends GetView<MyEarningsController> {
                                   value: value,
                                 );
                                 await invoiceController.checkVerifiedVendor();
+                                await myEarningsController.getMyEarnings(value);
                                 await invoiceController
                                     .onDropDownChanged(value);
                                 await invoiceController
                                     .ondropDownChangedInvoice(value);
                                 await invoiceController.getDueData();
+                                await productsController
+                                    .getListOfPrdoucts(value);
                               },
                               items:
                                   invoiceController.shopLists.value.map((data) {
@@ -183,7 +189,7 @@ class MyEarningsView extends GetView<MyEarningsController> {
             elevation: 0,
             backgroundColor: Colors.transparent,
           ),
-          body: Column(
+          body: ListView(
             children: [
               Padding(
                 padding: EdgeInsets.only(left: 5.w, right: 5.w),
@@ -241,41 +247,43 @@ class MyEarningsView extends GetView<MyEarningsController> {
                                             MaterialStateProperty.all(
                                                 Colors.transparent)),
                                     onPressed: null,
-                                    child: Text(
-                                      "₹1234",
-                                      style: GoogleFonts.roboto(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 22),
-                                    )))),
+                                    child: Obx(() {
+                                      return Text(
+                                        "₹ ${myEarningsController.totalAmount.value.isEmpty ? 0.0 : myEarningsController.totalAmount.value}",
+                                        style: GoogleFonts.roboto(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 22),
+                                      );
+                                    })))),
                       ],
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(0),
-                            minimumSize:
-                                MaterialStateProperty.all(Size(127, 34)),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10))),
-                            side: MaterialStateProperty.all(BorderSide(
-                              color: Color(0xff4956b2),
-                            )),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.white)),
-                        onPressed: () {
-                          // Get.to(Settlements());
-                        },
-                        child: Text(
-                          "withdraw",
-                          style: GoogleFonts.inter(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              color: Color(0xff4956b2)),
-                        )),
+                    // ElevatedButton(
+                    //     style: ButtonStyle(
+                    //         elevation: MaterialStateProperty.all(0),
+                    //         minimumSize:
+                    //             MaterialStateProperty.all(Size(127, 34)),
+                    //         shape: MaterialStateProperty.all(
+                    //             RoundedRectangleBorder(
+                    //                 borderRadius: BorderRadius.circular(10))),
+                    //         side: MaterialStateProperty.all(BorderSide(
+                    //           color: Color(0xff4956b2),
+                    //         )),
+                    //         backgroundColor:
+                    //             MaterialStateProperty.all(Colors.white)),
+                    //     onPressed: () {
+                    //       Get.to(Settlements());
+                    //     },
+                    //     child: Text(
+                    //       "withdraw",
+                    //       style: GoogleFonts.inter(
+                    //           fontWeight: FontWeight.w500,
+                    //           fontSize: 14,
+                    //           color: Color(0xff4956b2)),
+                    //     )),
                     SizedBox(
                       height: 20,
                     ),
@@ -294,60 +302,94 @@ class MyEarningsView extends GetView<MyEarningsController> {
                   ],
                 ),
               ),
-              Expanded(
-                  child: ListView.builder(
-                itemCount: 10,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(top: 15, right: 5.w, left: 5.w),
-                    child: Container(
-                      width: 100.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        gradient: LinearGradient(
-                            begin: Alignment(
-                                1.4153012037277222, 0.15562866628170013),
-                            end: Alignment(
-                                -0.15562868118286133, 0.044075123965740204),
-                            colors: [
-                              Color.fromRGBO(255, 255, 255, 0.75),
-                              Color.fromRGBO(255, 255, 255, 0.6800000071525574)
-                            ]),
-                      ),
-                      child: ListTile(
-                        isThreeLine: false,
-                        title: Text("Order#787666755564356",
-                            style: GoogleFonts.roboto(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                        subtitle: Text(
-                          "12:05 PM | Jan 16",
-                          style: GoogleFonts.roboto(
-                              fontSize: 14, fontWeight: FontWeight.w300),
-                        ),
-                        trailing: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+              Obx(() {
+                return myEarningsController.earningslist.isEmpty
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              "Earnings",
-                              style: GoogleFonts.roboto(
-                                  fontSize: 12, fontWeight: FontWeight.w300),
-                            ),
-                            Text(
-                              "₹1234",
-                              style: GoogleFonts.roboto(
-                                  color: Color(0xff4956b2),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500),
-                            ),
+                            Lottie.asset("assets/images/13659-no-data.json"),
                           ],
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ))
+                      )
+                    : ListView.builder(
+                        itemCount: myEarningsController.earningslist.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final data = myEarningsController.earningslist[index];
+                          String inputDate = data.createdAt.toString();
+
+                          // Define the input format to match the provided date format
+                          DateFormat inputFormat =
+                              DateFormat("yyyy MMM dd, hh:mm a");
+
+                          // Parse the input date string
+                          DateTime parsedDate = inputFormat.parse(inputDate);
+
+                          // Define the output format
+                          DateFormat outputFormat =
+                              DateFormat("hh:mm a | MMM dd");
+
+                          // Format the parsed date into the desired format
+                          String formattedDate =
+                              outputFormat.format(parsedDate);
+                          return Padding(
+                            padding:
+                                EdgeInsets.only(top: 15, right: 5.w, left: 5.w),
+                            child: Container(
+                              width: 100.w,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(14),
+                                gradient: LinearGradient(
+                                    begin: Alignment(1.4153012037277222,
+                                        0.15562866628170013),
+                                    end: Alignment(-0.15562868118286133,
+                                        0.044075123965740204),
+                                    colors: [
+                                      Color.fromRGBO(255, 255, 255, 0.75),
+                                      Color.fromRGBO(
+                                          255, 255, 255, 0.6800000071525574)
+                                    ]),
+                              ),
+                              child: ListTile(
+                                isThreeLine: false,
+                                title: Text("Order# ${data.id}",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600)),
+                                subtitle: Text(
+                                  formattedDate,
+                                  style: GoogleFonts.roboto(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w300),
+                                ),
+                                trailing: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Earnings",
+                                      style: GoogleFonts.roboto(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                    Text(
+                                      "₹${data.amount}",
+                                      style: GoogleFonts.roboto(
+                                          color: Color(0xff4956b2),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+              })
             ],
           )),
     );

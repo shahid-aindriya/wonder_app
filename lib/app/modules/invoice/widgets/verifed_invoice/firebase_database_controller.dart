@@ -8,14 +8,19 @@ final FirebaseDatabaseController firebaseDatabaseController =
     Get.put(FirebaseDatabaseController());
 
 class FirebaseDatabaseController extends GetxController {
+  // String dataBaseUrl = 'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+  // *********Test
+  String dataBaseUrl =
+      'https://wonderapptest-c9a28-default-rtdb.asia-southeast1.firebasedatabase.app';
+
 // *********************************************ExpireDays
   Future<int?> getExpireDays() async {
     await Firebase.initializeApp();
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("settings_tb/1");
@@ -45,8 +50,7 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("shops_tb/$shopId");
@@ -67,8 +71,7 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("levels_tb/$id");
@@ -111,8 +114,7 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("user_data_tb/$userId");
@@ -141,8 +143,7 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("levels_tb/$id");
@@ -171,11 +172,31 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("settings_tb/1");
+    Completer<Map<dynamic, dynamic>> completer = Completer();
+
+    rtdbRef.onValue.listen((event) {
+      DataSnapshot snapshot = event.snapshot;
+      Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
+      completer.complete(values);
+    });
+    return completer.future;
+  }
+
+  // *********************************************Shop Data
+
+  Future<Map<dynamic, dynamic>> offlineCommissionData(roleId) async {
+    await Firebase.initializeApp();
+    final firebaseApp = Firebase.app();
+    final rtdb = FirebaseDatabase.instanceFor(
+      app: firebaseApp,
+      databaseURL: dataBaseUrl,
+    );
+
+    final rtdbRef = rtdb.ref().child("offline_commission_settings_tb/$roleId");
     Completer<Map<dynamic, dynamic>> completer = Completer();
 
     rtdbRef.onValue.listen((event) {
@@ -202,8 +223,7 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("wallet_transactions_tb");
@@ -242,8 +262,7 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("shop_wallet_transactions_tb");
@@ -282,8 +301,7 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("user_transactions_tb");
@@ -318,8 +336,7 @@ class FirebaseDatabaseController extends GetxController {
     final firebaseApp = Firebase.app();
     final rtdb = FirebaseDatabase.instanceFor(
       app: firebaseApp,
-      databaseURL:
-          'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app',
+      databaseURL: dataBaseUrl,
     );
 
     final rtdbRef = rtdb.ref().child("user_transactions_tb");

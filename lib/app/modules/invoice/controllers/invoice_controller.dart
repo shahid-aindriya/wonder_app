@@ -82,6 +82,8 @@ class InvoiceController extends GetxController {
   var amountDataList = RxList<AmountData>().obs;
 
   dynamic selectShopId;
+  RxString newShopId = "".obs;
+
   // getInvoiceLists() async {
   //   try {
   //     final prefs = await SharedPreferences.getInstance();
@@ -158,7 +160,7 @@ class InvoiceController extends GetxController {
   changeShop({dynamic value, id}) {
     log(value.toString());
     selectShopId = null;
-
+    newShopId.value = id.toString();
     selectShopId = value;
 
     update();
@@ -416,6 +418,8 @@ class InvoiceController extends GetxController {
   var debitListValue = 'All'.obs;
   DateTime? startDate;
   DateTime? endDate;
+  RxString startDateString = "".obs;
+  RxString endDateString = "".obs;
   DateTimeRange? selecteds;
   var currentDatePage = 1.obs;
   RxInt totalDatePage = 1.obs;
@@ -437,7 +441,10 @@ class InvoiceController extends GetxController {
     } else {
       startDate = selecteds!.start;
       endDate = selecteds!.end;
-
+      startDateString.value =
+          "${startDate!.day}/${startDate!.month}/${startDate!.year}";
+      endDateString.value =
+          "${endDate!.day}/${endDate!.month}/${endDate!.year}";
       await fetChDateRange();
       update();
       // walletTransactionLists.value = walletTransactionLists2.where((list) {

@@ -58,7 +58,7 @@ class LoginController extends GetxController {
             loginResponseModel.haveShop == false) {
           prefs.setInt("userId", loginResponseModel.userId!);
           Get.to(StoreDetailsView());
-        } else if (loginResponseModel.isApproved == false) {
+        } else if (loginResponseModel.message == "Pending for approval") {
           Get.to(RequestPendingView());
         } else if (loginResponseModel.message ==
             "Invalid username or password") {

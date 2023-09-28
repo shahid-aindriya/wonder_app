@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wonder_app/app/modules/bottom_bar/views/bottom_bar_view.dart';
 
 import '../../../data/urls.dart';
 import '../../add_invoice/controllers/add_invoice_controller.dart';
@@ -416,6 +417,7 @@ class DrawerTab extends StatelessWidget {
                 await DefaultCacheManager().emptyCache();
 
                 Get.offAll(LoginView());
+                BottombarView.selectedPageIndex.value = 0;
               },
               leading: SvgPicture.asset(
                 "assets/images/drawer/SignOut.svg",

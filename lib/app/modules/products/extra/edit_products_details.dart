@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,14 +8,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:wonder_app/app/data/urls.dart';
 
 import '../controllers/products_controller.dart';
-import '../model/edit_product_details_model.dart';
+import '../views/products_view.dart';
 import 'add_products_view.dart';
 import 'buttons/add_button.dart';
-import 'buttons/remove_button.dart';
 
 class EditProductDetails extends StatefulWidget {
   EditProductDetails({super.key, this.id});
@@ -54,6 +53,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
   dynamic editSubCatId;
 
   dynamic editReturnAvailability;
+  dynamic deliveryTypeId;
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +128,8 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                 discountController.text = data.discount;
                 tagsController.text = data.tags;
                 deliveryChargeController.text = data.deliveryCharge.toString();
+                deliveryTypeId = data.deliveryType;
+                netWeightController.text = data.productWeight;
                 // taxEditingController.text = data.tax;
                 // editTaxType = data.taxType == "null" ? null : data.taxType;
                 editCatId = data.categoryId;
@@ -588,224 +590,341 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                               })),
                                         ],
                                       ),
+
                                       SizedBox(
                                         height: 20,
                                       ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Delivery type",
+                                            style: GoogleFonts.roboto(
+                                                fontSize: 12),
+                                          ),
+                                          Container(
+                                              height: 35,
+                                              child: DropdownButtonFormField(
+                                                value: deliveryTypeId,
+                                                items: productsController
+                                                    .deliveryTypeList
+                                                    .map((data) {
+                                                  return DropdownMenuItem(
+                                                      value: data,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 5.0),
+                                                        child: Text(
+                                                          data,
+                                                          overflow: TextOverflow
+                                                              .visible,
+                                                        ),
+                                                      ));
+                                                }).toList(),
+                                                onChanged: (value) {
+                                                  deliveryTypeId = value;
+                                                },
+                                              )),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+
                                       Obx(() {
                                         return ListView.separated(
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) {
+                                              final data = productsController
+                                                  .editAttributesList[index];
+                                              return Container(
+                                                width: 100.w,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(14),
+                                                  gradient: LinearGradient(
+                                                      begin: Alignment(
+                                                          1.4153012037277222,
+                                                          0.15562866628170013),
+                                                      end: Alignment(
+                                                          -0.15562868118286133,
+                                                          0.044075123965740204),
+                                                      colors: [
+                                                        Color.fromRGBO(213, 210,
+                                                            210, 0.749),
+                                                        Color.fromRGBO(223, 222,
+                                                            222, 0.678)
+                                                      ]),
+                                                ),
+                                                child: ListTile(
+                                                  leading: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
+                                                    child: data.fileImage !=
+                                                            null
+                                                        ? Image.file(File(
+                                                            data.fileImage))
+                                                        : Image.network(
+                                                            "$baseUrlForImage${data.image}"),
+                                                  ),
+                                                  title: Text(
+                                                      "Attribute : ${data.value}"),
+                                                  subtitle: Text(
+                                                      "Quantity: ${data.quantity}"),
+                                                  trailing: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            productsController
+                                                                .editAttributesList
+                                                                .removeAt(
+                                                                    index);
+                                                          },
+                                                          icon: Icon(Icons
+                                                              .remove_circle)),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                             separatorBuilder: (context, index) {
                                               return SizedBox(
                                                 height: 10,
                                               );
                                             },
-                                            shrinkWrap: true,
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
                                             itemCount: productsController
-                                                .editAttributesList.length,
-                                            itemBuilder: (contsext, index) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            7)),
-                                                child: FutureBuilder(
-                                                    future: productsController
-                                                        .getAllAttribute(),
-                                                    builder: (constext, snap) {
-                                                      if (snap.connectionState ==
-                                                          ConnectionState
-                                                              .waiting) {
-                                                        return Container(
-                                                          width: 60.w,
-                                                          height: 50,
-                                                          child: Shimmer(
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    185,
-                                                                    84,
-                                                                    84),
-                                                            child: ListTile(
-                                                              dense: true,
-                                                              leading: Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  CircleAvatar(
-                                                                    backgroundColor:
-                                                                        Color.fromARGB(
-                                                                            255,
-                                                                            220,
-                                                                            216,
-                                                                            216),
-                                                                    radius: 20,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              title: Container(
-                                                                height: 20,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        220,
-                                                                        216,
-                                                                        216),
-                                                              ),
-                                                              subtitle:
-                                                                  Container(
-                                                                height: 16,
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        top: 8),
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        220,
-                                                                        216,
-                                                                        216),
-                                                              ),
-                                                            ),
-                                                            direction:
-                                                                ShimmerDirection
-                                                                    .fromRTLB(),
-                                                          ),
-                                                        );
-                                                      }
-                                                      return Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                top: 20.0,
-                                                                right: 4.w,
-                                                                left: 4.w,
-                                                                bottom: 20),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              "Attribute",
-                                                              style: GoogleFonts
-                                                                  .roboto(
-                                                                      fontSize:
-                                                                          12),
-                                                            ),
-                                                            Container(
-                                                                height: 35,
-                                                                child: Obx(() {
-                                                                  return DropdownButtonFormField(
-                                                                    value: productsController
-                                                                        .editAttributesList
-                                                                        .value[
-                                                                            index]
-                                                                        .attributeId,
-                                                                    items: productsController
-                                                                        .attributeLists
-                                                                        .value
-                                                                        .map(
-                                                                            (data) {
-                                                                      return DropdownMenuItem(
-                                                                          value: data
-                                                                              .id,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(bottom: 5.0),
-                                                                            child:
-                                                                                Text(
-                                                                              data.title,
-                                                                              overflow: TextOverflow.visible,
-                                                                            ),
-                                                                          ));
-                                                                    }).toList(),
-                                                                    onChanged:
-                                                                        (value) {
-                                                                      productsController.getEditIdOfAttributes(
-                                                                          value,
-                                                                          index);
-                                                                    },
-                                                                  );
-                                                                })),
-                                                            SizedBox(
-                                                              height: 20,
-                                                            ),
-                                                            Text(
-                                                              "value",
-                                                              style: GoogleFonts
-                                                                  .roboto(
-                                                                      fontSize:
-                                                                          12),
-                                                            ),
-                                                            Container(
-                                                                height: 35,
-                                                                child:
-                                                                    TextField(
-                                                                  controller:
-                                                                      productsController
-                                                                              .editControllers[
-                                                                          index],
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    String selectedAttributeId = productsController
-                                                                        .editAttributesList
-                                                                        .value[
-                                                                            index]
-                                                                        .attributeId
-                                                                        .toString();
-                                                                    // log(selectedAttributeId);
-                                                                    // Call the function to add the id and value to the list
-                                                                    productsController.addEditIdAndValue(
-                                                                        selectedAttributeId,
-                                                                        value,
-                                                                        index);
-                                                                  },
-                                                                )),
-                                                            SizedBox(
-                                                              height: 10,
-                                                            ),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .end,
-                                                              children: [
-                                                                RemoveButton(
-                                                                    onTap: () {
-                                                                      log(widget
-                                                                          .id
-                                                                          .toString());
-                                                                      productsController.deleteAttribute(
-                                                                          productsController
-                                                                              .editAttributesList
-                                                                              .value[index]
-                                                                              .id,
-                                                                          widget.id);
-                                                                      // products Controller.idOfAttribute.removeLast();
-                                                                      // productsController
-                                                                      //     .listCount
-                                                                      //     .value--;
-                                                                      // productsController
-                                                                      //     .editControllers
-                                                                      //     .removeLast();
-
-                                                                      // productsController
-                                                                      //     .editAttributesList
-                                                                      //     .value
-                                                                      //     .removeLast();
-                                                                    },
-                                                                    productsController:
-                                                                        productsController),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    }),
-                                              );
-                                            });
+                                                .editAttributesList.length);
                                       }),
+
+                                      // Obx(() {
+                                      //   return ListView.separated(
+                                      //       separatorBuilder: (context, index) {
+                                      //         return SizedBox(
+                                      //           height: 10,
+                                      //         );
+                                      //       },
+                                      //       shrinkWrap: true,
+                                      //       physics:
+                                      //           NeverScrollableScrollPhysics(),
+                                      //       itemCount: productsController
+                                      //           .editAttributesList.length,
+                                      //       itemBuilder: (contsext, index) {
+                                      //         return Container(
+                                      //           decoration: BoxDecoration(
+                                      //               color: Colors.white,
+                                      //               borderRadius:
+                                      //                   BorderRadius.circular(
+                                      //                       7)),
+                                      //           child: FutureBuilder(
+                                      //               future: productsController
+                                      //                   .getAllAttribute(),
+                                      //               builder: (constext, snap) {
+                                      //                 if (snap.connectionState ==
+                                      //                     ConnectionState
+                                      //                         .waiting) {
+                                      //                   return Container(
+                                      //                     width: 60.w,
+                                      //                     height: 50,
+                                      //                     child: Shimmer(
+                                      //                       color:
+                                      //                           Color.fromARGB(
+                                      //                               255,
+                                      //                               185,
+                                      //                               84,
+                                      //                               84),
+                                      //                       child: ListTile(
+                                      //                         dense: true,
+                                      //                         leading: Column(
+                                      //                           mainAxisAlignment:
+                                      //                               MainAxisAlignment
+                                      //                                   .start,
+                                      //                           children: [
+                                      //                             CircleAvatar(
+                                      //                               backgroundColor:
+                                      //                                   Color.fromARGB(
+                                      //                                       255,
+                                      //                                       220,
+                                      //                                       216,
+                                      //                                       216),
+                                      //                               radius: 20,
+                                      //                             ),
+                                      //                           ],
+                                      //                         ),
+                                      //                         title: Container(
+                                      //                           height: 20,
+                                      //                           color: Color
+                                      //                               .fromARGB(
+                                      //                                   255,
+                                      //                                   220,
+                                      //                                   216,
+                                      //                                   216),
+                                      //                         ),
+                                      //                         subtitle:
+                                      //                             Container(
+                                      //                           height: 16,
+                                      //                           margin: EdgeInsets
+                                      //                               .only(
+                                      //                                   top: 8),
+                                      //                           color: Color
+                                      //                               .fromARGB(
+                                      //                                   255,
+                                      //                                   220,
+                                      //                                   216,
+                                      //                                   216),
+                                      //                         ),
+                                      //                       ),
+                                      //                       direction:
+                                      //                           ShimmerDirection
+                                      //                               .fromRTLB(),
+                                      //                     ),
+                                      //                   );
+                                      //                 }
+                                      //                 return Padding(
+                                      //                   padding:
+                                      //                       EdgeInsets.only(
+                                      //                           top: 20.0,
+                                      //                           right: 4.w,
+                                      //                           left: 4.w,
+                                      //                           bottom: 20),
+                                      //                   child: Column(
+                                      //                     crossAxisAlignment:
+                                      //                         CrossAxisAlignment
+                                      //                             .start,
+                                      //                     children: [
+                                      //                       Text(
+                                      //                         "Attribute",
+                                      //                         style: GoogleFonts
+                                      //                             .roboto(
+                                      //                                 fontSize:
+                                      //                                     12),
+                                      //                       ),
+                                      //                       Container(
+                                      //                           height: 35,
+                                      //                           child: Obx(() {
+                                      //                             return DropdownButtonFormField(
+                                      //                               value: productsController
+                                      //                                   .editAttributesList
+                                      //                                   .value[
+                                      //                                       index]
+                                      //                                   .attributeId,
+                                      //                               items: productsController
+                                      //                                   .attributeLists
+                                      //                                   .value
+                                      //                                   .map(
+                                      //                                       (data) {
+                                      //                                 return DropdownMenuItem(
+                                      //                                     value: data
+                                      //                                         .id,
+                                      //                                     child:
+                                      //                                         Padding(
+                                      //                                       padding:
+                                      //                                           const EdgeInsets.only(bottom: 5.0),
+                                      //                                       child:
+                                      //                                           Text(
+                                      //                                         data.title,
+                                      //                                         overflow: TextOverflow.visible,
+                                      //                                       ),
+                                      //                                     ));
+                                      //                               }).toList(),
+                                      //                               onChanged:
+                                      //                                   (value) {
+                                      //                                 productsController.getEditIdOfAttributes(
+                                      //                                     value,
+                                      //                                     index);
+                                      //                               },
+                                      //                             );
+                                      //                           })),
+                                      //                       SizedBox(
+                                      //                         height: 20,
+                                      //                       ),
+                                      //                       Text(
+                                      //                         "value",
+                                      //                         style: GoogleFonts
+                                      //                             .roboto(
+                                      //                                 fontSize:
+                                      //                                     12),
+                                      //                       ),
+                                      //                       Container(
+                                      //                           height: 35,
+                                      //                           child:
+                                      //                               TextField(
+                                      //                             controller:
+                                      //                                 productsController
+                                      //                                         .editControllers[
+                                      //                                     index],
+                                      //                             onChanged:
+                                      //                                 (value) {
+                                      //                               String selectedAttributeId = productsController
+                                      //                                   .editAttributesList
+                                      //                                   .value[
+                                      //                                       index]
+                                      //                                   .attributeId
+                                      //                                   .toString();
+                                      //                               // log(selectedAttributeId);
+                                      //                               // Call the function to add the id and value to the list
+                                      //                               productsController.addEditIdAndValue(
+                                      //                                   selectedAttributeId,
+                                      //                                   value,
+                                      //                                   index);
+                                      //                             },
+                                      //                           )),
+                                      //                       SizedBox(
+                                      //                         height: 10,
+                                      //                       ),
+                                      //                       Row(
+                                      //                         mainAxisAlignment:
+                                      //                             MainAxisAlignment
+                                      //                                 .end,
+                                      //                         children: [
+                                      //                           RemoveButton(
+                                      //                               onTap: () {
+                                      //                                 log(widget
+                                      //                                     .id
+                                      //                                     .toString());
+                                      //                                 productsController.deleteAttribute(
+                                      //                                     productsController
+                                      //                                         .editAttributesList
+                                      //                                         .value[index]
+                                      //                                         .id,
+                                      //                                     widget.id);
+                                      //                                 // products Controller.idOfAttribute.removeLast();
+                                      //                                 // productsController
+                                      //                                 //     .listCount
+                                      //                                 //     .value--;
+                                      //                                 // productsController
+                                      //                                 //     .editControllers
+                                      //                                 //     .removeLast();
+
+                                      //                                 // productsController
+                                      //                                 //     .editAttributesList
+                                      //                                 //     .value
+                                      //                                 //     .removeLast();
+                                      //                               },
+                                      //                               productsController:
+                                      //                                   productsController),
+                                      //                         ],
+                                      //                       ),
+                                      //                     ],
+                                      //                   ),
+                                      //                 );
+                                      //               }),
+                                      //         );
+                                      //       });
+                                      // }),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      EditAttributeWidget(
+                                          attributesList: productsController
+                                              .attributeLists),
                                       SizedBox(
                                         height: 15,
                                       ),
@@ -815,22 +934,24 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                         children: [
                                           AddButton(
                                               onClick: () {
+                                                // productsController
+                                                //     .listCount.value++;
+                                                // productsController
+                                                //     .editAttributesList
+                                                //     .add(EditAttribute(
+                                                //         id: null,
+                                                //         attributeId: null,
+                                                //         attribute: null,
+                                                //         value: ""));
+                                                // productsController
+                                                //     .editControllers
+                                                //     .add(
+                                                //         TextEditingController());
+                                                // log(productsController
+                                                //     .editAttributesList
+                                                //     .toString());
                                                 productsController
-                                                    .listCount.value++;
-                                                productsController
-                                                    .editAttributesList
-                                                    .add(EditAttribute(
-                                                        id: null,
-                                                        attributeId: null,
-                                                        attribute: null,
-                                                        value: ""));
-                                                productsController
-                                                    .editControllers
-                                                    .add(
-                                                        TextEditingController());
-                                                log(productsController
-                                                    .editAttributesList
-                                                    .toString());
+                                                    .editAttributeToList();
                                               },
                                               productsController:
                                                   productsController),
@@ -1081,48 +1202,52 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                         .editLoading.value
                                                     ? null
                                                     : () async {
-                                                        productsController
-                                                            .editProductDetails(
-                                                          context: context,
-                                                          tags: tagsController
-                                                              .text
-                                                              .toString(),
-                                                          categoryId: editCatId
-                                                              .toString(),
-                                                          discType:
-                                                              editDiscountType
-                                                                  .toString(),
-                                                          discount:
-                                                              discountController
-                                                                  .text
-                                                                  .toString(),
-                                                          name:
-                                                              nameEditingController
-                                                                  .text
-                                                                  .toString(),
-                                                          price:
-                                                              priceEditingController
-                                                                  .text
-                                                                  .toString(),
-                                                          productId: widget.id
-                                                              .toString(),
-                                                          quantity:
-                                                              quantityEditingController
-                                                                  .text
-                                                                  .toString(),
-                                                          shortDescription:
-                                                              descriptionEditingController
-                                                                  .text
-                                                                  .toString(),
-                                                          subCatId: editSubCatId
-                                                              .toString(),
-                                                          // tax:
-                                                          //     taxEditingController
-                                                          //         .text
-                                                          //         .toString(),
-                                                          // taxType: editTaxType
-                                                          //     .toString()
-                                                        );
+                                                        productsController.editProductDetails(
+                                                            context: context,
+                                                            tags: tagsController.text
+                                                                .toString(),
+                                                            categoryId: editCatId
+                                                                .toString(),
+                                                            discType:
+                                                                editDiscountType
+                                                                    .toString(),
+                                                            discount:
+                                                                discountController.text
+                                                                    .toString(),
+                                                            name: nameEditingController.text
+                                                                .toString(),
+                                                            price: priceEditingController
+                                                                .text
+                                                                .toString(),
+                                                            productId: widget.id
+                                                                .toString(),
+                                                            quantity:
+                                                                quantityEditingController.text
+                                                                    .toString(),
+                                                            shortDescription:
+                                                                descriptionEditingController
+                                                                    .text
+                                                                    .toString(),
+                                                            subCatId: editSubCatId
+                                                                .toString(),
+                                                            deliveryCharge:
+                                                                deliveryChargeController
+                                                                    .text
+                                                                    .toString(),
+                                                            deliveryType:
+                                                                deliveryTypeId
+                                                                    .toString(),
+                                                            netWeight:
+                                                                netWeightController
+                                                                    .text
+                                                                    .toString()
+                                                            // tax:
+                                                            //     taxEditingController
+                                                            //         .text
+                                                            //         .toString(),
+                                                            // taxType: editTaxType
+                                                            //     .toString()
+                                                            );
                                                       },
                                                 child: productsController
                                                         .editLoading.value
@@ -1157,5 +1282,192 @@ class _EditProductDetailsState extends State<EditProductDetails> {
         ),
       ),
     );
+  }
+}
+
+class EditAttributeWidget extends StatelessWidget {
+  const EditAttributeWidget({
+    super.key,
+    required this.attributesList,
+  });
+  final RxList attributesList;
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return ListView.separated(
+          separatorBuilder: (context, index) {
+            return SizedBox(
+              height: 10,
+            );
+          },
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: productsController.controllers.value.length,
+          itemBuilder: (contsext, index) {
+            return Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(7)),
+              child: FutureBuilder(
+                  future: productsController.getAllAttribute(),
+                  builder: (constext, snap) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          top: 20.0, right: 4.w, left: 4.w, bottom: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Attribute",
+                            style: GoogleFonts.roboto(fontSize: 12),
+                          ),
+                          Container(
+                              height: 35,
+                              child: Obx(() {
+                                return DropdownButtonFormField(
+                                  items: attributesList.map((data) {
+                                    return DropdownMenuItem(
+                                        value: data.id,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          child: Text(
+                                            data.title,
+                                            overflow: TextOverflow.visible,
+                                          ),
+                                        ));
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    // productsController
+                                    //     .getIdOfAttributes(
+                                    //         value, index);
+                                    productsController.editAttributeId = value;
+                                  },
+                                );
+                              })),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "value",
+                                      style: GoogleFonts.roboto(fontSize: 12),
+                                    ),
+                                    Container(
+                                        height: 35,
+                                        child: TextField(
+                                          controller: productsController
+                                              .editValueAttributeController,
+                                          onChanged: (value) {
+                                            // String
+                                            //     selectedAttributeId =
+                                            //     productsController
+                                            //         .idOfAttribute[
+                                            //             index]
+                                            //             ["id"]
+                                            //         .toString();
+                                            // // Call the function to add the id and value to the list
+                                            // productsController
+                                            //     .addIdAndValue(
+                                            //         selectedAttributeId,
+                                            //         value);
+                                          },
+                                        )),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Quantity",
+                                    style: GoogleFonts.roboto(fontSize: 12),
+                                  ),
+                                  Container(
+                                      height: 35,
+                                      child: TextField(
+                                        controller: productsController
+                                            .editQuantityAttributeController,
+                                        onChanged: (value) {},
+                                      )),
+                                ],
+                              ))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          GetBuilder<ProductsController>(builder: (c) {
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 30.w,
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white),
+                                  child: c.attributeImage != ""
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: Image.memory(
+                                            Base64Decoder()
+                                                .convert(c.attributeImage),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )
+                                      : InkWell(
+                                          onTap: () {
+                                            c.showPopup(context, "Attribute",
+                                                attriubte: true);
+                                          },
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons
+                                                    .add_circle_outline_outlined,
+                                                color: Color.fromARGB(
+                                                    255, 125, 129, 234),
+                                              ),
+                                              Text("Add Image")
+                                            ],
+                                          ),
+                                        ),
+                                ),
+                                Visibility(
+                                  visible:
+                                      c.attributeImage == "" ? false : true,
+                                  child: InkWell(
+                                    onTap: () {
+                                      c.removeImage(value: true);
+                                    },
+                                    child: Icon(
+                                      Icons.remove_circle,
+                                      color: Color.fromARGB(255, 227, 58, 46),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            );
+                          }),
+                        ],
+                      ),
+                    );
+                  }),
+            );
+          });
+    });
   }
 }

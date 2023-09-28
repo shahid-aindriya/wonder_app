@@ -236,12 +236,12 @@ class WalletTab extends GetView<InvoiceController> {
                       invoiceController.currentDatePage.value = 1;
                       invoiceController.dateSelect(context: context);
                     },
-                    child: GetBuilder<InvoiceController>(builder: (consdtext) {
+                    child: Obx(() {
                       return Text(
-                        invoiceController.startDate == null &&
-                                invoiceController.endDate == null
+                        invoiceController.endDateString.isEmpty &&
+                                invoiceController.endDateString.isEmpty
                             ? "Select Date Range"
-                            : "${invoiceController.startDate!.day}/${invoiceController.startDate!.month}/${invoiceController.startDate!.year}-${invoiceController.endDate!.day}/${invoiceController.endDate!.month}/${invoiceController.endDate!.year}",
+                            : "${invoiceController.startDateString.value.toString()}-${invoiceController.endDateString.value.toString()}",
                         style: GoogleFonts.roboto(
                             color: Color.fromARGB(239, 75, 72, 72)),
                       );

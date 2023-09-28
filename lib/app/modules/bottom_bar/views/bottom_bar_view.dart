@@ -92,7 +92,7 @@ class BottombarView extends GetView<BottomBarController> {
                               : 'assets/images/bottom/commission-2.svg',
                           size: 24,
                         ),
-                        label: 'Commisson'),
+                        label: 'Earnings'),
                     BottomNavigationBarItem(
                         icon: CustomSvgIcon(
                           assetPath: selectedPageIndex.value != 4

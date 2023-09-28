@@ -52,39 +52,42 @@ class EditProductData {
   bool returnAvailablility;
   dynamic deliveryCharge;
   dynamic commission;
+  String deliveryType;
+  dynamic productWeight;
   dynamic noOfReturnDays;
   List<ReasonId> reasonIds;
   List<EditAttribute> attributes;
 
-  EditProductData({
-    required this.id,
-    required this.name,
-    required this.sku,
-    required this.price,
-    required this.quantity,
-    required this.categoryId,
-    required this.category,
-    required this.subCategoryId,
-    required this.subCategory,
-    required this.featuredImage,
-    required this.discount,
-    required this.discountType,
-    required this.isFeatured,
-    required this.active,
-    required this.shopId,
-    required this.vendorId,
-    required this.description,
-    required this.shortDescription,
-    required this.tax,
-    required this.taxType,
-    required this.tags,
-    required this.returnAvailablility,
-    required this.deliveryCharge,
-    required this.commission,
-    required this.noOfReturnDays,
-    required this.reasonIds,
-    required this.attributes,
-  });
+  EditProductData(
+      {required this.id,
+      required this.name,
+      required this.sku,
+      required this.price,
+      required this.quantity,
+      required this.categoryId,
+      required this.category,
+      required this.subCategoryId,
+      required this.subCategory,
+      required this.featuredImage,
+      required this.discount,
+      required this.discountType,
+      required this.isFeatured,
+      required this.active,
+      required this.shopId,
+      required this.vendorId,
+      required this.description,
+      required this.shortDescription,
+      required this.tax,
+      required this.taxType,
+      required this.tags,
+      required this.returnAvailablility,
+      required this.deliveryCharge,
+      required this.commission,
+      required this.noOfReturnDays,
+      required this.productWeight,
+      required this.reasonIds,
+      required this.attributes,
+      required this.deliveryType});
 
   factory EditProductData.fromJson(Map<String, dynamic> json) =>
       EditProductData(
@@ -93,6 +96,7 @@ class EditProductData {
         sku: json["sku"],
         price: json["price"],
         quantity: json["quantity"],
+        deliveryType: json["delivery_type"],
         categoryId: json["category_id"],
         category: json["category"],
         subCategoryId: json["sub_category_id"],
@@ -103,6 +107,7 @@ class EditProductData {
         isFeatured: json["is_featured"],
         active: json["active"],
         shopId: json["shop_id"],
+        productWeight: json["product_weight"],
         vendorId: json["vendor_id"],
         description: json["description"],
         shortDescription: json["short_description"],
@@ -155,19 +160,25 @@ class EditAttribute {
   dynamic attributeId;
   dynamic attribute;
   dynamic value;
-
-  EditAttribute({
-    this.id,
-    this.attributeId,
-    this.attribute,
-    this.value,
-  });
+  dynamic image;
+  dynamic quantity;
+  dynamic fileImage;
+  EditAttribute(
+      {this.id,
+      this.attributeId,
+      this.attribute,
+      this.value,
+      this.image,
+      this.quantity,
+      this.fileImage});
 
   factory EditAttribute.fromJson(Map<String, dynamic> json) => EditAttribute(
         id: json["id"],
         attributeId: json["attribute_id"],
         attribute: json["attribute"],
         value: json["value"],
+        image: json["image"],
+        quantity: json["quantity"],
       );
 
   Map<String, dynamic> toJson() => {
