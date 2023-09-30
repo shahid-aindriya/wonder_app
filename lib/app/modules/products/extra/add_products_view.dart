@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -409,7 +408,8 @@ class AddProductsView extends StatelessWidget {
                                 child: ListTile(
                                   leading: ClipRRect(
                                     borderRadius: BorderRadius.circular(4),
-                                    child: Image.file(File(data.image)),
+                                    child: Image.memory(
+                                        Base64Decoder().convert(data.image)),
                                   ),
                                   title: Text("Attribute Id: ${data.value}"),
                                   subtitle: Text("Quantity: ${data.quantity}"),

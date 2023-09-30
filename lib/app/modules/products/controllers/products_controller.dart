@@ -360,12 +360,27 @@ class ProductsController extends GetxController {
     request.fields['discount_type'] = discType.toString();
     // request.fields['tax_type'] = taxType.toString();
     request.fields['return_reason_ids'] = idOfREturnLists.join(",");
-    request.fields['attributes'] = jsonEncode(attributeAddList.value);
+    request.fields['attributes'] = jsonEncode(attributeAddList.toJson());
     request.fields['return_availablility'] = returnAvailability.toString();
     request.fields['tags'] = tagsController.text.toString();
     request.fields['delivery_type'] = deliveryTypeId.toString();
     request.fields['delivery_charge'] =
         deliveryChargeController.text.toString();
+    // for (var attribute in attributeAddList) {
+    //   var fileStream =
+    //       http.ByteStream(Stream.castFrom(attribute.image.openRead()));
+    //   var length = await attribute.image.length();
+
+    //   var multipartFile = http.MultipartFile(
+    //     'attribute_image',
+    //     fileStream,
+    //     length,
+    //     filename: attribute.image.path.split('/').last,
+    //   );
+
+    //   request.files.add(multipartFile);
+    // }
+
     request.fields['product_weight'] = netWeightController.text.toString();
     commission.isEmpty
         ? null
@@ -374,6 +389,16 @@ class ProductsController extends GetxController {
         ? request.files
             .add(await http.MultipartFile.fromPath("image", image!.path))
         : null;
+    // for (int i = 0; i < attributeAddList.value.length; i++) {
+    //   log(attributeAddList.value[i].image.toString());
+    //   File image = attributeAddList.value[i].image;
+    //   request.files.add(
+    //     await http.MultipartFile.fromPath(
+    //       'attribute_image[${attributeAddList.value[i].imageId}]',
+    //       image.path,
+    //     ),
+    //   );
+    // }
     final response = await request.send();
     final responseBody = await response.stream.bytesToString();
     log(response.statusCode.toString());
@@ -505,6 +530,7 @@ class ProductsController extends GetxController {
         headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
+      editAttributesList.clear();
       final editProductListModel = editProductListModelFromJson(request.body);
       editProductsList.assign(editProductListModel.productData);
       editControllers.clear();
@@ -630,7 +656,14 @@ class ProductsController extends GetxController {
       Uri.parse("${baseUrl.value}vendor-edit-shop-product/"),
     );
     editLoading.value = true;
-    log("attribute:${editAttributesList.value}");
+    // for (var element in editAttributesList) {
+    //   log(element.attribute.toString());
+    //   log(element.attributeId.toString());
+    //   log(element.fileImage.toString());
+    //   log(element.image.toString());
+    //   log(element.value.toString());
+    //   log(element.quantity.toString());
+    // }
     request.fields["product_id"] = productId;
     request.fields["name"] = name;
     request.fields["shop_id"] = invoiceController.selectShopId;
@@ -651,7 +684,7 @@ class ProductsController extends GetxController {
     request.fields['delivery_type'] = deliveryType;
     request.fields['delivery_charge'] = deliveryCharge;
     request.fields['product_weight'] = netWeight;
-    request.fields["attributes"] = jsonEncode(editAttributesList.value);
+    request.fields["attributes"] = jsonEncode(editAttributesList.toJson());
     editImageFile != null
         ? request.files.add(
             await http.MultipartFile.fromPath("image", editImageFile!.path))
@@ -812,17 +845,20 @@ class ProductsController extends GetxController {
 
   RxList<AttriubuteAddModel> attributeAddList = <AttriubuteAddModel>[].obs;
   dynamic attributeId;
+  dynamic imageId = 1;
+  // RxList<File> attributeImageList = <File>[].obs;
   void addAttributeToList() {
     log(attributeFileImage!.path);
     final newProduct = AttriubuteAddModel(
-      Id: attributeId,
+      id: attributeId,
       value: valueAttributeController.text,
       quantity: quantityAttributeController.text,
-      image: attributeFileImage!.path,
+      image: attributeImage,
+      // imageId: imageId,
     );
-
+    // attributeImageList.add(attributeFileImage!);
     attributeAddList.add(newProduct);
-
+    imageId++;
     valueAttributeController.clear();
     quantityAttributeController.clear();
     attributeImage = "";
@@ -841,14 +877,17 @@ class ProductsController extends GetxController {
       attributeId: editAttributeId,
       value: editValueAttributeController.text,
       quantity: editQuantityAttributeController.text,
-      fileImage: attributeFileImage!.path,
+      fileImage: attributeImage,
     );
 
     editAttributesList.add(newProduct);
 
     editValueAttributeController.clear();
+
     editQuantityAttributeController.clear();
+
     attributeImage = "";
+
     update();
   }
 }

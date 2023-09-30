@@ -1,11 +1,11 @@
 class AttriubuteAddModel {
-  dynamic Id;
+  dynamic id;
   dynamic value;
   dynamic quantity;
-  dynamic image;
+  String image;
 
   AttriubuteAddModel({
-    required this.Id,
+    required this.id,
     required this.value,
     required this.quantity,
     required this.image,
@@ -13,7 +13,7 @@ class AttriubuteAddModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': Id,
+      'id': id,
       'value': value,
       'quantity': quantity,
       'image': image,

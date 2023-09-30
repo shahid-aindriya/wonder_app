@@ -186,6 +186,9 @@ class EditAttribute {
         "attribute_id": attributeId,
         "attribute": attribute,
         "value": value,
+        "file_image": fileImage,
+        "image": image,
+        "quantity": quantity
       };
 }
 

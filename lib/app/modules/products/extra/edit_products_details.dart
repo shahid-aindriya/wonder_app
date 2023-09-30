@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -668,10 +667,22 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                             4),
                                                     child: data.fileImage !=
                                                             null
-                                                        ? Image.file(File(
-                                                            data.fileImage))
-                                                        : Image.network(
-                                                            "$baseUrlForImage${data.image}"),
+                                                        ? Image.memory(
+                                                            Base64Decoder()
+                                                                .convert(data
+                                                                    .fileImage))
+                                                        : data.image != null
+                                                            ? Image.network(
+                                                                "$baseUrlForImage${data.image}")
+                                                            : Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Icon(Icons
+                                                                      .apps),
+                                                                ],
+                                                              ),
                                                   ),
                                                   title: Text(
                                                       "Attribute : ${data.value}"),
@@ -683,10 +694,16 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                     children: [
                                                       IconButton(
                                                           onPressed: () {
-                                                            productsController
-                                                                .editAttributesList
-                                                                .removeAt(
-                                                                    index);
+                                                            data.id != null
+                                                                ? productsController
+                                                                    .deleteAttribute(
+                                                                        data.id,
+                                                                        widget
+                                                                            .id)
+                                                                : productsController
+                                                                    .editAttributesList
+                                                                    .removeAt(
+                                                                        index);
                                                           },
                                                           icon: Icon(Icons
                                                               .remove_circle)),

@@ -335,6 +335,11 @@ class MyEarningsView extends GetView<MyEarningsController> {
                           // Format the parsed date into the desired format
                           String formattedDate =
                               outputFormat.format(parsedDate);
+                          final amount = num.tryParse(data.amount.toString())! -
+                              num.tryParse(
+                                  data.paymentGatewayAmount.toString())!;
+                          final total = amount -
+                              num.tryParse(data.deliveryCharge.toString())!;
                           return Padding(
                             padding:
                                 EdgeInsets.only(top: 15, right: 5.w, left: 5.w),
@@ -359,29 +364,98 @@ class MyEarningsView extends GetView<MyEarningsController> {
                                     style: GoogleFonts.roboto(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600)),
-                                subtitle: Text(
-                                  formattedDate,
-                                  style: GoogleFonts.roboto(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      formattedDate,
+                                      style: GoogleFonts.roboto(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w300),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Earnings  ",
+                                          style: GoogleFonts.roboto(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        Text(
+                                          "₹${data.amount}",
+                                          style: GoogleFonts.roboto(
+                                              color: Color(0xff4956b2),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    )
+                                  ],
                                 ),
                                 trailing: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      "Earnings",
-                                      style: GoogleFonts.roboto(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300),
+                                    Wrap(
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Order Value:  ",
+                                          style: GoogleFonts.roboto(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        Text(
+                                          "₹$total",
+                                          style: GoogleFonts.roboto(
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      "₹${data.amount}",
-                                      style: GoogleFonts.roboto(
-                                          color: Color(0xff4956b2),
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500),
+                                    Wrap(
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Delivery Charge:  ",
+                                          style: GoogleFonts.roboto(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        Text(
+                                          "₹${data.deliveryCharge}",
+                                          style: GoogleFonts.roboto(
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
                                     ),
+                                    Wrap(
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Payment Gateway Amount:  ",
+                                          style: GoogleFonts.roboto(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        Text(
+                                          "₹${data.paymentGatewayAmount}",
+                                          style: GoogleFonts.roboto(
+                                              color:
+                                                  Color.fromARGB(255, 0, 0, 0),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 ),
                               ),

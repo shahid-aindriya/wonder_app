@@ -50,6 +50,10 @@ class TransactionDatum {
   dynamic walletType;
   dynamic entryType;
   dynamic remark;
+  dynamic onlineAmount;
+  dynamic offlineAmount;
+  dynamic paymentGatewayAmount;
+  dynamic deliveryCharge;
   dynamic status;
   dynamic createdAt;
 
@@ -62,6 +66,10 @@ class TransactionDatum {
     required this.shopId,
     required this.amount,
     required this.walletType,
+    required this.onlineAmount,
+    required this.offlineAmount,
+    required this.paymentGatewayAmount,
+    required this.deliveryCharge,
     required this.entryType,
     required this.remark,
     required this.status,
@@ -79,6 +87,10 @@ class TransactionDatum {
         amount: json["amount"],
         walletType: json["wallet_type"],
         entryType: json["entry_type"],
+        onlineAmount: json["online_amount"],
+        offlineAmount: json["offline_amount"],
+        paymentGatewayAmount: json["payment_gateway_amount"],
+        deliveryCharge: json["delivery_charge"],
         remark: json["remark"],
         status: json["status"],
         createdAt: json["created_at"],
