@@ -112,7 +112,7 @@ class InvoicePaymentController extends GetxController {
             // ignore: unrelated_type_equality_checks
             if (int.tryParse(parentId.toString()) != 0) {
               levelPercentsge =
-                  await firebaseDatabaseController.levelPercentsge(i);
+                  await firebaseDatabaseController.levelPercentsge(i + 1);
 
               userCommission =
                   calculatePercentage(levelPercentsge, commissionAmount);
@@ -121,7 +121,7 @@ class InvoicePaymentController extends GetxController {
               log("Level percent:$levelPercentsge");
               log("commission amountt:$commissionAmount");
               log("user commission:$userCommission");
-              //*************** user wallet transaction
+              //***** user wallet transaction
               firebaseDatabaseController.walletTransaction(
                   userId: parentId,
                   vendorId: vendorId,
@@ -133,7 +133,7 @@ class InvoicePaymentController extends GetxController {
                   expiryDate: expiryDate.toString(),
                   status: "Approve");
 
-              //*************** shop wallet transaction
+              //***** shop wallet transaction
               firebaseDatabaseController.shopWalletTransaction(
                   userId: parentId,
                   vendorId: vendorId,
@@ -160,7 +160,9 @@ class InvoicePaymentController extends GetxController {
                 status: "Approve");
           }
           updateUserRoleCommissionAndShopBalance(
-              verifiedInvoiceData: verifiedData, vendorBalance: vendorBalance);
+              verifiedInvoiceData: verifiedData,
+              vendorBalance: vendorBalance,
+              commissionAmount: commissionAmount);
           log("message");
           invoiceController.updateInvoiceBulkStatus(verifiedData.id);
         } else {
@@ -202,7 +204,9 @@ class InvoicePaymentController extends GetxController {
   }
 
   updateUserRoleCommissionAndShopBalance(
-      {required VerifiedInvoiceData verifiedInvoiceData, vendorBalance}) async {
+      {required VerifiedInvoiceData verifiedInvoiceData,
+      vendorBalance,
+      commissionAmount}) async {
     shopId = verifiedInvoiceData.shopId;
     invoiceAmount = double.parse(verifiedInvoiceData.preTaxAmount.toString());
     vendorId = verifiedInvoiceData.userId;
@@ -213,8 +217,8 @@ class InvoicePaymentController extends GetxController {
 
     print("===============$shopId");
 
-    int adminOfficer = 1;
-    int zonalManager = 2;
+    int adminOfficer = 2;
+    int zonalManager = 1;
     int relationshipManager = 3;
     int businessRepresentative = 4;
     int businessDirector = 5;
@@ -251,7 +255,7 @@ class InvoicePaymentController extends GetxController {
 
       String businessrepCommission = offlineCommissionData['commission'];
       double businessrepCommissionAmount = calculatePercentage(
-          double.parse(businessrepCommission), invoiceAmount);
+          double.parse(businessrepCommission), commissionAmount);
 
       firebaseDatabaseController.createUserTransaction(
           userId: userBusinessRep,
@@ -270,7 +274,7 @@ class InvoicePaymentController extends GetxController {
       String relationshipManagerCommission =
           offlineCommissionData['commission'];
       double relationshipManagerCommissionAmount = calculatePercentage(
-          double.parse(relationshipManagerCommission), invoiceAmount);
+          double.parse(relationshipManagerCommission), commissionAmount);
 
       firebaseDatabaseController.createUserTransaction(
           userId: userRelationshipManager,
@@ -287,14 +291,17 @@ class InvoicePaymentController extends GetxController {
           await firebaseDatabaseController.offlineCommissionData(adminOfficer);
 
       String adminOfficerCommission = offlineCommissionData['commission'];
-      double adminOfficerCcommissionAmount = calculatePercentage(
-          double.parse(adminOfficerCommission), invoiceAmount);
+      double adminOfficerCommissionAmount = calculatePercentage(
+          double.parse(adminOfficerCommission), commissionAmount);
+
+      print(
+          "=======$adminOfficerCommission===$adminOfficerCommissionAmount========$commissionAmount");
 
       firebaseDatabaseController.createUserTransaction(
           userId: userAdminOfficer,
           vendorId: verifiedInvoiceData.userId,
           shopId: verifiedInvoiceData.shopId,
-          amount: adminOfficerCcommissionAmount,
+          amount: adminOfficerCommissionAmount,
           invoiceId: verifiedInvoiceData.id,
           entryType: "Credit",
           walletType: "User Offline Commission");
@@ -306,7 +313,7 @@ class InvoicePaymentController extends GetxController {
 
       String zonalManagerCommission = offlineCommissionData['commission'];
       double zonalManagerCommissionAmount = calculatePercentage(
-          double.parse(zonalManagerCommission), invoiceAmount);
+          double.parse(zonalManagerCommission), commissionAmount);
 
       firebaseDatabaseController.createUserTransaction(
           userId: userZonalManager,
@@ -325,7 +332,7 @@ class InvoicePaymentController extends GetxController {
 
       String businessDirectorCommission = offlineCommissionData['commission'];
       double businessDirectorCommissionAmount = calculatePercentage(
-          double.parse(businessDirectorCommission), invoiceAmount);
+          double.parse(businessDirectorCommission), commissionAmount);
 
       firebaseDatabaseController.createUserTransaction(
           userId: userBusinessDirector,
@@ -344,7 +351,7 @@ class InvoicePaymentController extends GetxController {
 
       String businessPresidentCommission = offlineCommissionData['commission'];
       double businessPresidentCommissionAmount = calculatePercentage(
-          double.parse(businessPresidentCommission), invoiceAmount);
+          double.parse(businessPresidentCommission), commissionAmount);
 
       firebaseDatabaseController.createUserTransaction(
           userId: userBusinessPresident,
@@ -355,6 +362,13 @@ class InvoicePaymentController extends GetxController {
           entryType: "Credit",
           walletType: "User Offline Commission");
     }
+    firebaseDatabaseController.createUserTransaction(
+        vendorId: verifiedInvoiceData.userId,
+        shopId: verifiedInvoiceData.shopId,
+        amount: vendorBalance,
+        invoiceId: verifiedInvoiceData.id,
+        entryType: "Credit",
+        walletType: "Shop Due Amount");
   }
   // updateUserRoleCommissionAndShopBalance(
   //     {required VerifiedInvoiceData verifiedInvoiceData, vendorBalance}) async {

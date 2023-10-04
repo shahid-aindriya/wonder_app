@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
-final baseUrl = "http://64.227.158.202:8000/".obs;
+final baseUrl = "https://wonderpoints.com/".obs;
 final headers = {"Content-Type": "application/json"}.obs;
-final baseUrlForImage = "http://64.227.158.202:8000/";
+final baseUrlForImage = "https://wonderpoints.com";
 // http://64.227.178.175:8000/
 // http://192.168.1.49:8000/
 // https://wonderpoints.com/
