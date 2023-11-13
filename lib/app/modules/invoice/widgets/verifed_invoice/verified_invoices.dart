@@ -480,6 +480,10 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                                 ));
                                               },
                                               child: Slidable(
+                                                enabled:
+                                                    datas.payHalfAmount == true
+                                                        ? false
+                                                        : true,
                                                 // Specify a key if the Slidable is dismissible.
                                                 key: const ValueKey(0),
 

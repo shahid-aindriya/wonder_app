@@ -163,12 +163,16 @@ class EditAttribute {
   dynamic image;
   dynamic quantity;
   dynamic fileImage;
+  dynamic price;
+  dynamic discount;
   EditAttribute(
       {this.id,
       this.attributeId,
       this.attribute,
       this.value,
       this.image,
+      this.discount,
+      this.price,
       this.quantity,
       this.fileImage});
 
@@ -188,7 +192,9 @@ class EditAttribute {
         "value": value,
         "file_image": fileImage,
         "image": image,
-        "quantity": quantity
+        "quantity": quantity,
+        "discount": discount,
+        "price": price
       };
 }
 

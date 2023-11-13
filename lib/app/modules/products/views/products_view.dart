@@ -8,7 +8,9 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import 'package:wonder_app/app/data/urls.dart';
 
 import '../../../data/colors.dart';
+import '../../add_invoice/controllers/add_invoice_controller.dart';
 import '../../invoice/views/invoice_view.dart';
+import '../../invoice/widgets/drawer_tab.dart';
 import '../../invoice/widgets/notification_icon.dart';
 import '../../my_earnings/controllers/my_earnings_controller.dart';
 import '../../notifications/views/notifications_view.dart';
@@ -21,7 +23,7 @@ final ProductsController productsController = Get.put(ProductsController());
 class ProductsView extends GetView<ProductsController> {
   ProductsView({Key? key}) : super(key: key);
   // final AddInvoiceController addInvoiceController = Get.find();
-
+  final AddInvoiceController addInvoiceController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,7 +39,7 @@ class ProductsView extends GetView<ProductsController> {
             ]),
       ),
       child: Scaffold(
-        // drawer: DrawerTab(addInvoiceController: addInvoiceController),
+        drawer: DrawerTab(addInvoiceController: addInvoiceController),
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           leading: Builder(builder: (contezxt) {
@@ -329,7 +331,10 @@ class ProductsView extends GetView<ProductsController> {
                           await productsController.getListOfPrdoucts(
                               invoiceController.selectShopId);
                         },
-                        child: ListView.builder(
+                        child: ListView.separated(
+                            separatorBuilder: (context, index) {
+                              return SizedBox();
+                            },
                             itemCount: productsController.productsLists.length,
                             itemBuilder: (contexts, index) {
                               final data =
@@ -551,7 +556,7 @@ class ProductsView extends GetView<ProductsController> {
                             }),
                       );
               }),
-            )
+            ),
           ],
         ),
         floatingActionButtonLocation:

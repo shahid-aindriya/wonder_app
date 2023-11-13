@@ -12,9 +12,6 @@ final InvoicePaymentController invoicePaymentController =
     Get.put(InvoicePaymentController());
 
 class InvoicePaymentController extends GetxController {
-  FirebaseDatabaseController firebaseDatabaseController =
-      Get.put(FirebaseDatabaseController());
-
   int? vendorId;
   int? shopId;
   double? shopCommission;
@@ -44,7 +41,7 @@ class InvoicePaymentController extends GetxController {
   int? userZonalManager;
   int? userBusinessDirector;
   int? userBusinessPresident;
-
+  final progressLoading = false.obs;
   bulkApproval(RxList<VerifiedInvoiceData> verifiedList, walletAmount2) async {
     RxList<VerifiedInvoiceData> selectedItems =
         RxList<VerifiedInvoiceData>.from(
@@ -187,13 +184,15 @@ class InvoicePaymentController extends GetxController {
       progress.value = progressValue;
       // update();
     }
+
     invoiceController.verifiedList.clear();
     await invoiceController.verifiedInvoiceList();
-    progress.value = 0.0;
-    count.value = 0;
-    listCount.value = 0;
+    progressLoading.value = true;
+    // progress.value = 0.0;
+    // count.value = 0;
+    // listCount.value = 0;
     update();
-    Get.back();
+    // Get.back();
 
     // count.value = 0;
     // progress.value = 0.0;

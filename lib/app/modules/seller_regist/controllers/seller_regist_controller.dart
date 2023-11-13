@@ -58,6 +58,24 @@ class SellerRegistController extends GetxController {
     update();
   }
 
+  String tanImg = '';
+  File? image4;
+  pickimage3(bool value) async {
+    final pimage = await ImagePicker().pickImage(
+        source: value == true ? ImageSource.camera : ImageSource.gallery);
+    if (pimage == null) {
+      return;
+    } else {
+      final ims = await cropsImage(pimage.path);
+
+      final bytes = File(ims.path).readAsBytesSync();
+      final compressedimage = testComporessList(bytes);
+      tanImg = base64Encode(await compressedimage);
+    }
+    log("panimg");
+    update();
+  }
+
   snackBar({required context, required text}) {
     MotionToast.warning(
       dismissable: true,
@@ -90,7 +108,7 @@ class SellerRegistController extends GetxController {
     return result.toList();
   }
 
-  showPopup(contexts, bool value) {
+  showPopup(contexts, {value}) {
     showModalBottomSheet(
       context: contexts,
       builder: (BuildContext context) {
@@ -104,8 +122,10 @@ class SellerRegistController extends GetxController {
                   onTap: () {
                     if (value == true) {
                       pickimage(true);
-                    } else {
+                    } else if (value == false) {
                       pickimage2(true);
+                    } else {
+                      pickimage3(true);
                     }
                     // Handle the 'Take a photo' option
                     Navigator.of(context).pop();
@@ -115,7 +135,11 @@ class SellerRegistController extends GetxController {
                   leading: Icon(Icons.image),
                   title: Text('Choose from gallery'),
                   onTap: () {
-                    value == true ? pickimage(false) : pickimage2(false);
+                    value == true
+                        ? pickimage(false)
+                        : value == false
+                            ? pickimage2(false)
+                            : pickimage3(false);
                     // Handle the 'Choose from gallery' option
                     Navigator.of(context).pop();
                   },

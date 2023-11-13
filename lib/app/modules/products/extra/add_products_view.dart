@@ -418,8 +418,9 @@ class AddProductsView extends StatelessWidget {
                                     children: [
                                       IconButton(
                                           onPressed: () {
-                                            productsController.attributeAddList
-                                                .removeAt(index);
+                                            productsController
+                                                .removeAttributeFromList(
+                                                    index, data.quantity);
                                           },
                                           icon: Icon(Icons.remove_circle)),
                                     ],
@@ -602,55 +603,109 @@ class AddProductsView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 4.w, top: 15, bottom: 15),
-              child: Text("Product Image"),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 8.w, bottom: 20),
-              child: GetBuilder<ProductsController>(builder: (c) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 30.w,
-                      height: 120,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white),
-                      child: c.profileImage != ""
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.memory(
-                                Base64Decoder().convert(c.profileImage),
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          : InkWell(
-                              onTap: () {
-                                c.showPopup(context, "Add");
-                              },
-                              child: Center(
-                                child: Icon(
-                                  Icons.add_circle_outline_outlined,
-                                  color: Color.fromARGB(255, 125, 129, 234),
-                                ),
-                              ),
+              padding: EdgeInsets.only(top: 10, right: 5.w, left: 5.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Product Image".tr,
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    width: 140,
+                    height: 140,
+                    child: InkWell(
+                      onTap: () {
+                        productsController.selectMultipleImages(true);
+                      },
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add_circle_outline_outlined,
+                              color: Color.fromARGB(255, 125, 129, 234),
                             ),
-                    ),
-                    Visibility(
-                      visible: c.profileImage == "" ? false : true,
-                      child: InkWell(
-                        onTap: () {
-                          c.removeImage();
-                        },
-                        child: Icon(
-                          Icons.remove_circle,
-                          color: Color.fromARGB(255, 227, 58, 46),
+                            Text(
+                              "Add-Images",
+                              textAlign: TextAlign.center,
+                            )
+                          ],
                         ),
                       ),
-                    )
-                  ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 10),
+              child: Obx(() {
+                return SizedBox(
+                  width: 300.0, // To show images in particular area only
+                  child: productsController
+                          .multiImages.isEmpty // If no images is selected
+                      ? Center(child: Text('Sorry nothing selected!!'.tr))
+                      // If atleast 1 images is selected
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          itemCount: productsController.multiImages.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 0,
+                                  mainAxisSpacing: 5
+                                  // Horizontally only 3 images will show
+                                  ),
+                          itemBuilder: (BuildContext context, int index) {
+                            // TO show selected file
+                            return Container(
+                                child: Padding(
+                              padding: EdgeInsets.only(left: 4.w),
+                              child: Stack(children: <Widget>[
+                                Positioned(
+                                    top: 8,
+                                    left: 0,
+                                    child: Container(
+                                        width: 24.w,
+                                        height: 14.h,
+                                        child: Stack(children: <Widget>[
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.file(
+                                              productsController
+                                                  .multiImages[index],
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ]))),
+                                Positioned(
+                                  top: 0,
+                                  left: 80,
+                                  child: InkWell(
+                                      onTap: () {
+                                        productsController.multiImages
+                                            .removeAt(index);
+                                      },
+                                      child: Icon(
+                                        Icons.remove_circle_outline,
+                                        color: Colors.red,
+                                      )),
+                                ),
+                              ]),
+                            ));
+
+                            // If you are making the web app then you have to
+                            // use image provider as network image or in
+                            // android or iOS it will as file only
+                          },
+                        ),
                 );
               }),
             ),
@@ -829,6 +884,51 @@ class AddAttributeWidget extends StatelessWidget {
                                       child: TextField(
                                         controller: productsController
                                             .quantityAttributeController,
+                                        onChanged: (value) {},
+                                      )),
+                                ],
+                              ))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Price",
+                                      style: GoogleFonts.roboto(fontSize: 12),
+                                    ),
+                                    Container(
+                                        height: 35,
+                                        child: TextField(
+                                          controller: productsController
+                                              .priceAttributeController,
+                                          onChanged: (value) {},
+                                        )),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Discount",
+                                    style: GoogleFonts.roboto(fontSize: 12),
+                                  ),
+                                  Container(
+                                      height: 35,
+                                      child: TextField(
+                                        controller: productsController
+                                            .discountAttributeController,
                                         onChanged: (value) {},
                                       )),
                                 ],

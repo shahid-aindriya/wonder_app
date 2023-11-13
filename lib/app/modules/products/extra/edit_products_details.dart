@@ -29,7 +29,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
 
   final TextEditingController skuEditingController = TextEditingController();
 
-  final TextEditingController quantityEditingController =
+  final TextEditingController editQuantityEditingController =
       TextEditingController();
 
   final TextEditingController descriptionEditingController =
@@ -123,7 +123,8 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                 nameEditingController.text = data.name;
                 descriptionEditingController.text = data.shortDescription;
                 priceEditingController.text = data.price;
-                quantityEditingController.text = data.quantity;
+                productsController.editQuantityEditingController.text =
+                    data.quantity;
                 discountController.text = data.discount;
                 tagsController.text = data.tags;
                 deliveryChargeController.text = data.deliveryCharge.toString();
@@ -227,8 +228,8 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                       Container(
                                           height: 35,
                                           child: TextFormField(
-                                            controller:
-                                                quantityEditingController,
+                                            controller: productsController
+                                                .editQuantityEditingController,
                                           )),
                                       SizedBox(
                                         height: 20,
@@ -701,9 +702,9 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                                         widget
                                                                             .id)
                                                                 : productsController
-                                                                    .editAttributesList
-                                                                    .removeAt(
-                                                                        index);
+                                                                    .removeEditAttributeFromList(
+                                                                        index,
+                                                                        data.quantity);
                                                           },
                                                           icon: Icon(Icons
                                                               .remove_circle)),
@@ -1238,9 +1239,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                                 .toString(),
                                                             productId: widget.id
                                                                 .toString(),
-                                                            quantity:
-                                                                quantityEditingController.text
-                                                                    .toString(),
+                                                            quantity: productsController
+                                                                .editQuantityEditingController
+                                                                .text
+                                                                .toString(),
                                                             shortDescription:
                                                                 descriptionEditingController
                                                                     .text
@@ -1413,6 +1415,51 @@ class EditAttributeWidget extends StatelessWidget {
                                       child: TextField(
                                         controller: productsController
                                             .editQuantityAttributeController,
+                                        onChanged: (value) {},
+                                      )),
+                                ],
+                              ))
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Price",
+                                      style: GoogleFonts.roboto(fontSize: 12),
+                                    ),
+                                    Container(
+                                        height: 35,
+                                        child: TextField(
+                                          controller: productsController
+                                              .editAttributePriceEditingController,
+                                          onChanged: (value) {},
+                                        )),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                  child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Discount",
+                                    style: GoogleFonts.roboto(fontSize: 12),
+                                  ),
+                                  Container(
+                                      height: 35,
+                                      child: TextField(
+                                        controller: productsController
+                                            .editAttributeDiscountEditingController,
                                         onChanged: (value) {},
                                       )),
                                 ],

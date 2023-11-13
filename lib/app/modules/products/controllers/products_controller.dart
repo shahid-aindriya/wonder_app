@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -149,6 +150,50 @@ class ProductsController extends GetxController {
     log(list.length.toString());
     log(result.length.toString());
     return result.toList();
+  }
+
+  RxList<File> multiEditImages = <File>[].obs;
+  RxList<File> multiImages = <File>[].obs;
+  selectMultipleImages(value) async {
+    try {
+      List<XFile> pimage = await ImagePicker().pickMultiImage();
+      if (pimage.isEmpty) {
+        return;
+      } else {
+        if (pimage.isNotEmpty && value == true) {
+          for (var i = 0; i < pimage.length; i++) {
+            File imageFile = File(pimage[i].path);
+            File compressedImage = await compressImage(imageFile);
+            multiImages.add(compressedImage);
+          }
+        } else {
+          for (var i = 0; i < pimage.length; i++) {
+            File imageFile = File(pimage[i].path);
+            File compressedImage = await compressImage(imageFile);
+            multiEditImages.add(compressedImage);
+          }
+        }
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  compressImage(File imageFile) async {
+    ImageProperties properties =
+        await FlutterNativeImage.getImageProperties(imageFile.path);
+    File compressedFile2 = await FlutterNativeImage.compressImage(
+        imageFile.path,
+        quality: 80,
+        targetWidth: 600,
+        targetHeight: 700);
+    File compressedFile = await FlutterNativeImage.compressImage(
+        compressedFile2.path,
+        quality: 100,
+        percentage: 70);
+    // File compressedFile = await FlutterNativeImage.compressImage(imageFile.path,
+    //     quality: 100, percentage: 100);
+    return compressedFile;
   }
 
   showPopup(context, addEdit, {dynamic attriubte}) {
@@ -318,6 +363,11 @@ class ProductsController extends GetxController {
       TextEditingController();
   final TextEditingController quantityAttributeController =
       TextEditingController();
+  final TextEditingController priceAttributeController =
+      TextEditingController();
+  final TextEditingController discountAttributeController =
+      TextEditingController();
+
   final TextEditingController nameEditingController = TextEditingController();
   final TextEditingController priceEditingController = TextEditingController();
   final TextEditingController skuEditingController = TextEditingController();
@@ -366,39 +416,23 @@ class ProductsController extends GetxController {
     request.fields['delivery_type'] = deliveryTypeId.toString();
     request.fields['delivery_charge'] =
         deliveryChargeController.text.toString();
-    // for (var attribute in attributeAddList) {
-    //   var fileStream =
-    //       http.ByteStream(Stream.castFrom(attribute.image.openRead()));
-    //   var length = await attribute.image.length();
-
-    //   var multipartFile = http.MultipartFile(
-    //     'attribute_image',
-    //     fileStream,
-    //     length,
-    //     filename: attribute.image.path.split('/').last,
-    //   );
-
-    //   request.files.add(multipartFile);
-    // }
 
     request.fields['product_weight'] = netWeightController.text.toString();
     commission.isEmpty
         ? null
         : request.fields['commission'] = quantityVal.value.toString();
-    image != null
-        ? request.files
-            .add(await http.MultipartFile.fromPath("image", image!.path))
-        : null;
-    // for (int i = 0; i < attributeAddList.value.length; i++) {
-    //   log(attributeAddList.value[i].image.toString());
-    //   File image = attributeAddList.value[i].image;
-    //   request.files.add(
-    //     await http.MultipartFile.fromPath(
-    //       'attribute_image[${attributeAddList.value[i].imageId}]',
-    //       image.path,
-    //     ),
-    //   );
-    // }
+    // request.files.add(await http.MultipartFile.fromPath("image", image!.path));
+
+    for (int i = 0; i < multiImages.length; i++) {
+      File image = multiImages[i];
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image[$i]',
+          image.path,
+          filename: image.path.split('/').last,
+        ),
+      );
+    }
     final response = await request.send();
     final responseBody = await response.stream.bytesToString();
     log(response.statusCode.toString());
@@ -850,17 +884,28 @@ class ProductsController extends GetxController {
   void addAttributeToList() {
     log(attributeFileImage!.path);
     final newProduct = AttriubuteAddModel(
-      id: attributeId,
-      value: valueAttributeController.text,
-      quantity: quantityAttributeController.text,
-      image: attributeImage,
-      // imageId: imageId,
-    );
+        id: attributeId,
+        value: valueAttributeController.text,
+        quantity: quantityAttributeController.text,
+        image: attributeImage,
+        discount: discountAttributeController.text,
+        price: priceAttributeController.text
+        // imageId: imageId,
+        );
     // attributeImageList.add(attributeFileImage!);
     attributeAddList.add(newProduct);
+    quantityEditingController.clear();
+    int count = 0;
+    for (var element in attributeAddList) {
+      count = count + int.tryParse(element.quantity.toString())!;
+      log(count.toString());
+    }
+    quantityEditingController.text = count.toString();
     imageId++;
     valueAttributeController.clear();
     quantityAttributeController.clear();
+    priceAttributeController.clear();
+    discountAttributeController.clear();
     attributeImage = "";
     update();
   }
@@ -870,24 +915,53 @@ class ProductsController extends GetxController {
       TextEditingController();
   final TextEditingController editQuantityAttributeController =
       TextEditingController();
-
+  final TextEditingController editQuantityEditingController =
+      TextEditingController();
+  final TextEditingController editAttributeDiscountEditingController =
+      TextEditingController();
+  final TextEditingController editAttributePriceEditingController =
+      TextEditingController();
   void editAttributeToList() {
     log(attributeFileImage!.path);
     final newProduct = EditAttribute(
-      attributeId: editAttributeId,
-      value: editValueAttributeController.text,
-      quantity: editQuantityAttributeController.text,
-      fileImage: attributeImage,
-    );
+        attributeId: editAttributeId,
+        value: editValueAttributeController.text,
+        quantity: editQuantityAttributeController.text,
+        fileImage: attributeImage,
+        discount: editAttributeDiscountEditingController.text,
+        price: editAttributePriceEditingController.text);
 
     editAttributesList.add(newProduct);
-
+    int count = 0;
+    editQuantityEditingController.clear();
+    for (var element in editAttributesList) {
+      count = count + int.tryParse(element.quantity.toString())!;
+      log(count.toString());
+    }
+    editQuantityEditingController.text = count.toString();
     editValueAttributeController.clear();
 
     editQuantityAttributeController.clear();
-
+    editAttributeDiscountEditingController.clear();
+    editAttributePriceEditingController.clear();
     attributeImage = "";
 
     update();
+  }
+
+  removeAttributeFromList(index, quantity) {
+    attributeAddList.removeAt(index);
+    final quant = int.tryParse(editQuantityEditingController.text);
+    num realCount = quant! - int.tryParse(quantity)!;
+    log(realCount.toString());
+    editQuantityEditingController.text = realCount.toString();
+  }
+
+  removeEditAttributeFromList(index, quantity) {
+    editAttributesList.removeAt(index);
+    final quant = int.tryParse(editQuantityEditingController.text);
+    num realCount = quant! - int.tryParse(quantity)!;
+    log(realCount.toString());
+    editQuantityEditingController.text = realCount.toString();
   }
 }

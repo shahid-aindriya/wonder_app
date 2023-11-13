@@ -221,7 +221,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CHAT,
-      page: () =>  ChatView(),
+      page: () => ChatView(),
       binding: ChatBinding(),
     ),
     GetPage(
@@ -251,7 +251,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.TAXES,
-      page: () => const TaxesView(),
+      page: () => TaxesView(),
       binding: TaxesBinding(),
     ),
   ];

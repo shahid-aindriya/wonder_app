@@ -39,6 +39,8 @@ class PasswordGenerationController extends GetxController {
       pan,
       password,
       adarImag,
+      tanImg,
+      tanNumber,
       panImag,
       context,
       repId}) async {
@@ -52,7 +54,9 @@ class PasswordGenerationController extends GetxController {
       "password": password,
       "adar_image": adarImag,
       "pan_image": panImag,
-      "business_rep_id": repId
+      "business_rep_id": repId,
+      "tan_number": tanNumber,
+      "tan_image": tanImg
     };
 
     try {

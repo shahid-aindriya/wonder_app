@@ -203,7 +203,7 @@ class _StoreDetailsViewState extends State<StoreDetailsView> {
                                   height: 1.1725,
                                   color: Color.fromARGB(93, 0, 0, 0),
                                 ),
-                                hintText: "Enter full adress",
+                                hintText: "Enter full address",
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 18.0, horizontal: 18),
                                 enabled: true,
@@ -224,7 +224,7 @@ class _StoreDetailsViewState extends State<StoreDetailsView> {
                                 focusColor: Color.fromARGB(255, 231, 231, 231)),
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'please enter valid adress';
+                                return 'please enter valid address';
                               } else {
                                 return null;
                               }
@@ -297,7 +297,7 @@ class _StoreDetailsViewState extends State<StoreDetailsView> {
                                 focusColor: Color.fromARGB(255, 231, 231, 231)),
                             validator: (value) {
                               if (value!.length < 3) {
-                                return 'please enter valid adress';
+                                return 'please enter valid address';
                               } else {
                                 return null;
                               }
@@ -359,7 +359,7 @@ class _StoreDetailsViewState extends State<StoreDetailsView> {
                                 focusColor: Color.fromARGB(255, 231, 231, 231)),
                             // validator: (value) {
                             //   if (value!.isEmpty) {
-                            //     return 'please enter valid adress';
+                            //     return 'please enter valid address';
                             //   } else {
                             //     return null;
                             //   }

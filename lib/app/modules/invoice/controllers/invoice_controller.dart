@@ -1020,7 +1020,7 @@ class InvoiceController extends GetxController {
           Uri.parse("${baseUrl.value}vendor-shop-pay-amount/"),
           headers: headers,
           body: jsonEncode(body));
-      log(requests.body.toString());
+      log("payment Status${requests.body.toString()}");
       if (requests.statusCode == 201) {
         Get.snackbar("Info ", "Payment completed succesfully",
             backgroundColor: Colors.green);

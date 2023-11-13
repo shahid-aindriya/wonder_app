@@ -31,6 +31,7 @@ class ProgressIndicatorView extends StatelessWidget {
           invoicePaymentController.count.value = 0;
           invoicePaymentController.listCount.value = 0;
 
+          invoicePaymentController.progressLoading.value = false;
           Get.back();
           throw Exception();
         },
@@ -119,44 +120,54 @@ class ProgressIndicatorView extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              // Container(
-              //     height: 40,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(10),
-              //       border: Border(),
-              //       gradient: LinearGradient(
-              //         begin: Alignment(-0.934, -1),
-              //         end: Alignment(1.125, 1.333),
-              //         colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
-              //         stops: <double>[0, 1],
-              //       ),
-              //       boxShadow: [
-              //         BoxShadow(
-              //           color: Color(0x3f000000),
-              //           offset: Offset(0, 0.7870440483),
-              //           blurRadius: 2.7546541691,
-              //         ),
-              //       ],
-              //     ),
-              //     child: Padding(
-              //         padding: const EdgeInsets.only(left: 5, right: 5),
-              //         child: ElevatedButton(
-              //             style: ButtonStyle(
-              //                 elevation: MaterialStateProperty.all(0),
-              //                 backgroundColor: MaterialStateProperty.all(
-              //                     Colors.transparent)),
-              //             onPressed: () async {
-              //               invoicePaymentController.progress.value = 0.0;
-              //               invoicePaymentController.count.value = 0;
-              //               invoicePaymentController.listCount.value = 0;
-              //               invoiceController.verifiedList.clear();
-              //               await invoiceController.verifiedInvoiceList();
-              //               Get.back();
-              //             },
-              //             child: Text(
-              //               "Go Back",
-              //               style: GoogleFonts.roboto(color: Colors.white),
-              //             ))))
+              Obx(() {
+                return Visibility(
+                  visible: invoicePaymentController.progressLoading.value
+                      ? true
+                      : false,
+                  child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border(),
+                        gradient: LinearGradient(
+                          begin: Alignment(-0.934, -1),
+                          end: Alignment(1.125, 1.333),
+                          colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+                          stops: <double>[0, 1],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0x3f000000),
+                            offset: Offset(0, 0.7870440483),
+                            blurRadius: 2.7546541691,
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                  elevation: MaterialStateProperty.all(0),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Colors.transparent)),
+                              onPressed: () async {
+                                invoiceController.verifiedList.clear();
+                                await invoiceController.verifiedInvoiceList();
+                                invoicePaymentController.progress.value = 0.0;
+                                invoicePaymentController.count.value = 0;
+                                invoicePaymentController.listCount.value = 0;
+
+                                invoicePaymentController.progressLoading.value =
+                                    false;
+                                Get.back();
+                              },
+                              child: Text(
+                                "Go Back",
+                                style: GoogleFonts.roboto(color: Colors.white),
+                              )))),
+                );
+              })
             ],
           ),
         ),

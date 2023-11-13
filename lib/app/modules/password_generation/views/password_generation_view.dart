@@ -17,7 +17,7 @@ class PasswordGenerationView extends GetView<PasswordGenerationController> {
   String? panNumber;
   String? panImag;
   String? email;
-  final repId;
+  final repId, tanImg, tanNumber;
   @override
   final PasswordGenerationController controller =
       Get.put(PasswordGenerationController());
@@ -33,6 +33,8 @@ class PasswordGenerationView extends GetView<PasswordGenerationController> {
       this.panImag,
       this.panNumber,
       this.phoneNmber,
+      this.tanNumber,
+      this.tanImg,
       this.email});
 
   @override
@@ -404,6 +406,8 @@ class PasswordGenerationView extends GetView<PasswordGenerationController> {
                                                 email: email,
                                                 name: name,
                                                 pan: panNumber,
+                                                tanImg: tanImg,
+                                                tanNumber: tanNumber,
                                                 panImag: panImag,
                                                 password:
                                                     passwordController.text,

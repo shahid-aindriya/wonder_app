@@ -35,8 +35,13 @@ class OrderData {
   int productId;
   String productName;
   String productImage;
+  int productAttributeId;
+  String productAttribute;
+  String productAttributeValue;
+  String productAttributeImage;
   String price;
   String paymentMethod;
+  String quantity;
   DateTime createdAt;
   bool orderReceivedStatus;
   bool orderConfirmedStatus;
@@ -56,8 +61,13 @@ class OrderData {
     required this.productId,
     required this.productName,
     required this.productImage,
+    required this.productAttributeId,
+    required this.productAttribute,
+    required this.productAttributeValue,
+    required this.productAttributeImage,
     required this.price,
     required this.paymentMethod,
+    required this.quantity,
     required this.createdAt,
     required this.orderReceivedStatus,
     required this.orderConfirmedStatus,
@@ -78,8 +88,13 @@ class OrderData {
         productId: json["product_id"],
         productName: json["product_name"],
         productImage: json["product_image"],
+        productAttributeId: json["product_attribute_id"],
+        productAttribute: json["product_attribute"],
+        productAttributeValue: json["product_attribute_value"],
+        productAttributeImage: json["product_attribute_image"],
         price: json["price"],
         paymentMethod: json["payment_method"],
+        quantity: json["quantity"],
         createdAt: DateTime.parse(json["created_at"]),
         orderReceivedStatus: json["order_received_status"],
         orderConfirmedStatus: json["order_confirmed_status"],

@@ -308,6 +308,12 @@ class DrawerTab extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
+                if (invoiceController.selectShopId == null) {
+                  Get.snackbar("Error", "Select a Shop to Proceed",
+                      backgroundColor: Colors.red);
+                  return;
+                }
+
                 Get.to(TaxesView());
               },
               leading: SvgPicture.asset(
@@ -323,6 +329,11 @@ class DrawerTab extends StatelessWidget {
               ),
               trailing: IconButton(
                   onPressed: () {
+                    if (invoiceController.selectShopId == null) {
+                      Get.snackbar("Error", "Select a Shop to Proceed",
+                          backgroundColor: Colors.red);
+                      return;
+                    }
                     Get.to(TaxesView());
                   },
                   icon: Icon(Icons.arrow_forward_ios_outlined)),
