@@ -1003,6 +1003,7 @@ class InvoiceController extends GetxController {
 
   dynamic shopId;
   dynamic halfAmount;
+  dynamic payHalfWithGst;
   paymentSuccessForAll({
     razorId,
   }) async {
@@ -1011,6 +1012,7 @@ class InvoiceController extends GetxController {
       "amount": halfAmount,
       "invoice_ids": idOfVerifiedList,
       "razorpay_transaction_id": razorId,
+      "pay_half_with_gst": payHalfWithGst,
       "razorpay_status": "completed",
       "total_amount": totalAmount.value
     };

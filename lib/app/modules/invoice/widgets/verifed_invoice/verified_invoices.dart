@@ -180,6 +180,8 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                                   .invoiceController.verifiedAmountData[index];
                               widget.invoiceController.halfAmount =
                                   amount.halfAmount;
+                              widget.invoiceController.payHalfWithGst =
+                                  amount.payHalfWithGst;
                               var phoneData = widget
                                       .invoiceController.verifiedList.isNotEmpty
                                   ? widget.invoiceController.verifiedList[index]

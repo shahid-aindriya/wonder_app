@@ -59,7 +59,7 @@ class PayHalf extends StatelessWidget {
                                         0
                                     ? widget.invoiceController
                                         .additionSelectAmount.value
-                                    : amount.halfAmount,
+                                    : amount.payHalfWithGst,
                                 email: amount.email,
                                 name: amount.name,
                                 phone: phoneData,
@@ -83,7 +83,7 @@ class PayHalf extends StatelessWidget {
                                     children: [
                                       Text("Pay Half Now"),
                                       Text(
-                                        "Pay only ₹${amount.halfAmount} now ",
+                                        "Pay only ₹${amount.payHalfWithGst} now ",
                                         style: GoogleFonts.jost(fontSize: 9),
                                       )
                                     ],

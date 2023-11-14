@@ -230,6 +230,7 @@ class TotalAmountData {
     required this.haveBank,
     required this.dueAmount,
     required this.halfAmount,
+    required this.payHalfWithGst,
     required this.shopBalance,
   });
 
@@ -237,6 +238,7 @@ class TotalAmountData {
   dynamic dueAmount;
   dynamic halfAmount;
   dynamic shopWalletAmount;
+  dynamic payHalfWithGst;
   String name;
   String email;
   String razorKey;
@@ -254,6 +256,7 @@ class TotalAmountData {
         razorKey: json["razor_key"],
         razorSecret: json["razor_secret"],
         haveBank: json["have_bank"],
+        payHalfWithGst: json["pay_half_with_gst"],
         dueAmount: json["due_amount"],
         halfAmount: json["half_amount"],
         shopBalance: json["shop_balance"],
