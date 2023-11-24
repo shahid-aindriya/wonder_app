@@ -145,10 +145,12 @@ class OrdersView extends GetView<OrdersController> {
                                 invoiceController.dueTotalCount.value = 1;
                                 invoiceController.dueCurrentCount.value = 1;
                                 invoiceController.debitListValue.value = "All";
+
                                 invoiceController.changeShop(
                                   value: value,
                                 );
                                 await invoiceController.checkVerifiedVendor();
+                                await ordersController.getListOfOrders(value);
                                 await myEarningsController.getMyEarnings(value);
                                 await invoiceController
                                     .onDropDownChanged(value);

@@ -35,10 +35,10 @@ class OrderData {
   int productId;
   String productName;
   String productImage;
-  int productAttributeId;
-  String productAttribute;
-  String productAttributeValue;
-  String productAttributeImage;
+  dynamic productAttributeId;
+  dynamic productAttribute;
+  dynamic productAttributeValue;
+  dynamic productAttributeImage;
   String price;
   String paymentMethod;
   String quantity;

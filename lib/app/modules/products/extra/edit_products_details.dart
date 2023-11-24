@@ -166,6 +166,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                 value!) // Convert nullable int to non-nullable
                             .toList();
                         return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
                               padding: EdgeInsets.only(
@@ -687,27 +688,59 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                   ),
                                                   title: Text(
                                                       "Attribute : ${data.value}"),
-                                                  subtitle: Text(
-                                                      "Quantity: ${data.quantity}"),
+                                                  subtitle: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                          "Quantity: ${data.quantity}"),
+                                                      Text(
+                                                          "Price: ${data.price}")
+                                                    ],
+                                                  ),
                                                   trailing: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
                                                       IconButton(
                                                           onPressed: () {
-                                                            data.id != null
-                                                                ? productsController
-                                                                    .deleteAttribute(
-                                                                        data.id,
-                                                                        widget
-                                                                            .id)
-                                                                : productsController
-                                                                    .removeEditAttributeFromList(
-                                                                        index,
-                                                                        data.quantity);
+                                                            // data.id != null
+                                                            //     ? productsController
+                                                            //         .deleteAttribute(
+                                                            //             data.id,
+                                                            //             widget
+                                                            //                 .id)
+                                                            //     : productsController
+                                                            //         .removeEditAttributeFromList(
+                                                            //             index,
+                                                            //             data.quantity);
+
+                                                            productsController.attributeEditDialogBox(
+                                                                data.id,
+                                                                id: widget.id,
+                                                                index: index,
+                                                                productId:
+                                                                    widget.id,
+                                                                context:
+                                                                    context,
+                                                                attributeId: data
+                                                                    .attributeId,
+                                                                discount: data
+                                                                    .discount
+                                                                    .toString(),
+                                                                price: data
+                                                                    .price
+                                                                    .toString(),
+                                                                quantity: data
+                                                                    .quantity
+                                                                    .toString(),
+                                                                value: data
+                                                                    .value
+                                                                    .toString());
                                                           },
-                                                          icon: Icon(Icons
-                                                              .remove_circle)),
+                                                          icon:
+                                                              Icon(Icons.edit)),
                                                     ],
                                                   ),
                                                 ),
@@ -722,221 +755,6 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                 .editAttributesList.length);
                                       }),
 
-                                      // Obx(() {
-                                      //   return ListView.separated(
-                                      //       separatorBuilder: (context, index) {
-                                      //         return SizedBox(
-                                      //           height: 10,
-                                      //         );
-                                      //       },
-                                      //       shrinkWrap: true,
-                                      //       physics:
-                                      //           NeverScrollableScrollPhysics(),
-                                      //       itemCount: productsController
-                                      //           .editAttributesList.length,
-                                      //       itemBuilder: (contsext, index) {
-                                      //         return Container(
-                                      //           decoration: BoxDecoration(
-                                      //               color: Colors.white,
-                                      //               borderRadius:
-                                      //                   BorderRadius.circular(
-                                      //                       7)),
-                                      //           child: FutureBuilder(
-                                      //               future: productsController
-                                      //                   .getAllAttribute(),
-                                      //               builder: (constext, snap) {
-                                      //                 if (snap.connectionState ==
-                                      //                     ConnectionState
-                                      //                         .waiting) {
-                                      //                   return Container(
-                                      //                     width: 60.w,
-                                      //                     height: 50,
-                                      //                     child: Shimmer(
-                                      //                       color:
-                                      //                           Color.fromARGB(
-                                      //                               255,
-                                      //                               185,
-                                      //                               84,
-                                      //                               84),
-                                      //                       child: ListTile(
-                                      //                         dense: true,
-                                      //                         leading: Column(
-                                      //                           mainAxisAlignment:
-                                      //                               MainAxisAlignment
-                                      //                                   .start,
-                                      //                           children: [
-                                      //                             CircleAvatar(
-                                      //                               backgroundColor:
-                                      //                                   Color.fromARGB(
-                                      //                                       255,
-                                      //                                       220,
-                                      //                                       216,
-                                      //                                       216),
-                                      //                               radius: 20,
-                                      //                             ),
-                                      //                           ],
-                                      //                         ),
-                                      //                         title: Container(
-                                      //                           height: 20,
-                                      //                           color: Color
-                                      //                               .fromARGB(
-                                      //                                   255,
-                                      //                                   220,
-                                      //                                   216,
-                                      //                                   216),
-                                      //                         ),
-                                      //                         subtitle:
-                                      //                             Container(
-                                      //                           height: 16,
-                                      //                           margin: EdgeInsets
-                                      //                               .only(
-                                      //                                   top: 8),
-                                      //                           color: Color
-                                      //                               .fromARGB(
-                                      //                                   255,
-                                      //                                   220,
-                                      //                                   216,
-                                      //                                   216),
-                                      //                         ),
-                                      //                       ),
-                                      //                       direction:
-                                      //                           ShimmerDirection
-                                      //                               .fromRTLB(),
-                                      //                     ),
-                                      //                   );
-                                      //                 }
-                                      //                 return Padding(
-                                      //                   padding:
-                                      //                       EdgeInsets.only(
-                                      //                           top: 20.0,
-                                      //                           right: 4.w,
-                                      //                           left: 4.w,
-                                      //                           bottom: 20),
-                                      //                   child: Column(
-                                      //                     crossAxisAlignment:
-                                      //                         CrossAxisAlignment
-                                      //                             .start,
-                                      //                     children: [
-                                      //                       Text(
-                                      //                         "Attribute",
-                                      //                         style: GoogleFonts
-                                      //                             .roboto(
-                                      //                                 fontSize:
-                                      //                                     12),
-                                      //                       ),
-                                      //                       Container(
-                                      //                           height: 35,
-                                      //                           child: Obx(() {
-                                      //                             return DropdownButtonFormField(
-                                      //                               value: productsController
-                                      //                                   .editAttributesList
-                                      //                                   .value[
-                                      //                                       index]
-                                      //                                   .attributeId,
-                                      //                               items: productsController
-                                      //                                   .attributeLists
-                                      //                                   .value
-                                      //                                   .map(
-                                      //                                       (data) {
-                                      //                                 return DropdownMenuItem(
-                                      //                                     value: data
-                                      //                                         .id,
-                                      //                                     child:
-                                      //                                         Padding(
-                                      //                                       padding:
-                                      //                                           const EdgeInsets.only(bottom: 5.0),
-                                      //                                       child:
-                                      //                                           Text(
-                                      //                                         data.title,
-                                      //                                         overflow: TextOverflow.visible,
-                                      //                                       ),
-                                      //                                     ));
-                                      //                               }).toList(),
-                                      //                               onChanged:
-                                      //                                   (value) {
-                                      //                                 productsController.getEditIdOfAttributes(
-                                      //                                     value,
-                                      //                                     index);
-                                      //                               },
-                                      //                             );
-                                      //                           })),
-                                      //                       SizedBox(
-                                      //                         height: 20,
-                                      //                       ),
-                                      //                       Text(
-                                      //                         "value",
-                                      //                         style: GoogleFonts
-                                      //                             .roboto(
-                                      //                                 fontSize:
-                                      //                                     12),
-                                      //                       ),
-                                      //                       Container(
-                                      //                           height: 35,
-                                      //                           child:
-                                      //                               TextField(
-                                      //                             controller:
-                                      //                                 productsController
-                                      //                                         .editControllers[
-                                      //                                     index],
-                                      //                             onChanged:
-                                      //                                 (value) {
-                                      //                               String selectedAttributeId = productsController
-                                      //                                   .editAttributesList
-                                      //                                   .value[
-                                      //                                       index]
-                                      //                                   .attributeId
-                                      //                                   .toString();
-                                      //                               // log(selectedAttributeId);
-                                      //                               // Call the function to add the id and value to the list
-                                      //                               productsController.addEditIdAndValue(
-                                      //                                   selectedAttributeId,
-                                      //                                   value,
-                                      //                                   index);
-                                      //                             },
-                                      //                           )),
-                                      //                       SizedBox(
-                                      //                         height: 10,
-                                      //                       ),
-                                      //                       Row(
-                                      //                         mainAxisAlignment:
-                                      //                             MainAxisAlignment
-                                      //                                 .end,
-                                      //                         children: [
-                                      //                           RemoveButton(
-                                      //                               onTap: () {
-                                      //                                 log(widget
-                                      //                                     .id
-                                      //                                     .toString());
-                                      //                                 productsController.deleteAttribute(
-                                      //                                     productsController
-                                      //                                         .editAttributesList
-                                      //                                         .value[index]
-                                      //                                         .id,
-                                      //                                     widget.id);
-                                      //                                 // products Controller.idOfAttribute.removeLast();
-                                      //                                 // productsController
-                                      //                                 //     .listCount
-                                      //                                 //     .value--;
-                                      //                                 // productsController
-                                      //                                 //     .editControllers
-                                      //                                 //     .removeLast();
-
-                                      //                                 // productsController
-                                      //                                 //     .editAttributesList
-                                      //                                 //     .value
-                                      //                                 //     .removeLast();
-                                      //                               },
-                                      //                               productsController:
-                                      //                                   productsController),
-                                      //                         ],
-                                      //                       ),
-                                      //                     ],
-                                      //                   ),
-                                      //                 );
-                                      //               }),
-                                      //         );
-                                      //       });
-                                      // }),
                                       SizedBox(
                                         height: 15,
                                       ),
@@ -1094,85 +912,220 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                             ),
                             Padding(
                               padding: EdgeInsets.only(
-                                  left: 4.w, top: 15, bottom: 15),
+                                left: 4.w,
+                                top: 15,
+                              ),
                               child: Text("Product Image"),
                             ),
+                            // Padding(
+                            //   padding: EdgeInsets.only(left: 8.w, bottom: 20),
+                            //   child:
+                            //       GetBuilder<ProductsController>(builder: (c) {
+                            //     return Row(
+                            //       crossAxisAlignment: CrossAxisAlignment.start,
+                            //       children: [
+                            //         Container(
+                            //           width: 30.w,
+                            //           height: 120,
+                            //           decoration: BoxDecoration(
+                            //               border:
+                            //                   Border.all(color: Colors.grey),
+                            //               borderRadius:
+                            //                   BorderRadius.circular(10),
+                            //               color: Colors.white),
+                            //           child: c.editImage != ""
+                            //               ? InkWell(
+                            //                   onTap: () {
+                            //                     c.showPopup(context, "Edit");
+                            //                   },
+                            //                   child: ClipRRect(
+                            //                     borderRadius:
+                            //                         BorderRadius.circular(10),
+                            //                     child: Image.memory(
+                            //                       Base64Decoder()
+                            //                           .convert(c.editImage),
+                            //                       fit: BoxFit.cover,
+                            //                     ),
+                            //                   ),
+                            //                 )
+                            //               : data.featuredImage.isNotEmpty
+                            //                   ? InkWell(
+                            //                       onTap: () {
+                            //                         c.showPopup(
+                            //                             context, "Edit");
+                            //                       },
+                            //                       child: ClipRRect(
+                            //                         borderRadius:
+                            //                             BorderRadius.circular(
+                            //                                 10),
+                            //                         child: Image.network(
+                            //                           "$baseUrlForImage${data.featuredImage}",
+                            //                           fit: BoxFit.cover,
+                            //                         ),
+                            //                       ),
+                            //                     )
+                            //                   : InkWell(
+                            //                       onTap: () {
+                            //                         c.showPopup(
+                            //                             context, "Edit");
+                            //                       },
+                            //                       child: Center(
+                            //                         child: Icon(
+                            //                           Icons
+                            //                               .add_circle_outline_outlined,
+                            //                           color: Color.fromARGB(
+                            //                               255, 125, 129, 234),
+                            //                         ),
+                            //                       ),
+                            //                     ),
+                            //         ),
+                            //         Visibility(
+                            //           visible: c.editImage == "" ? false : true,
+                            //           child: InkWell(
+                            //             onTap: () {
+                            //               c.removeImage();
+                            //             },
+                            //             child: Icon(
+                            //               Icons.remove_circle,
+                            //               color:
+                            //                   Color.fromARGB(255, 227, 58, 46),
+                            //             ),
+                            //           ),
+                            //         )
+                            //       ],
+                            //     );
+                            //   }),
+                            // ),
+
                             Padding(
-                              padding: EdgeInsets.only(left: 8.w, bottom: 20),
-                              child:
-                                  GetBuilder<ProductsController>(builder: (c) {
-                                return Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: 30.w,
-                                      height: 120,
-                                      decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.grey),
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.white),
-                                      child: c.editImage != ""
-                                          ? InkWell(
-                                              onTap: () {
-                                                c.showPopup(context, "Edit");
-                                              },
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: Image.memory(
-                                                  Base64Decoder()
-                                                      .convert(c.editImage),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            )
-                                          : data.featuredImage.isNotEmpty
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    c.showPopup(
-                                                        context, "Edit");
-                                                  },
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Image.network(
-                                                      "$baseUrlForImage${data.featuredImage}",
-                                                      fit: BoxFit.cover,
-                                                    ),
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Obx(() {
+                                return Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 5.w, right: 5.w),
+                                  child: SizedBox(
+                                    width: 100.w,
+                                    // To show images in particular area only
+                                    child: productsController.imageList
+                                            .isEmpty // If no images is selected
+                                        ? Center(
+                                            child: Text(
+                                                'Sorry nothing selected!!'.tr))
+                                        // If atleast 1 images is selected
+                                        : GridView.builder(
+                                            shrinkWrap: true,
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            scrollDirection: Axis.vertical,
+                                            itemCount: productsController
+                                                    .imageList.length +
+                                                1,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              crossAxisSpacing: 0,
+                                              // mainAxisSpacing: 5
+                                              // Horizontally only 3 images will show
+                                            ),
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              // TO show selected file
+                                              if (index <
+                                                  productsController
+                                                      .imageList.length) {
+                                                return Container(
+                                                    child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 4.w),
+                                                  child: Stack(
+                                                      children: <Widget>[
+                                                        Positioned(
+                                                            top: 8,
+                                                            left: 0,
+                                                            child: Container(
+                                                                width: 24.w,
+                                                                height: 100,
+                                                                child: Stack(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10),
+                                                                        child: productsController.imageList[index].id ==
+                                                                                null
+                                                                            ? Image.file(
+                                                                                productsController.imageList[index].image,
+                                                                                fit: BoxFit.contain,
+                                                                              )
+                                                                            : Image.network(
+                                                                                "$baseUrlForImage${productsController.imageList[index].image}",
+                                                                                fit: BoxFit.contain,
+                                                                              ),
+                                                                      ),
+                                                                    ]))),
+                                                        Positioned(
+                                                          top: 0,
+                                                          left: 80,
+                                                          child: InkWell(
+                                                              onTap: () {
+                                                                productsController.deleteImageFromList(
+                                                                    productsController
+                                                                        .imageList[
+                                                                            index]
+                                                                        .id,
+                                                                    widget.id,
+                                                                    context,
+                                                                    index);
+                                                              },
+                                                              child: Icon(
+                                                                Icons
+                                                                    .remove_circle_outline,
+                                                                color:
+                                                                    Colors.red,
+                                                              )),
+                                                        ),
+                                                      ]),
+                                                ));
+                                              }
+                                              return Container(
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 4.w),
+                                                  child: Stack(
+                                                    children: [
+                                                      Positioned(
+                                                        top: 8,
+                                                        left: 0,
+                                                        child: Container(
+                                                          width: 22.w,
+                                                          height: 100,
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                              color:
+                                                                  Colors.white),
+                                                          child: IconButton(
+                                                              onPressed: () {
+                                                                productsController
+                                                                    .selectMultipleImages(
+                                                                        false);
+                                                              },
+                                                              icon: Icon(Icons
+                                                                  .add_a_photo)),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                )
-                                              : InkWell(
-                                                  onTap: () {
-                                                    c.showPopup(
-                                                        context, "Edit");
-                                                  },
-                                                  child: Center(
-                                                    child: Icon(
-                                                      Icons
-                                                          .add_circle_outline_outlined,
-                                                      color: Color.fromARGB(
-                                                          255, 125, 129, 234),
-                                                    ),
-                                                  ),
                                                 ),
-                                    ),
-                                    Visibility(
-                                      visible: c.editImage == "" ? false : true,
-                                      child: InkWell(
-                                        onTap: () {
-                                          c.removeImage();
-                                        },
-                                        child: Icon(
-                                          Icons.remove_circle,
-                                          color:
-                                              Color.fromARGB(255, 227, 58, 46),
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                              );
+                                              // If you are making the web app then you have to
+                                              // use image provider as network image or in
+                                              // android or iOS it will as file only
+                                            },
+                                          ),
+                                  ),
                                 );
                               }),
                             ),

@@ -54,6 +54,10 @@ class TransactionDatum {
   dynamic offlineAmount;
   dynamic paymentGatewayAmount;
   dynamic deliveryCharge;
+  dynamic onlineGstAmount;
+  dynamic onlineTdsAmount;
+  dynamic offlineGstAmount;
+  dynamic offlineTdsAmount;
   dynamic status;
   dynamic createdAt;
 
@@ -72,6 +76,10 @@ class TransactionDatum {
     required this.deliveryCharge,
     required this.entryType,
     required this.remark,
+    required this.onlineGstAmount,
+    required this.onlineTdsAmount,
+    required this.offlineGstAmount,
+    required this.offlineTdsAmount,
     required this.status,
     required this.createdAt,
   });
@@ -93,6 +101,10 @@ class TransactionDatum {
         deliveryCharge: json["delivery_charge"],
         remark: json["remark"],
         status: json["status"],
+        onlineGstAmount: json["online_gst_amount"],
+        onlineTdsAmount: json["online_tds_amount"],
+        offlineGstAmount: json["offline_gst_amount"],
+        offlineTdsAmount: json["offline_tds_amount"],
         createdAt: json["created_at"],
       );
 

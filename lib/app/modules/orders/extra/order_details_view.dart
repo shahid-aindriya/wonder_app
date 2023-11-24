@@ -334,7 +334,7 @@ class OrderDetailsView extends StatelessWidget {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child: Image.network(
-                                          data.productAttributeImage.isEmpty
+                                          data.productAttributeImage != null
                                               ? "$baseUrlForImage${data.productAttributeImage}"
                                               : "$baseUrlForImage${data.productImage}",
                                           fit: BoxFit.cover,
@@ -359,7 +359,7 @@ class OrderDetailsView extends StatelessWidget {
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500),
                                       ),
-                                      Text(data.productAttributeValue),
+                                      Text(data.productAttributeValue ?? ""),
                                       SizedBox(
                                         height: 8,
                                       ),

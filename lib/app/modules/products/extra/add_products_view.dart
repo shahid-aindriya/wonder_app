@@ -744,7 +744,21 @@ class AddProductsView extends StatelessWidget {
                                 onPressed: productsController.addLoading.value
                                     ? null
                                     : () async {
-                                        productsController.addProducts(context);
+                                        productsController.multiImages.isEmpty
+                                            ? ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                                SnackBar(
+                                                  backgroundColor: Colors.red,
+                                                  content: Text(
+                                                      'Please Select Image',
+                                                      style: GoogleFonts.roboto(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w500)),
+                                                ),
+                                              )
+                                            : productsController
+                                                .addProducts(context);
                                       },
                                 child: productsController.addLoading.value
                                     ? Row(

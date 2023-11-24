@@ -13,9 +13,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
+import '../../../data/colors.dart';
 import '../../seller_regist/controllers/seller_regist_controller.dart';
 import '../model/attribute_add_model.dart';
 import '../model/attribute_model.dart';
@@ -156,7 +158,8 @@ class ProductsController extends GetxController {
   RxList<File> multiImages = <File>[].obs;
   selectMultipleImages(value) async {
     try {
-      List<XFile> pimage = await ImagePicker().pickMultiImage();
+      List<XFile> pimage = await ImagePicker()
+          .pickMultiImage(imageQuality: 80, maxHeight: 1080, maxWidth: 1920);
       if (pimage.isEmpty) {
         return;
       } else {
@@ -170,6 +173,8 @@ class ProductsController extends GetxController {
           for (var i = 0; i < pimage.length; i++) {
             File imageFile = File(pimage[i].path);
             File compressedImage = await compressImage(imageFile);
+            final AllImage allImage = AllImage(image: compressedImage);
+            imageList.add(allImage);
             multiEditImages.add(compressedImage);
           }
         }
@@ -452,6 +457,7 @@ class ProductsController extends GetxController {
       tagsController.clear();
       deliveryChargeController.clear();
       netWeightController.clear();
+      multiImages.clear();
       profileImage = "";
       update();
       await getListOfPrdoucts(invoiceController.selectShopId);
@@ -492,6 +498,7 @@ class ProductsController extends GetxController {
   }
 
   RxList<ProductDatum> productsLists = <ProductDatum>[].obs;
+
   getListOfPrdoucts(id) async {
     final body = {"shop_id": id};
     final request = await http.post(
@@ -556,6 +563,7 @@ class ProductsController extends GetxController {
   }
 
   RxList<EditProductData> editProductsList = <EditProductData>[].obs;
+  RxList<AllImage> imageList = <AllImage>[].obs;
   getProductDetails(id) async {
     final body = {"product_id": id};
     final request = await http.post(
@@ -568,7 +576,7 @@ class ProductsController extends GetxController {
       final editProductListModel = editProductListModelFromJson(request.body);
       editProductsList.assign(editProductListModel.productData);
       editControllers.clear();
-
+      imageList.assignAll(editProductListModel.productData.allImages);
       if (editProductsList.first.subCategoryId != null) {
         getSubCategory(editProductsList.first.categoryId);
       }
@@ -719,10 +727,22 @@ class ProductsController extends GetxController {
     request.fields['delivery_charge'] = deliveryCharge;
     request.fields['product_weight'] = netWeight;
     request.fields["attributes"] = jsonEncode(editAttributesList.toJson());
-    editImageFile != null
-        ? request.files.add(
-            await http.MultipartFile.fromPath("image", editImageFile!.path))
-        : null;
+    for (int i = 0; i < imageList.length; i++) {
+      if (imageList[i].id == null) {
+        File image = imageList[i].image;
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'image[$i]',
+            image.path,
+            filename: image.path.split('/').last,
+          ),
+        );
+      }
+    }
+    // editImageFile != null
+    //     ? request.files.add(
+    //         await http.MultipartFile.fromPath("image", editImageFile!.path))
+    //     : null;
     final response = await request.send();
     final responseBody = await response.stream.bytesToString();
     log(response.statusCode.toString());
@@ -783,6 +803,7 @@ class ProductsController extends GetxController {
     log(request.body);
     if (request.statusCode == 201) {
       await getProductDetails(productId);
+      Get.back();
     }
   }
 
@@ -963,5 +984,203 @@ class ProductsController extends GetxController {
     num realCount = quant! - int.tryParse(quantity)!;
     log(realCount.toString());
     editQuantityEditingController.text = realCount.toString();
+    Get.back();
+  }
+
+  deleteImageFromList(imageId, id, context, index) async {
+    if (imageList.length == 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Atleast one image required',
+              style: GoogleFonts.roboto(
+                  fontSize: 15, fontWeight: FontWeight.w500)),
+        ),
+      );
+      return;
+    }
+    if (imageList[index].id == null) {
+      imageList.removeAt(index);
+
+      return;
+    }
+
+    final body = {"image_id": imageId};
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-delete-shop-product-image/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(request.body);
+    if (request.statusCode == 200) {
+      await getProductDetails(id);
+    }
+    await getProductDetails(id);
+  }
+
+  dynamic attriId;
+  final TextEditingController valueAttController = TextEditingController();
+  final TextEditingController discountAttController = TextEditingController();
+  final TextEditingController priceAttController = TextEditingController();
+  final TextEditingController quantityAttController = TextEditingController();
+  var isAttLoading = false.obs;
+
+  attributeEditDialogBox(attribId,
+      {context,
+      attributeId,
+      value,
+      discount,
+      price,
+      quantity,
+      id,
+      productId,
+      index}) {
+    attriId = attributeId;
+    valueAttController.text = value;
+    discountAttController.text = discount;
+    priceAttController.text = price;
+    quantityAttController.text = quantity;
+
+    Alert(
+      context: context,
+      title: "Edit Attribute",
+      style: AlertStyle(
+          overlayColor: Color.fromARGB(120, 0, 0, 0),
+          titleStyle: GoogleFonts.jost(
+              color: textGradientBlue, fontWeight: FontWeight.w500)),
+      content: Column(
+        children: <Widget>[
+          Form(
+            child: Column(
+              children: [
+                DropdownButtonFormField(
+                  value: attriId,
+                  decoration: InputDecoration(labelText: "Select Attribute"),
+                  items: attributeLists.map((data) {
+                    return DropdownMenuItem(
+                        value: data.id,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 5.0),
+                          child: Text(
+                            data.title,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ));
+                  }).toList(),
+                  onChanged: (value) {
+                    // productsController
+                    //     .getIdOfAttributes(
+                    //         value, index);
+                    log(value.toString());
+                    attriId = value;
+                  },
+                ),
+                TextFormField(
+                  controller: valueAttController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Value',
+                  ),
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: priceAttController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Price',
+                  ),
+                ),
+                TextFormField(
+                  controller: quantityAttController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Enter quantity',
+                  ),
+                ),
+                TextFormField(
+                  controller: discountAttController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Enter discount',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      buttons: [
+        DialogButton(
+          gradient: LinearGradient(
+            begin: Alignment(-0.934, -1),
+            end: Alignment(1.125, 1.333),
+            colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+            stops: <double>[0, 1],
+          ),
+          radius: BorderRadius.circular(10),
+          onPressed: () {
+            editAttr(id: id, attribute: attribId);
+          },
+          child: Obx(() {
+            return isAttLoading.value == true
+                ? CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : Text(
+                    "Update",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  );
+          }),
+        ),
+        DialogButton(
+          gradient: LinearGradient(
+            begin: Alignment(-0.934, -1),
+            end: Alignment(1.125, 1.333),
+            colors: <Color>[
+              Color.fromARGB(228, 189, 63, 63),
+              Color.fromARGB(228, 232, 87, 65)
+            ],
+            stops: <double>[0, 1],
+          ),
+          radius: BorderRadius.circular(10),
+          onPressed: () {
+            log(attribId.toString());
+            attribId != null
+                ? deleteAttribute(attribId, productId)
+                : removeEditAttributeFromList(index, quantity);
+          },
+          child: Obx(() {
+            return isAttLoading.value == true
+                ? CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : Text(
+                    "Delete",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  );
+          }),
+        ),
+      ],
+    ).show();
+  }
+
+  editAttr({id, attribute}) async {
+    isAttLoading.value = true;
+    final body = {
+      "attribute_id": attribute,
+      "value": valueAttController.text,
+      "quantity": quantityAttController.text,
+      "price": priceAttController.text,
+      "discount": discountAttController.text,
+    };
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-edit-product-attribute/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(request.statusCode.toString());
+    if (request.statusCode == 201) {
+      await getProductDetails(id);
+
+      isAttLoading.value = false;
+      Get.back();
+    }
+    isAttLoading.value = false;
   }
 }

@@ -57,7 +57,7 @@ class EditProductData {
   dynamic noOfReturnDays;
   List<ReasonId> reasonIds;
   List<EditAttribute> attributes;
-
+  List<AllImage> allImages;
   EditProductData(
       {required this.id,
       required this.name,
@@ -87,6 +87,7 @@ class EditProductData {
       required this.productWeight,
       required this.reasonIds,
       required this.attributes,
+      required this.allImages,
       required this.deliveryType});
 
   factory EditProductData.fromJson(Map<String, dynamic> json) =>
@@ -122,6 +123,8 @@ class EditProductData {
             json["reason_ids"].map((x) => ReasonId.fromJson(x))),
         attributes: List<EditAttribute>.from(
             json["attributes"].map((x) => EditAttribute.fromJson(x))),
+        allImages: List<AllImage>.from(
+            json["all_images"].map((x) => AllImage.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -177,13 +180,14 @@ class EditAttribute {
       this.fileImage});
 
   factory EditAttribute.fromJson(Map<String, dynamic> json) => EditAttribute(
-        id: json["id"],
-        attributeId: json["attribute_id"],
-        attribute: json["attribute"],
-        value: json["value"],
-        image: json["image"],
-        quantity: json["quantity"],
-      );
+      id: json["id"],
+      attributeId: json["attribute_id"],
+      attribute: json["attribute"],
+      value: json["value"],
+      image: json["image"],
+      quantity: json["quantity"],
+      price: json['price'],
+      discount: json['discount']);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -215,5 +219,25 @@ class ReasonId {
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
+      };
+}
+
+class AllImage {
+  dynamic id;
+  dynamic image;
+
+  AllImage({
+    this.id,
+    required this.image,
+  });
+
+  factory AllImage.fromJson(Map<String, dynamic> json) => AllImage(
+        id: json["id"],
+        image: json["image"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "image": image,
       };
 }

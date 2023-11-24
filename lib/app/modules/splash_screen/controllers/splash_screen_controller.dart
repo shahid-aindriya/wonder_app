@@ -21,7 +21,7 @@ class SplashScreenController extends GetxController {
       await gotoLogin();
     } else {
       await Future.delayed(const Duration(seconds: 4));
-      Get.offAll(BottombarView());
+      Get.offAll(() => BottombarView(), transition: Transition.fade);
     }
     return loggedName;
   }

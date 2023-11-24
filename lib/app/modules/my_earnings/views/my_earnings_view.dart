@@ -358,107 +358,338 @@ class MyEarningsView extends GetView<MyEarningsController> {
                                           255, 255, 255, 0.6800000071525574)
                                     ]),
                               ),
-                              child: ListTile(
-                                isThreeLine: false,
-                                title: Text("Order# ${data.id}",
-                                    style: GoogleFonts.roboto(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600)),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      formattedDate,
-                                      style: GoogleFonts.roboto(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Earnings  ",
-                                          style: GoogleFonts.roboto(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w300),
-                                        ),
-                                        Text(
-                                          "₹${data.amount}",
-                                          style: GoogleFonts.roboto(
-                                              color: Color(0xff4956b2),
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                trailing: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Wrap(
+                                    Column(
                                       crossAxisAlignment:
-                                          WrapCrossAlignment.center,
+                                          CrossAxisAlignment.start,
                                       children: [
+                                        Text("Order# ${data.id}",
+                                            style: GoogleFonts.roboto(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600)),
                                         Text(
-                                          "Order Value:  ",
+                                          formattedDate,
                                           style: GoogleFonts.roboto(
-                                              fontSize: 12,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w300),
                                         ),
-                                        Text(
-                                          "₹$total",
-                                          style: GoogleFonts.roboto(
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
+                                        Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Online Tds:  ",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              "₹${data.onlineTdsAmount ?? 0.0}",
+                                              style: GoogleFonts.roboto(
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
                                         ),
+                                        Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Offline Tds:    ",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              "₹${data.offlineTdsAmount ?? 0.0}",
+                                              style: GoogleFonts.roboto(
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Earnings  ",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              "₹${data.amount}",
+                                              style: GoogleFonts.roboto(
+                                                  color: Color(0xff4956b2),
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
-                                    Wrap(
+                                    Column(
                                       crossAxisAlignment:
-                                          WrapCrossAlignment.center,
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          "Delivery Charge:  ",
-                                          style: GoogleFonts.roboto(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w300),
+                                        Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Order Value:  ",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              "₹$total",
+                                              style: GoogleFonts.roboto(
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
                                         ),
-                                        Text(
-                                          "₹${data.deliveryCharge}",
-                                          style: GoogleFonts.roboto(
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
+                                        Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Delivery Charge:  ",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              "₹${data.deliveryCharge}",
+                                              style: GoogleFonts.roboto(
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
                                         ),
+                                        Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Online Gst:  ",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              "₹${data.onlineGstAmount ?? 0.0}",
+                                              style: GoogleFonts.roboto(
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                        Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Offline Gst:  ",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              "₹${data.offlineGstAmount ?? 0.0}",
+                                              style: GoogleFonts.roboto(
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                        Wrap(
+                                          crossAxisAlignment:
+                                              WrapCrossAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Payment Gateway Amount:  ",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                            Text(
+                                              "₹${data.paymentGatewayAmount}",
+                                              style: GoogleFonts.roboto(
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
-                                    Wrap(
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Payment Gateway Amount:  ",
-                                          style: GoogleFonts.roboto(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w300),
-                                        ),
-                                        Text(
-                                          "₹${data.paymentGatewayAmount}",
-                                          style: GoogleFonts.roboto(
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ],
-                                    )
                                   ],
                                 ),
                               ),
+
+                              //  ListTile(
+                              //   isThreeLine: true,
+                              //   title: Text("Order# ${data.id}",
+                              //       style: GoogleFonts.roboto(
+                              //           fontSize: 16,
+                              //           fontWeight: FontWeight.w600)),
+                              //   subtitle: Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       Text(
+                              //         formattedDate,
+                              //         style: GoogleFonts.roboto(
+                              //             fontSize: 14,
+                              //             fontWeight: FontWeight.w300),
+                              //       ),
+                              //       Row(
+                              //         children: [
+                              //           Text(
+                              //             "Earnings  ",
+                              //             style: GoogleFonts.roboto(
+                              //                 fontSize: 12,
+                              //                 fontWeight: FontWeight.w300),
+                              //           ),
+                              //           Text(
+                              //             "₹${data.amount}",
+                              //             style: GoogleFonts.roboto(
+                              //                 color: Color(0xff4956b2),
+                              //                 fontSize: 18,
+                              //                 fontWeight: FontWeight.w500),
+                              //           ),
+                              //         ],
+                              //       )
+                              //     ],
+                              //   ),
+                              //   trailing: Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.end,
+                              //     mainAxisAlignment: MainAxisAlignment.start,
+                              //     children: [
+                              //       Wrap(
+                              //         crossAxisAlignment:
+                              //             WrapCrossAlignment.center,
+                              //         children: [
+                              //           Text(
+                              //             "Order Value:  ",
+                              //             style: GoogleFonts.roboto(
+                              //                 fontSize: 12,
+                              //                 fontWeight: FontWeight.w300),
+                              //           ),
+                              //           Text(
+                              //             "₹$total",
+                              //             style: GoogleFonts.roboto(
+                              //                 color:
+                              //                     Color.fromARGB(255, 0, 0, 0),
+                              //                 fontSize: 15,
+                              //                 fontWeight: FontWeight.w500),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //       Wrap(
+                              //         crossAxisAlignment:
+                              //             WrapCrossAlignment.center,
+                              //         children: [
+                              //           Text(
+                              //             "Delivery Charge:  ",
+                              //             style: GoogleFonts.roboto(
+                              //                 fontSize: 12,
+                              //                 fontWeight: FontWeight.w300),
+                              //           ),
+                              //           Text(
+                              //             "₹${data.deliveryCharge}",
+                              //             style: GoogleFonts.roboto(
+                              //                 color:
+                              //                     Color.fromARGB(255, 0, 0, 0),
+                              //                 fontSize: 15,
+                              //                 fontWeight: FontWeight.w500),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //       Wrap(
+                              //         crossAxisAlignment:
+                              //             WrapCrossAlignment.center,
+                              //         children: [
+                              //           Text(
+                              //             "Online Gst:  ",
+                              //             style: GoogleFonts.roboto(
+                              //                 fontSize: 12,
+                              //                 fontWeight: FontWeight.w300),
+                              //           ),
+                              //           Text(
+                              //             "₹${data.onlineGstAmount ?? 0.0}",
+                              //             style: GoogleFonts.roboto(
+                              //                 color:
+                              //                     Color.fromARGB(255, 0, 0, 0),
+                              //                 fontSize: 15,
+                              //                 fontWeight: FontWeight.w500),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //       Wrap(
+                              //         crossAxisAlignment:
+                              //             WrapCrossAlignment.center,
+                              //         children: [
+                              //           Text(
+                              //             "Offline Gst:  ",
+                              //             style: GoogleFonts.roboto(
+                              //                 fontSize: 12,
+                              //                 fontWeight: FontWeight.w300),
+                              //           ),
+                              //           Text(
+                              //             "₹${data.offlineGstAmount ?? 0.0}",
+                              //             style: GoogleFonts.roboto(
+                              //                 color:
+                              //                     Color.fromARGB(255, 0, 0, 0),
+                              //                 fontSize: 15,
+                              //                 fontWeight: FontWeight.w500),
+                              //           ),
+                              //         ],
+                              //       ),
+                              //       Wrap(
+                              //         crossAxisAlignment:
+                              //             WrapCrossAlignment.center,
+                              //         children: [
+                              //           Text(
+                              //             "Payment Gateway Amount:  ",
+                              //             style: GoogleFonts.roboto(
+                              //                 fontSize: 12,
+                              //                 fontWeight: FontWeight.w300),
+                              //           ),
+                              //           Text(
+                              //             "₹${data.paymentGatewayAmount}",
+                              //             style: GoogleFonts.roboto(
+                              //                 color:
+                              //                     Color.fromARGB(255, 0, 0, 0),
+                              //                 fontSize: 15,
+                              //                 fontWeight: FontWeight.w500),
+                              //           ),
+                              //         ],
+                              //       )
+                              //     ],
+                              //   ),
+                              // ),
                             ),
                           );
                         },

@@ -679,11 +679,14 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                             height: 10,
                                           ),
                                           Visibility(
-                                              visible:
-                                                  (newData.invoiceData.status ==
-                                                          "Verified")
-                                                      ? true
-                                                      : false,
+                                              visible: (newData.invoiceData
+                                                              .status ==
+                                                          "Verified" &&
+                                                      newData.invoiceData
+                                                              .payHalfAmount !=
+                                                          true)
+                                                  ? true
+                                                  : false,
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
