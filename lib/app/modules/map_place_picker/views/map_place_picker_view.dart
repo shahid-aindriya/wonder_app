@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_place_picker_mb/google_maps_place_picker.dart';
+
 
 import '../../store_details/views/store_details_view.dart';
 import '../controllers/map_place_picker_controller.dart';
@@ -28,138 +31,138 @@ class MapPlacePickerView extends GetView<MapPlacePickerController> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: FutureBuilder(
-            future: mapPlacePickerController.getCurrentLocation(),
-            builder: (context, snapShot) {
-              if (snapShot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-              return OpenStreetMapSearchAndPick(
-                buttonWidth: 40.w,
-                buttonTextStyle:
-                    const TextStyle(fontSize: 18, fontStyle: FontStyle.normal),
-                center:
-                    LatLong(snapShot.data!.latitude, snapShot.data!.longitude),
-                buttonColor: Color(0xff4956b2),
-                locationPinIconColor: Color(0xff4956b2),
-                locationPinText: '',
-                buttonText: 'Set Location',
-                onPicked: (pickedData) {
-                  print(pickedData.latLong.latitude);
-                  print(pickedData.latLong.longitude);
-                  print(pickedData.address);
-                  print(pickedData.addressName);
-                  datas.location!.text = pickedData.addressName.toString();
-                  datas.lat!.text = pickedData.latLong.latitude.toString();
-                  datas.long!.text = pickedData.latLong.longitude.toString();
-                  Get.back();
-                },
-              );
-            }),
-        // body: PlacePicker(
-        //   apiKey: "AIzaSyA6sfxAGWorlekK-rkolU152WkN5mzn76A",
-        //   useCurrentLocation: true,
-        //   initialPosition: LatLng(9.9312328, 76.26730410000005),
-        //   forceSearchOnZoomChanged: true,
-        //   enableMyLocationButton: true,
-        //   hintText: "Find a place ...",
-        //   searchingText: "Please wait ...",
-        //   selectInitialPosition: true,
-        //   usePinPointingSearch: true,
-        //   usePlaceDetailSearch: true,
-        //   selectedPlaceWidgetBuilder: (
-        //     context,
-        //     selectedPlace,
-        //     state,
-        //     isSearchBarFocused,
-        //   ) {
-        //     return isSearchBarFocused
-        //         ? Container()
-        //         : FloatingCard(
-        //             bottomPosition: 0.0,
-        //             leftPosition: 0.0,
-        //             rightPosition: 0.0,
-        //             child: state == SearchingState.Searching
-        //                 ? Container()
-        //                 : Column(
-        //                     mainAxisSize: MainAxisSize.min,
-        //                     children: [
-        //                       selectedPlace == null
-        //                           ? Container()
-        //                           : Container(
-        //                               height: 130,
-        //                               padding: const EdgeInsets.all(16),
-        //                               child: Column(
-        //                                 mainAxisSize: MainAxisSize.min,
-        //                                 children: [
-        //                                   Text(
-        //                                     selectedPlace.formattedAddress
-        //                                         .toString(),
-        //                                     textAlign: TextAlign.center,
-        //                                     style: TextStyle(
-        //                                         color: Colors.green,
-        //                                         fontSize: 14,
-        //                                         fontWeight: FontWeight.bold),
-        //                                   ),
-        //                                   const SizedBox(height: 8),
-        //                                   MaterialButton(
-        //                                     onPressed: () {
-        //                                       // log(selectedPlace
-        //                                       //     .geometry!.location.lat
-        //                                       //     .toString());
-        //                                       // log(selectedPlace.geometry!.viewport
-        //                                       //     .toString());
-        //                                       // Get.off(StoreDetailsView(
-        //                                       //   storeLocation: selectedPlace
-        //                                       //       .formattedAddress,
-        //                                       // ));
+        // body: FutureBuilder(
+        //     future: mapPlacePickerController.getCurrentLocation(),
+        //     builder: (context, snapShot) {
+        //       if (snapShot.connectionState == ConnectionState.waiting) {
+        //         return Center(child: CircularProgressIndicator());
+        //       }
+        //       return OpenStreetMapSearchAndPick(
+        //         buttonWidth: 40.w,
+        //         buttonTextStyle:
+        //             const TextStyle(fontSize: 18, fontStyle: FontStyle.normal),
+        //         center:
+        //             LatLong(snapShot.data!.latitude, snapShot.data!.longitude),
+        //         buttonColor: Color(0xff4956b2),
+        //         locationPinIconColor: Color(0xff4956b2),
+        //         locationPinText: '',
+        //         buttonText: 'Set Location',
+        //         onPicked: (pickedData) {
+        //           print(pickedData.latLong.latitude);
+        //           print(pickedData.latLong.longitude);
+        //           print(pickedData.address);
+        //           print(pickedData.addressName);
+        //           datas.location!.text = pickedData.addressName.toString();
+        //           datas.lat!.text = pickedData.latLong.latitude.toString();
+        //           datas.long!.text = pickedData.latLong.longitude.toString();
+        //           Get.back();
+        //         },
+        //       );
+        //     }),
+        body: PlacePicker(
+          apiKey: "AIzaSyA6sfxAGWorlekK-rkolU152WkN5mzn76A",
+          useCurrentLocation: true,
+          initialPosition: LatLng(9.9312328, 76.26730410000005),
+          forceSearchOnZoomChanged: true,
+          enableMyLocationButton: true,
+          hintText: "Find a place ...",
+          searchingText: "Please wait ...",
+          selectInitialPosition: true,
+          usePinPointingSearch: true,
+          usePlaceDetailSearch: true,
+          selectedPlaceWidgetBuilder: (
+            context,
+            selectedPlace,
+            state,
+            isSearchBarFocused,
+          ) {
+            return isSearchBarFocused
+                ? Container()
+                : FloatingCard(
+                    bottomPosition: 0.0,
+                    leftPosition: 0.0,
+                    rightPosition: 0.0,
+                    child: state == SearchingState.Searching
+                        ? Container()
+                        : Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              selectedPlace == null
+                                  ? Container()
+                                  : Container(
+                                      height: 130,
+                                      padding: const EdgeInsets.all(16),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            selectedPlace.formattedAddress
+                                                .toString(),
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          MaterialButton(
+                                            onPressed: () {
+                                              // log(selectedPlace
+                                              //     .geometry!.location.lat
+                                              //     .toString());
+                                              // log(selectedPlace.geometry!.viewport
+                                              //     .toString());
+                                              // Get.off(StoreDetailsView(
+                                              //   storeLocation: selectedPlace
+                                              //       .formattedAddress,
+                                              // ));
 
-        //                                       // String s = '';
-        //                                       // for (var i = 0;
-        //                                       //     i <
-        //                                       //         selectedPlace
-        //                                       //             .addressComponents!
-        //                                       //             .length;
-        //                                       //     i++) {
-        //                                       //   log(selectedPlace
-        //                                       //       .addressComponents![i]
-        //                                       //       .shortName);
-        //                                       //   s = "$s${selectedPlace.addressComponents![i].shortName} ,";
-        //                                       // }
-        //                                       try {
-        //                                         datas.location!.text =
-        //                                             selectedPlace
-        //                                                 .formattedAddress!
-        //                                                 .toString();
-        //                                         datas.lat!.text = selectedPlace
-        //                                             .geometry!.location.lat
-        //                                             .toString();
-        //                                         datas.long!.text = selectedPlace
-        //                                             .geometry!.location.lng
-        //                                             .toString();
-        //                                         Get.back();
-        //                                       } catch (e) {
-        //                                         log(e.toString());
-        //                                       }
-        //                                     },
-        //                                     // ignore: sort_child_properties_last
-        //                                     child: Text("Select Place"),
+                                              // String s = '';
+                                              // for (var i = 0;
+                                              //     i <
+                                              //         selectedPlace
+                                              //             .addressComponents!
+                                              //             .length;
+                                              //     i++) {
+                                              //   log(selectedPlace
+                                              //       .addressComponents![i]
+                                              //       .shortName);
+                                              //   s = "$s${selectedPlace.addressComponents![i].shortName} ,";
+                                              // }
+                                              try {
+                                                datas.location!.text =
+                                                    selectedPlace
+                                                        .formattedAddress!
+                                                        .toString();
+                                                datas.lat!.text = selectedPlace
+                                                    .geometry!.location.lat
+                                                    .toString();
+                                                datas.long!.text = selectedPlace
+                                                    .geometry!.location.lng
+                                                    .toString();
+                                                Get.back();
+                                              } catch (e) {
+                                                log(e.toString());
+                                              }
+                                            },
+                                            // ignore: sort_child_properties_last
+                                            child: Text("Select Place"),
 
-        //                                     minWidth: 200,
-        //                                     height: 45,
-        //                                     shape: RoundedRectangleBorder(
-        //                                         borderRadius:
-        //                                             BorderRadius.circular(20)),
-        //                                     color: Colors.green,
-        //                                   )
-        //                                 ],
-        //                               ),
-        //                             ),
-        //                     ],
-        //                   ),
-        //           );
-        //   },
-        // ),
+                                            minWidth: 200,
+                                            height: 45,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            color: Colors.green,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                            ],
+                          ),
+                  );
+          },
+        ),
       ),
     );
   }

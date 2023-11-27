@@ -72,19 +72,25 @@ class PayHalf extends StatelessWidget {
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("Pay Half Now"),
+                                      Text("Pay Half Now",
+                                          style: GoogleFonts.jost(
+                                              color: Colors.white)),
                                       Text(
                                           "Pay only ₹${widget.invoiceController.additionSelectAmount.value} now ",
-                                          style: GoogleFonts.jost(fontSize: 9))
+                                          style: GoogleFonts.jost(
+                                              fontSize: 9, color: Colors.white))
                                     ],
                                   )
                                 : Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("Pay Half Now"),
+                                      Text("Pay Half Now",
+                                          style: GoogleFonts.jost(
+                                              color: Colors.white)),
                                       Text(
                                         "Pay only ₹${amount.payHalfWithGst} now ",
-                                        style: GoogleFonts.jost(fontSize: 9),
+                                        style: GoogleFonts.jost(
+                                            fontSize: 9, color: Colors.white),
                                       )
                                     ],
                                   );

@@ -30,7 +30,14 @@ class TaxesController extends GetxController {
   final tdsScrollController = ScrollController();
 
   getTds() async {
-    final body = {"shop_id": invoiceController.selectShopId, "page": 1};
+    if (currentTdsPage.value > totalTdsPages.value) {
+      log("message");
+      return;
+    }
+    final body = {
+      "shop_id": invoiceController.selectShopId,
+      "page": currentTdsPage.value
+    };
 
     final request = await http.post(
         Uri.parse(
@@ -70,6 +77,7 @@ class TaxesController extends GetxController {
 
   getGst() async {
     if (currentGstPage.value > totalGstPages.value) {
+      log("message");
       return;
     }
     final body = {"shop_id": invoiceController.selectShopId, "page": 1};

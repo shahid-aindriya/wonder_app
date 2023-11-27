@@ -25,7 +25,7 @@ class PayLater extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-                height: 43,
+                height: 50,
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                   border: Border.all(

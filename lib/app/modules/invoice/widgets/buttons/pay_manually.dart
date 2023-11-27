@@ -16,7 +16,7 @@ class PayManually extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-                height: 40,
+                height: 50,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.white, width: 1),
                   borderRadius: BorderRadius.circular(10),

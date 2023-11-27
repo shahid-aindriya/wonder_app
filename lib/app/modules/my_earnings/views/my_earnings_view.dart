@@ -17,7 +17,7 @@ import '../../products/views/products_view.dart';
 import '../controllers/my_earnings_controller.dart';
 
 class MyEarningsView extends GetView<MyEarningsController> {
-  MyEarningsView({Key? key}) : super(key: key);
+  MyEarningsView({super.key});
   final AddInvoiceController addInvoiceController = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -454,7 +454,7 @@ class MyEarningsView extends GetView<MyEarningsController> {
                                                   fontWeight: FontWeight.w300),
                                             ),
                                             Text(
-                                              "₹$total",
+                                              "₹${total.toStringAsFixed(2)}",
                                               style: GoogleFonts.roboto(
                                                   color: Color.fromARGB(
                                                       255, 0, 0, 0),

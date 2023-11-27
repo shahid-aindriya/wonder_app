@@ -21,7 +21,7 @@ import '../extra/edit_products_details.dart';
 final ProductsController productsController = Get.put(ProductsController());
 
 class ProductsView extends GetView<ProductsController> {
-  ProductsView({Key? key}) : super(key: key);
+  ProductsView({super.key});
   // final AddInvoiceController addInvoiceController = Get.find();
   final AddInvoiceController addInvoiceController = Get.find();
   @override
@@ -585,6 +585,7 @@ class ProductsView extends GetView<ProductsController> {
                     child: Icon(
                       Icons.add,
                       size: 30,
+                      color: Colors.white,
                     ));
           }),
         ),

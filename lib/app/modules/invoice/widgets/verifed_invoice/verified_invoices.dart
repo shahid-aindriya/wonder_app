@@ -407,499 +407,477 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
                             CircularProgressIndicator()
                           ],
                         )
-                      : FutureBuilder(builder: (contextd, snapshot) {
-                          // if (snapshot.connectionState ==
-                          //     ConnectionState.waiting) {
-                          //   return Row(
-                          //     mainAxisAlignment: MainAxisAlignment.center,
-                          //     children: [
-                          //       SizedBox(height: 40.h),
-                          //       CircularProgressIndicator()
-                          //     ],
-                          //   );
-                          // }
-                          return RefreshIndicator(
-                            onRefresh: () async {
-                              await widget.invoiceController
-                                  .ondropDownChangedInvoice(
-                                      widget.invoiceController.selectShopId);
-                            },
-                            child: Obx(() {
-                              return widget
-                                      .invoiceController.verifiedList.isEmpty
-                                  ? Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 10.h,
+                      : RefreshIndicator(
+                          onRefresh: () async {
+                            await widget.invoiceController
+                                .ondropDownChangedInvoice(
+                                    widget.invoiceController.selectShopId);
+                          },
+                          child: Obx(() {
+                            return widget.invoiceController.verifiedList.isEmpty
+                                ? Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 10.h,
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Lottie.asset(
+                                                "assets/images/13659-no-data.json"),
+                                          ],
                                         ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Lottie.asset(
-                                                  "assets/images/13659-no-data.json"),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Obx(() {
-                                      return ListView.builder(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemCount: widget.invoiceController
-                                                .isVerfiedInvoiceLoading.value
-                                            ? widget.invoiceController
-                                                    .verifiedList.length +
-                                                1
-                                            : widget.invoiceController
-                                                .verifiedList.length,
-                                        itemBuilder: (contexst, index) {
-                                          if (index <
-                                              widget.invoiceController
-                                                  .verifiedList.length) {
-                                            var datas = widget.invoiceController
-                                                .verifiedList[index];
-                                            widget.invoiceController.invoiceId =
-                                                datas.id;
-                                            widget.invoiceController.amount =
-                                                datas.amountData
-                                                    .additionalAmount;
-                                            String formattedDate =
-                                                DateFormat("MMM dd, yyyy")
-                                                    .format(DateTime.parse(datas
-                                                        .invoiceDate
-                                                        .toString()));
-                                            // log(formattedDate);
+                                      ),
+                                    ],
+                                  )
+                                : Obx(() {
+                                    return ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: widget.invoiceController
+                                              .isVerfiedInvoiceLoading.value
+                                          ? widget.invoiceController
+                                                  .verifiedList.length +
+                                              1
+                                          : widget.invoiceController
+                                              .verifiedList.length,
+                                      itemBuilder: (contexst, index) {
+                                        if (index <
+                                            widget.invoiceController
+                                                .verifiedList.length) {
+                                          var datas = widget.invoiceController
+                                              .verifiedList[index];
+                                          widget.invoiceController.invoiceId =
+                                              datas.id;
+                                          widget.invoiceController.amount =
+                                              datas.amountData.additionalAmount;
+                                          String formattedDate =
+                                              DateFormat("MMM dd, yyyy").format(
+                                                  DateTime.parse(datas
+                                                      .invoiceDate
+                                                      .toString()));
+                                          // log(formattedDate);
 
-                                            return InkWell(
-                                              onTap: () async {
-                                                Get.to(InvoiceDetailsView(
-                                                  id: datas.id,
-                                                ));
-                                              },
-                                              child: Slidable(
-                                                enabled:
-                                                    datas.payHalfAmount == true
-                                                        ? false
-                                                        : true,
-                                                // Specify a key if the Slidable is dismissible.
-                                                key: const ValueKey(0),
+                                          return InkWell(
+                                            onTap: () async {
+                                              Get.to(InvoiceDetailsView(
+                                                id: datas.id,
+                                              ));
+                                            },
+                                            child: Slidable(
+                                              enabled:
+                                                  datas.payHalfAmount == true
+                                                      ? false
+                                                      : true,
+                                              // Specify a key if the Slidable is dismissible.
+                                              key: const ValueKey(0),
 
-                                                // The start action pane is the one at the left or the top side.
-                                                endActionPane: ActionPane(
-                                                  extentRatio: .2,
-                                                  dragDismissible: false,
-                                                  // A motion is a widget used to control how the pane animates.
-                                                  motion: const ScrollMotion(),
+                                              // The start action pane is the one at the left or the top side.
+                                              endActionPane: ActionPane(
+                                                extentRatio: .2,
+                                                dragDismissible: false,
+                                                // A motion is a widget used to control how the pane animates.
+                                                motion: const ScrollMotion(),
 
-                                                  // A pane can dismiss the Slidable.
+                                                // A pane can dismiss the Slidable.
 
-                                                  // All actions are defined in the children parameter.
-                                                  children: [
-                                                    // InkWell(
-                                                    //   onLongPress: () {},
-                                                    //   onTap:
-                                                    //       // datas.payHalfAmount ==
-                                                    //       //         false
-                                                    //       //     ?
-                                                    //       //     () {
-                                                    //       //         Get.snackbar(
-                                                    //       //             "Error",
-                                                    //       //             "Can't approve this Invoice",
-                                                    //       //             backgroundColor:
-                                                    //       //                 Colors
-                                                    //       //                     .red);
-                                                    //       //       }
-                                                    //       // :
-                                                    //       () async {
-                                                    //     log("message");
-                                                    //     datas.amountData.additionalAmount ==
-                                                    //             0
-                                                    //         ? await widget
-                                                    //             .invoiceController
-                                                    //             .approveOrDeclineInvoice(
-                                                    //                 choice:
-                                                    //                     "Approve",
-                                                    //                 context:
-                                                    //                     context,
-                                                    //                 invoiceId:
-                                                    //                     datas
-                                                    //                         .id)
-                                                    //         : await widget
-                                                    //             .invoiceController
-                                                    //             .openCheckout(
-                                                    //             amount: datas
-                                                    //                 .amountData
-                                                    //                 .additionalAmount,
-                                                    //             email: datas
-                                                    //                 .amountData
-                                                    //                 .email,
-                                                    //             invoiceId:
-                                                    //                 datas.id,
-                                                    //             name: datas
-                                                    //                 .amountData
-                                                    //                 .name,
-                                                    //             razorKey: datas
-                                                    //                 .amountData
-                                                    //                 .razorKey,
-                                                    //             data: datas
-                                                    //                 .amountData,
-                                                    //           );
-                                                    //   },
-                                                    //   child: Container(
-                                                    //     height: 70,
-                                                    //     width: 54,
-                                                    //     child: Image.asset(
-                                                    //       "assets/images/approve.png",
-                                                    //       fit: BoxFit.cover,
-                                                    //     ),
-                                                    //   ),
-                                                    // ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        widget.invoiceController
-                                                            .approveOrDeclineInvoice(
-                                                                choice:
-                                                                    "Reject",
-                                                                context:
-                                                                    context,
-                                                                invoiceId:
-                                                                    datas.id);
-                                                      },
-                                                      child: Container(
-                                                        height: 70,
-                                                        width: 54,
-                                                        child: Image.asset(
-                                                          "assets/images/decline.png",
-                                                          fit: BoxFit.cover,
-                                                        ),
+                                                // All actions are defined in the children parameter.
+                                                children: [
+                                                  // InkWell(
+                                                  //   onLongPress: () {},
+                                                  //   onTap:
+                                                  //       // datas.payHalfAmount ==
+                                                  //       //         false
+                                                  //       //     ?
+                                                  //       //     () {
+                                                  //       //         Get.snackbar(
+                                                  //       //             "Error",
+                                                  //       //             "Can't approve this Invoice",
+                                                  //       //             backgroundColor:
+                                                  //       //                 Colors
+                                                  //       //                     .red);
+                                                  //       //       }
+                                                  //       // :
+                                                  //       () async {
+                                                  //     log("message");
+                                                  //     datas.amountData.additionalAmount ==
+                                                  //             0
+                                                  //         ? await widget
+                                                  //             .invoiceController
+                                                  //             .approveOrDeclineInvoice(
+                                                  //                 choice:
+                                                  //                     "Approve",
+                                                  //                 context:
+                                                  //                     context,
+                                                  //                 invoiceId:
+                                                  //                     datas
+                                                  //                         .id)
+                                                  //         : await widget
+                                                  //             .invoiceController
+                                                  //             .openCheckout(
+                                                  //             amount: datas
+                                                  //                 .amountData
+                                                  //                 .additionalAmount,
+                                                  //             email: datas
+                                                  //                 .amountData
+                                                  //                 .email,
+                                                  //             invoiceId:
+                                                  //                 datas.id,
+                                                  //             name: datas
+                                                  //                 .amountData
+                                                  //                 .name,
+                                                  //             razorKey: datas
+                                                  //                 .amountData
+                                                  //                 .razorKey,
+                                                  //             data: datas
+                                                  //                 .amountData,
+                                                  //           );
+                                                  //   },
+                                                  //   child: Container(
+                                                  //     height: 70,
+                                                  //     width: 54,
+                                                  //     child: Image.asset(
+                                                  //       "assets/images/approve.png",
+                                                  //       fit: BoxFit.cover,
+                                                  //     ),
+                                                  //   ),
+                                                  // ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () {
+                                                      widget.invoiceController
+                                                          .approveOrDeclineInvoice(
+                                                              choice: "Reject",
+                                                              context: context,
+                                                              invoiceId:
+                                                                  datas.id);
+                                                    },
+                                                    child: Container(
+                                                      height: 70,
+                                                      width: 54,
+                                                      child: Image.asset(
+                                                        "assets/images/decline.png",
+                                                        fit: BoxFit.cover,
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
+                                              ),
 
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      10.0),
-                                                  child: Container(
-                                                    width: 100.w,
-                                                    height: 80,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color: Colors.white,
-                                                          width: 1),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              14),
-                                                      gradient: LinearGradient(
-                                                          begin: Alignment(
-                                                              1.1437236070632935,
-                                                              -0.005003529135137796),
-                                                          end: Alignment(
-                                                              -0.06076670065522194,
-                                                              0.042849887162446976),
-                                                          colors: [
-                                                            Color.fromRGBO(255,
-                                                                255, 255, 0.75),
-                                                            Color.fromRGBO(
-                                                                255,
-                                                                255,
-                                                                255,
-                                                                0.3199999928474426)
-                                                          ]),
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        Obx(() {
-                                                          return Visibility(
-                                                            visible: widget
-                                                                    .invoiceController
-                                                                    .checkButton
-                                                                    .isFalse
-                                                                ? false
-                                                                : true,
-                                                            child: Checkbox(
-                                                              value: widget
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: Container(
+                                                  width: 100.w,
+                                                  height: 80,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 1),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            14),
+                                                    gradient: LinearGradient(
+                                                        begin: Alignment(
+                                                            1.1437236070632935,
+                                                            -0.005003529135137796),
+                                                        end: Alignment(
+                                                            -0.06076670065522194,
+                                                            0.042849887162446976),
+                                                        colors: [
+                                                          Color.fromRGBO(255,
+                                                              255, 255, 0.75),
+                                                          Color.fromRGBO(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              0.3199999928474426)
+                                                        ]),
+                                                  ),
+                                                  child: Row(
+                                                    children: [
+                                                      Obx(() {
+                                                        return Visibility(
+                                                          visible: widget
                                                                   .invoiceController
-                                                                  .checkBoxedList[index],
-                                                              onChanged:
-                                                                  (value) async {
-                                                                widget.invoiceController.checBoxFunct(
-                                                                    dueAmount: datas
-                                                                        .amountData
-                                                                        .vendorBalance,
-                                                                    value:
-                                                                        value,
-                                                                    index:
-                                                                        index,
-                                                                    commissionAmount: datas
-                                                                        .amountData
-                                                                        .commissionAmount,
-                                                                    walletAmount: datas
-                                                                        .amountData
-                                                                        .currentAmount,
-                                                                    preTaxAmount:
-                                                                        datas
-                                                                            .preTaxAmount,
-                                                                    addiTionalAmount: datas
-                                                                        .amountData
-                                                                        .additionalAmount);
-                                                                widget
-                                                                    .invoiceController
-                                                                    .toggleIdSelection(
-                                                                        datas
-                                                                            .id);
-                                                                // log(widget
-                                                                //     .invoiceController
-                                                                //     .idOfVerifiedList
-                                                                //     .toString());
-                                                              },
-                                                            ),
-                                                          );
-                                                        }),
-                                                        Visibility(
-                                                          visible: datas.payHalfAmount ==
-                                                                      true &&
-                                                                  datas.bulkApproveStatus ==
-                                                                      true
-                                                              ? true
-                                                              : false,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 3.0,
-                                                                    left: 10),
-                                                            child: Container(
-                                                              width: 5,
-                                                              height: 5,
-                                                              child: Icon(
-                                                                Icons
-                                                                    .verified_user_sharp,
-                                                                size: 20,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        43,
-                                                                        154,
-                                                                        54),
-                                                              ),
+                                                                  .checkButton
+                                                                  .isFalse
+                                                              ? false
+                                                              : true,
+                                                          child: Checkbox(
+                                                            value: widget
+                                                                .invoiceController
+                                                                .checkBoxedList[index],
+                                                            onChanged:
+                                                                (value) async {
+                                                              widget.invoiceController.checBoxFunct(
+                                                                  dueAmount: datas
+                                                                      .amountData
+                                                                      .vendorBalance,
+                                                                  value: value,
+                                                                  index: index,
+                                                                  commissionAmount: datas
+                                                                      .amountData
+                                                                      .commissionAmount,
+                                                                  walletAmount: datas
+                                                                      .amountData
+                                                                      .currentAmount,
+                                                                  preTaxAmount:
+                                                                      datas
+                                                                          .preTaxAmount,
+                                                                  addiTionalAmount: datas
+                                                                      .amountData
+                                                                      .additionalAmount);
+                                                              widget
+                                                                  .invoiceController
+                                                                  .toggleIdSelection(
+                                                                      datas.id);
+                                                              // log(widget
+                                                              //     .invoiceController
+                                                              //     .idOfVerifiedList
+                                                              //     .toString());
+                                                            },
+                                                          ),
+                                                        );
+                                                      }),
+                                                      Visibility(
+                                                        visible:
+                                                            datas.payHalfAmount ==
+                                                                        true &&
+                                                                    datas.bulkApproveStatus ==
+                                                                        true
+                                                                ? true
+                                                                : false,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  top: 3.0,
+                                                                  left: 10),
+                                                          child: Container(
+                                                            width: 5,
+                                                            height: 5,
+                                                            child: Icon(
+                                                              Icons
+                                                                  .verified_user_sharp,
+                                                              size: 20,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      43,
+                                                                      154,
+                                                                      54),
                                                             ),
                                                           ),
                                                         ),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Column(
-                                                            children: [
-                                                              Container(
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          229,
+                                                                          223,
+                                                                          227)),
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        8.0),
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  maxLines: 2,
+                                                                  "₹${datas.preTaxAmount}",
+                                                                  maxFontSize:
+                                                                      18,
+                                                                  minFontSize:
+                                                                      12,
+                                                                  style: GoogleFonts.roboto(
+                                                                      color: datas.status ==
+                                                                              "Verified"
+                                                                          ? Color.fromARGB(
+                                                                              255,
+                                                                              73,
+                                                                              117,
+                                                                              231)
+                                                                          : greyColor,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 4,
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left:
+                                                                          3.w),
+                                                              child: Text(
+                                                                formattedDate,
+                                                                style: GoogleFonts.roboto(
+                                                                    color: datas.status ==
+                                                                            "Verified"
+                                                                        ? Colors
+                                                                            .black
+                                                                        : greyColor,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w300),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 1.w,
+                                                      ),
+                                                      Expanded(
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      top: 14.0,
+                                                                      left:
+                                                                          2.w),
+                                                              child: Column(
+                                                                children: [
+                                                                  RichText(
+                                                                    text:
+                                                                        TextSpan(
+                                                                      children: [
+                                                                        TextSpan(
+                                                                          text:
+                                                                              'By ',
+                                                                          style: GoogleFonts.roboto(
+                                                                              fontSize: 16,
+                                                                              color: datas.status == "Verified" ? Colors.black : greyColor,
+                                                                              fontWeight: FontWeight.w300),
+                                                                        ),
+                                                                        TextSpan(
+                                                                          text:
+                                                                              datas.phone,
+                                                                          style: GoogleFonts.roboto(
+                                                                              fontSize: 14,
+                                                                              color: datas.status == "Verified" ? Colors.black : greyColor,
+                                                                              fontWeight: FontWeight.w700),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 13,
+                                                                  ),
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                          " Invoice No: ${datas.invoiceNumber}  ",
+                                                                          style: GoogleFonts.roboto(
+                                                                              color: datas.status == "Verified" ? Colors.black : greyColor,
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.w300)),
+                                                                      Visibility(
+                                                                        visible: datas.payHalfAmount ==
+                                                                                true
+                                                                            ? true
+                                                                            : false,
+                                                                        child:
+                                                                            Wrap(
+                                                                          crossAxisAlignment:
+                                                                              WrapCrossAlignment.center,
+                                                                          children: [
+                                                                            Container(
+                                                                              width: 8,
+                                                                              height: 8,
+                                                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromARGB(255, 67, 213, 82)),
+                                                                            ),
+                                                                            Text(" Paid",
+                                                                                style: GoogleFonts.roboto(color: Color.fromARGB(255, 67, 213, 82), fontSize: 12, fontWeight: FontWeight.w500))
+                                                                          ],
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 2.w,
+                                                            ),
+                                                            Flexible(
+                                                              child: Container(
                                                                 decoration: BoxDecoration(
                                                                     borderRadius:
                                                                         BorderRadius.circular(
                                                                             10),
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            229,
-                                                                            223,
-                                                                            227)),
+                                                                    color: Colors
+                                                                        .white),
                                                                 child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          8.0),
-                                                                  child:
-                                                                      AutoSizeText(
-                                                                    maxLines: 2,
-                                                                    "₹${datas.preTaxAmount}",
-                                                                    maxFontSize:
-                                                                        18,
-                                                                    minFontSize:
-                                                                        12,
-                                                                    style: GoogleFonts.roboto(
-                                                                        color: datas.status ==
-                                                                                "Verified"
-                                                                            ? Color.fromARGB(
-                                                                                255,
-                                                                                73,
-                                                                                117,
-                                                                                231)
-                                                                            : greyColor,
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
-                                                                  ),
+                                                                  padding: const EdgeInsets
+                                                                      .only(
+                                                                      top: 3.0,
+                                                                      bottom: 3,
+                                                                      left: 4,
+                                                                      right: 4),
+                                                                  child: SvgPicture
+                                                                      .asset(
+                                                                          "assets/images/verified.svg"),
                                                                 ),
                                                               ),
-                                                              SizedBox(
-                                                                height: 4,
-                                                              ),
-                                                              Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        left: 3
-                                                                            .w),
-                                                                child: Text(
-                                                                  formattedDate,
-                                                                  style: GoogleFonts.roboto(
-                                                                      color: datas
-                                                                                  .status ==
-                                                                              "Verified"
-                                                                          ? Colors
-                                                                              .black
-                                                                          : greyColor,
-                                                                      fontSize:
-                                                                          12,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w300),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 1.w,
+                                                            )
+                                                          ],
                                                         ),
-                                                        SizedBox(
-                                                          width: 1.w,
-                                                        ),
-                                                        Expanded(
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Padding(
-                                                                padding: EdgeInsets
-                                                                    .only(
-                                                                        top:
-                                                                            14.0,
-                                                                        left: 2
-                                                                            .w),
-                                                                child: Column(
-                                                                  children: [
-                                                                    RichText(
-                                                                      text:
-                                                                          TextSpan(
-                                                                        children: [
-                                                                          TextSpan(
-                                                                            text:
-                                                                                'By ',
-                                                                            style: GoogleFonts.roboto(
-                                                                                fontSize: 16,
-                                                                                color: datas.status == "Verified" ? Colors.black : greyColor,
-                                                                                fontWeight: FontWeight.w300),
-                                                                          ),
-                                                                          TextSpan(
-                                                                            text:
-                                                                                datas.phone,
-                                                                            style: GoogleFonts.roboto(
-                                                                                fontSize: 14,
-                                                                                color: datas.status == "Verified" ? Colors.black : greyColor,
-                                                                                fontWeight: FontWeight.w700),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height:
-                                                                          13,
-                                                                    ),
-                                                                    Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Text(
-                                                                            " Invoice No: ${datas.invoiceNumber}  ",
-                                                                            style: GoogleFonts.roboto(
-                                                                                color: datas.status == "Verified" ? Colors.black : greyColor,
-                                                                                fontSize: 12,
-                                                                                fontWeight: FontWeight.w300)),
-                                                                        Visibility(
-                                                                          visible: datas.payHalfAmount == true
-                                                                              ? true
-                                                                              : false,
-                                                                          child:
-                                                                              Wrap(
-                                                                            crossAxisAlignment:
-                                                                                WrapCrossAlignment.center,
-                                                                            children: [
-                                                                              Container(
-                                                                                width: 8,
-                                                                                height: 8,
-                                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromARGB(255, 67, 213, 82)),
-                                                                              ),
-                                                                              Text(" Paid", style: GoogleFonts.roboto(color: Color.fromARGB(255, 67, 213, 82), fontSize: 12, fontWeight: FontWeight.w500))
-                                                                            ],
-                                                                          ),
-                                                                        )
-                                                                      ],
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 2.w,
-                                                              ),
-                                                              Flexible(
-                                                                child:
-                                                                    Container(
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10),
-                                                                      color: Colors
-                                                                          .white),
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top:
-                                                                            3.0,
-                                                                        bottom:
-                                                                            3,
-                                                                        left: 4,
-                                                                        right:
-                                                                            4),
-                                                                    child: SvgPicture
-                                                                        .asset(
-                                                                            "assets/images/verified.svg"),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 1.w,
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ),
-                                            );
-                                          } else {
-                                            return Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                CircularProgressIndicator()
-                                              ],
-                                            );
-                                          }
-                                        },
-                                      );
-                                    });
-                            }),
-                          );
-                        });
+                                            ),
+                                          );
+                                        } else {
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              CircularProgressIndicator()
+                                            ],
+                                          );
+                                        }
+                                      },
+                                    );
+                                  });
+                          }),
+                        );
                 })
               ],
             ),

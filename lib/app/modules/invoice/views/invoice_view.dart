@@ -151,32 +151,36 @@ class InvoiceView extends GetView<InvoiceController> {
                                         Color.fromARGB(255, 231, 231, 231)),
                                 value: invoiceController.selectShopId,
                                 onChanged: (value) async {
-                                
-                                   invoiceController.invoiceListsFilter.value
-                                    .clear();
-                                invoiceController.walletTransactionLists
-                                    .clear();
-                                invoiceController.invoiceLists.value.clear();
-                                invoiceController.walletCurrentpage.value = 1;
-                                invoiceController.invoiceCurrentpage.value = 1;
-                                invoiceController.shopWalletAmount.value = "0";
-                                invoiceController.dueList.clear();
-                                invoiceController.walletAmount.value = '';
-                                invoiceController.filterPage.value = 1;
-                                invoiceController.dueTotalCount.value = 1;
-                                invoiceController.dueCurrentCount.value = 1;
-                                invoiceController.debitListValue.value = "All";
-                                invoiceController.changeShop(
-                                  value: value,
-                                );
-                                await invoiceController.checkVerifiedVendor();
-                                await myEarningsController.getMyEarnings(value);
-                                await invoiceController
-                                    .onDropDownChanged(value);
-                                await invoiceController
-                                    .ondropDownChangedInvoice(value);
-                                await invoiceController.getDueData();
-                                 await productsController.getListOfPrdoucts(value);
+                                  invoiceController.invoiceListsFilter.value
+                                      .clear();
+                                  invoiceController.walletTransactionLists
+                                      .clear();
+                                  invoiceController.invoiceLists.value.clear();
+                                  invoiceController.walletCurrentpage.value = 1;
+                                  invoiceController.invoiceCurrentpage.value =
+                                      1;
+                                  invoiceController.shopWalletAmount.value =
+                                      "0";
+                                  invoiceController.dueList.clear();
+                                  invoiceController.walletAmount.value = '';
+                                  invoiceController.filterPage.value = 1;
+                                  invoiceController.dueTotalCount.value = 1;
+                                  invoiceController.dueCurrentCount.value = 1;
+                                  invoiceController.debitListValue.value =
+                                      "All";
+                                  invoiceController.changeShop(
+                                    value: value,
+                                  );
+                                  await invoiceController.checkVerifiedVendor();
+                                  await myEarningsController
+                                      .getMyEarnings(value);
+                                  await invoiceController
+                                      .onDropDownChanged(value);
+                                  await invoiceController
+                                      .ondropDownChangedInvoice(value);
+                                  await invoiceController.getDueData();
+                                  await productsController
+                                      .getListOfPrdoucts(value);
                                 },
                                 items: invoiceController.shopLists.value
                                     .map((data) {
@@ -482,6 +486,7 @@ class InvoiceView extends GetView<InvoiceController> {
                       child: Icon(
                         Icons.add,
                         size: 30,
+                        color: Colors.white,
                       ));
             }),
           ),
