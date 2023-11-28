@@ -66,7 +66,9 @@ class TdsView extends StatelessWidget {
                                 child: ListTile(
                                   isThreeLine: false,
                                   title: Text(
-                                      "Order#${data.orderNumber.toString()}",
+                                      data.orderNumber == null
+                                          ? "Half-Payment"
+                                          : "Order${data.orderNumber.toString()}",
                                       style: GoogleFonts.roboto(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600)),

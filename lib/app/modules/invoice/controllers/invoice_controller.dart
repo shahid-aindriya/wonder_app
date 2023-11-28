@@ -337,7 +337,7 @@ class InvoiceController extends GetxController {
           Uri.parse("${baseUrl.value}vendor-notifications/"),
           headers: headers,
           body: jsonEncode(body));
-      // log(request.body);
+      log(request.body);
     } catch (e) {
       Get.snackbar("Error", "Something went wrong",
           backgroundColor: Colors.red);

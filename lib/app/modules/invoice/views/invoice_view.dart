@@ -11,6 +11,7 @@ import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/search_invoice.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/verifed_invoice/verified_invoices.dart';
+import 'package:wonder_app/app/modules/orders/controllers/orders_controller.dart';
 
 import '../../add_invoice/controllers/add_invoice_controller.dart';
 import '../../my_earnings/controllers/my_earnings_controller.dart';
@@ -172,6 +173,7 @@ class InvoiceView extends GetView<InvoiceController> {
                                     value: value,
                                   );
                                   await invoiceController.checkVerifiedVendor();
+                                     await ordersController.getListOfOrders(value);
                                   await myEarningsController
                                       .getMyEarnings(value);
                                   await invoiceController

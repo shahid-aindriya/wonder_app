@@ -72,7 +72,7 @@ class ProductsController extends GetxController {
           "${baseUrl.value}vendor-change-product-status/",
         ),
         body: jsonEncode(body),
-        headers: headers.value);
+        headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
       await getListOfPrdoucts(invoiceController.selectShopId);
@@ -185,8 +185,8 @@ class ProductsController extends GetxController {
   }
 
   compressImage(File imageFile) async {
-    ImageProperties properties =
-        await FlutterNativeImage.getImageProperties(imageFile.path);
+    // ImageProperties properties =
+    //     await FlutterNativeImage.getImageProperties(imageFile.path);
     File compressedFile2 = await FlutterNativeImage.compressImage(
         imageFile.path,
         quality: 80,
@@ -251,7 +251,7 @@ class ProductsController extends GetxController {
   getCategories() async {
     final request = await http.get(
         Uri.parse("${baseUrl.value}get-all-product-categories/"),
-        headers: headers.value);
+        headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
       final categoryForAddingProducts =
@@ -266,7 +266,7 @@ class ProductsController extends GetxController {
     final request = await http.post(
         Uri.parse("${baseUrl.value}get-all-product-sub-categories/"),
         body: jsonEncode(body),
-        headers: headers.value);
+        headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
       subCatId = null;
@@ -282,7 +282,7 @@ class ProductsController extends GetxController {
   getAllAttribute() async {
     final request = await http.get(
         Uri.parse("${baseUrl.value}get-all-attributes/"),
-        headers: headers.value);
+        headers: headers);
     // log(request.body);
     if (request.statusCode == 201) {
       final attributeModel = attributeModelFromJson(request.body);
@@ -344,7 +344,7 @@ class ProductsController extends GetxController {
   getAllReturn() async {
     final request = await http.get(
         Uri.parse("${baseUrl.value}get-all-return-reasons/"),
-        headers: headers.value);
+        headers: headers);
     // log(request.body);
     if (request.statusCode == 201) {
       final returnReasonsModel = returnReasonsModelFromJson(request.body);
@@ -506,7 +506,7 @@ class ProductsController extends GetxController {
           "${baseUrl.value}vendor-list-shop-product/",
         ),
         body: jsonEncode(body),
-        headers: headers.value);
+        headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
       final productListModel = productListModelFromJson(request.body);
@@ -520,7 +520,7 @@ class ProductsController extends GetxController {
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-delete-shop-product/"),
         body: jsonEncode(body),
-        headers: headers.value);
+        headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
       await getListOfPrdoucts(invoiceController.selectShopId);
@@ -583,7 +583,7 @@ class ProductsController extends GetxController {
 
       editAttributesList.assignAll(editProductsList.first.attributes);
 
-      listCount.value = editAttributesList.value.length;
+      listCount.value = editAttributesList.length;
       editQuantityVal.value =
           int.tryParse(editProductListModel.productData.commission.toString())!;
       editCommission.value =

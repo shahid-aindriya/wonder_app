@@ -40,7 +40,7 @@ class MyEarningsController extends GetxController {
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-shop-earnings/"),
         body: jsonEncode(body),
-        headers: headers.value);
+        headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
       final myEarnings = myEarningsFromJson(request.body);

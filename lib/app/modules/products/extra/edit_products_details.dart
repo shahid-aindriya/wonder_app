@@ -54,6 +54,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
   dynamic editReturnAvailability;
   dynamic deliveryTypeId;
 
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -181,275 +182,276 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                       right: 4.w,
                                       left: 4.w,
                                       bottom: 20),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Title",
-                                        style: GoogleFonts.roboto(fontSize: 12),
-                                      ),
-                                      Container(
-                                          height: 35,
-                                          child: TextFormField(
-                                            controller: nameEditingController,
-                                          )),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Short Description",
-                                        style: GoogleFonts.roboto(fontSize: 12),
-                                      ),
-                                      Container(
-                                          height: 35,
-                                          child: TextFormField(
-                                            controller:
-                                                descriptionEditingController,
-                                          )),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Selling Price",
-                                        style: GoogleFonts.roboto(fontSize: 12),
-                                      ),
-                                      Container(
-                                          height: 35,
-                                          child: TextFormField(
-                                            controller: priceEditingController,
-                                          )),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Quantity",
-                                        style: GoogleFonts.roboto(fontSize: 12),
-                                      ),
-                                      Container(
-                                          height: 35,
-                                          child: TextFormField(
-                                            controller: productsController
-                                                .editQuantityEditingController,
-                                          )),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Tags",
-                                        style: GoogleFonts.roboto(fontSize: 12),
-                                      ),
-                                      Container(
-                                          height: 35,
-                                          child: TextFormField(
-                                            controller: tagsController,
-                                          )),
+                                  child: Form(
+                                    key: formKey,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Title",
+                                          style:
+                                              GoogleFonts.roboto(fontSize: 12),
+                                        ),
+                                        Container(
+                                            height: 35,
+                                            child: TextFormField(
+                                              controller: nameEditingController,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'Please enter value';
+                                                }
+                                                return null;
+                                              },
+                                            )),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Short Description",
+                                          style:
+                                              GoogleFonts.roboto(fontSize: 12),
+                                        ),
+                                        Container(
+                                            height: 35,
+                                            child: TextFormField(
+                                                controller:
+                                                    descriptionEditingController,
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Please enter value';
+                                                  }
+                                                  return null;
+                                                })),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Selling Price",
+                                          style:
+                                              GoogleFonts.roboto(fontSize: 12),
+                                        ),
+                                        Container(
+                                            height: 35,
+                                            child: TextFormField(
+                                                controller:
+                                                    priceEditingController,
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Please enter value';
+                                                  }
+                                                  return null;
+                                                })),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Quantity",
+                                          style:
+                                              GoogleFonts.roboto(fontSize: 12),
+                                        ),
+                                        Container(
+                                            height: 35,
+                                            child: TextFormField(
+                                                controller: productsController
+                                                    .editQuantityEditingController,
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Please enter value';
+                                                  }
+                                                  return null;
+                                                })),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Tags",
+                                          style:
+                                              GoogleFonts.roboto(fontSize: 12),
+                                        ),
+                                        Container(
+                                            height: 35,
+                                            child: TextFormField(
+                                                controller: tagsController,
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Please enter value';
+                                                  }
+                                                  return null;
+                                                })),
 
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Delivery Charge",
-                                        style: GoogleFonts.roboto(fontSize: 12),
-                                      ),
-                                      Container(
-                                          height: 35,
-                                          child: TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller:
-                                                deliveryChargeController,
-                                          )),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        "Net-Weight",
-                                        style: GoogleFonts.roboto(fontSize: 12),
-                                      ),
-                                      Container(
-                                          height: 35,
-                                          child: TextFormField(
-                                            keyboardType: TextInputType.number,
-                                            controller: netWeightController,
-                                          )),
-                                      // SizedBox(
-                                      //   height: 20,
-                                      // ),
-                                      // Row(
-                                      //   children: [
-                                      //     Expanded(
-                                      //       child: Column(
-                                      //         crossAxisAlignment:
-                                      //             CrossAxisAlignment.start,
-                                      //         children: [
-                                      //           Text(
-                                      //             "Tax",
-                                      //             style: GoogleFonts.roboto(
-                                      //                 fontSize: 12),
-                                      //           ),
-                                      //           Container(
-                                      //               height: 35,
-                                      //               child: TextFormField(
-                                      //                 controller:
-                                      //                     taxEditingController,
-                                      //               )),
-                                      //         ],
-                                      //       ),
-                                      //     ),
-                                      //     SizedBox(width: 20),
-                                      //     Expanded(
-                                      //       child: Column(
-                                      //         crossAxisAlignment:
-                                      //             CrossAxisAlignment.start,
-                                      //         children: [
-                                      //           Text(
-                                      //             "Tax Type",
-                                      //             style: GoogleFonts.roboto(
-                                      //                 fontSize: 12),
-                                      //           ),
-                                      //           Container(
-                                      //               height: 35,
-                                      //               child:
-                                      //                   DropdownButtonFormField(
-                                      //                 value: editTaxType,
-                                      //                 items: productsController
-                                      //                     .typeList
-                                      //                     .map((data) {
-                                      //                   return DropdownMenuItem(
-                                      //                       value: data,
-                                      //                       child: Padding(
-                                      //                         padding:
-                                      //                             const EdgeInsets
-                                      //                                     .only(
-                                      //                                 bottom:
-                                      //                                     5.0),
-                                      //                         child: Text(
-                                      //                           data,
-                                      //                           overflow:
-                                      //                               TextOverflow
-                                      //                                   .visible,
-                                      //                         ),
-                                      //                       ));
-                                      //                 }).toList(),
-                                      //                 onChanged: (value) {
-                                      //                   editTaxType = value;
-                                      //                 },
-                                      //               )),
-                                      //         ],
-                                      //       ),
-                                      //     ),
-                                      //   ],
-                                      // ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Discount",
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 12),
-                                                ),
-                                                Container(
-                                                    height: 35,
-                                                    child: TextFormField(
-                                                      controller:
-                                                          discountController,
-                                                    )),
-                                              ],
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Delivery Charge",
+                                          style:
+                                              GoogleFonts.roboto(fontSize: 12),
+                                        ),
+                                        Container(
+                                            height: 35,
+                                            child: TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller:
+                                                    deliveryChargeController,
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Please enter value';
+                                                  }
+                                                  return null;
+                                                })),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          "Net-Weight",
+                                          style:
+                                              GoogleFonts.roboto(fontSize: 12),
+                                        ),
+                                        Container(
+                                            height: 35,
+                                            child: TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller: netWeightController,
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Please enter value';
+                                                  }
+                                                  return null;
+                                                })),
+                                        // SizedBox(
+                                        //   height: 20,
+                                        // ),
+                                        // Row(
+                                        //   children: [
+                                        //     Expanded(
+                                        //       child: Column(
+                                        //         crossAxisAlignment:
+                                        //             CrossAxisAlignment.start,
+                                        //         children: [
+                                        //           Text(
+                                        //             "Tax",
+                                        //             style: GoogleFonts.roboto(
+                                        //                 fontSize: 12),
+                                        //           ),
+                                        //           Container(
+                                        //               height: 35,
+                                        //               child: TextFormField(
+                                        //                 controller:
+                                        //                     taxEditingController,
+                                        //               )),
+                                        //         ],
+                                        //       ),
+                                        //     ),
+                                        //     SizedBox(width: 20),
+                                        //     Expanded(
+                                        //       child: Column(
+                                        //         crossAxisAlignment:
+                                        //             CrossAxisAlignment.start,
+                                        //         children: [
+                                        //           Text(
+                                        //             "Tax Type",
+                                        //             style: GoogleFonts.roboto(
+                                        //                 fontSize: 12),
+                                        //           ),
+                                        //           Container(
+                                        //               height: 35,
+                                        //               child:
+                                        //                   DropdownButtonFormField(
+                                        //                 value: editTaxType,
+                                        //                 items: productsController
+                                        //                     .typeList
+                                        //                     .map((data) {
+                                        //                   return DropdownMenuItem(
+                                        //                       value: data,
+                                        //                       child: Padding(
+                                        //                         padding:
+                                        //                             const EdgeInsets
+                                        //                                     .only(
+                                        //                                 bottom:
+                                        //                                     5.0),
+                                        //                         child: Text(
+                                        //                           data,
+                                        //                           overflow:
+                                        //                               TextOverflow
+                                        //                                   .visible,
+                                        //                         ),
+                                        //                       ));
+                                        //                 }).toList(),
+                                        //                 onChanged: (value) {
+                                        //                   editTaxType = value;
+                                        //                 },
+                                        //               )),
+                                        //         ],
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Discount",
+                                                    style: GoogleFonts.roboto(
+                                                        fontSize: 12),
+                                                  ),
+                                                  Container(
+                                                      height: 35,
+                                                      child: TextFormField(
+                                                          controller:
+                                                              discountController,
+                                                          validator: (value) {
+                                                            if (value!
+                                                                .isEmpty) {
+                                                              return 'Please enter value';
+                                                            }
+                                                            return null;
+                                                          })),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(width: 20),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Discount Type",
-                                                  style: GoogleFonts.roboto(
-                                                      fontSize: 12),
-                                                ),
-                                                Container(
-                                                    height: 35,
-                                                    child:
-                                                        DropdownButtonFormField(
-                                                      value: editDiscountType,
-                                                      items: productsController
-                                                          .typeList
-                                                          .map((data) {
-                                                        return DropdownMenuItem(
-                                                            value: data,
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      bottom:
-                                                                          5.0),
-                                                              child: Text(
-                                                                data,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .visible,
-                                                              ),
-                                                            ));
-                                                      }).toList(),
-                                                      onChanged: (value) {
-                                                        editDiscountType =
-                                                            value;
-                                                      },
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Row(
-                                        children: [
-                                          FutureBuilder(
-                                              future: productsController
-                                                  .getCategories(),
-                                              builder: (constext, snap) {
-                                                return Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        "Category",
-                                                        style:
-                                                            GoogleFonts.roboto(
-                                                                fontSize: 12),
-                                                      ),
-                                                      Container(
-                                                          height: 35,
-                                                          child: Obx(() {
-                                                            return DropdownButtonFormField(
-                                                              value: editCatId,
-                                                              items: productsController
-                                                                  .categoryLists
-                                                                  .map((data) {
+                                            SizedBox(width: 20),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Discount Type",
+                                                    style: GoogleFonts.roboto(
+                                                        fontSize: 12),
+                                                  ),
+                                                  Container(
+                                                      height: 35,
+                                                      child:
+                                                          DropdownButtonFormField(
+                                                              value:
+                                                                  editDiscountType,
+                                                              items:
+                                                                  productsController
+                                                                      .typeList
+                                                                      .map(
+                                                                          (data) {
                                                                 return DropdownMenuItem(
-                                                                    value:
-                                                                        data.id,
+                                                                    value: data,
                                                                     child:
                                                                         Padding(
                                                                       padding: const EdgeInsets
-                                                                              .only(
+                                                                          .only(
                                                                           bottom:
                                                                               5.0),
                                                                       child:
                                                                           Text(
-                                                                        data.name,
+                                                                        data,
                                                                         overflow:
                                                                             TextOverflow.visible,
                                                                       ),
@@ -457,126 +459,245 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                               }).toList(),
                                                               onChanged:
                                                                   (value) {
-                                                                editCatId =
+                                                                editDiscountType =
                                                                     value;
-
-                                                                productsController
-                                                                    .editCalculateCommission(
-                                                                        value);
-                                                                productsController
-                                                                    .getSubCategory(
-                                                                        value);
                                                               },
-                                                            );
-                                                          })),
-                                                    ],
-                                                  ),
-                                                );
-                                              }),
-                                          Obx(() {
-                                            return Visibility(
-                                              visible: productsController
-                                                          .editCommission
-                                                          .value ==
-                                                      "0"
-                                                  ? false
-                                                  : true,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 20),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Commission",
-                                                      style: GoogleFonts.roboto(
-                                                          fontSize: 12),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Row(
+                                                              validator:
+                                                                  (value) {
+                                                                if (value ==
+                                                                    null) {
+                                                                  return 'Please enter value';
+                                                                }
+                                                                return null;
+                                                              })),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Row(
+                                          children: [
+                                            FutureBuilder(
+                                                future: productsController
+                                                    .getCategories(),
+                                                builder: (constext, snap) {
+                                                  return Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
-                                                        InkWell(
-                                                            onTap: () {
-                                                              productsController
-                                                                  .editSelectQuantity(
-                                                                      false);
-                                                            },
-                                                            child: Icon(
-                                                              (Icons.remove),
-                                                            )),
-                                                        const SizedBox(
-                                                            width: 5),
-                                                        Container(
-                                                          height: 20,
-                                                          width: 30,
-                                                          color: Colors.white,
-                                                          child: Center(
-                                                            child: Obx(() {
-                                                              return Text(
-                                                                productsController
-                                                                    .editQuantityVal
-                                                                    .value
-                                                                    .toString(),
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              );
-                                                            }),
-                                                          ),
+                                                        Text(
+                                                          "Category",
+                                                          style: GoogleFonts
+                                                              .roboto(
+                                                                  fontSize: 12),
                                                         ),
-                                                        const SizedBox(
-                                                            width: 5),
-                                                        InkWell(
-                                                            onTap: () {
-                                                              productsController
-                                                                  .editSelectQuantity(
-                                                                      true);
-                                                            },
-                                                            child: Icon(
-                                                              (Icons.add),
-                                                            )),
+                                                        Container(
+                                                            height: 35,
+                                                            child: Obx(() {
+                                                              return DropdownButtonFormField(
+                                                                  value:
+                                                                      editCatId,
+                                                                  items: productsController
+                                                                      .categoryLists
+                                                                      .map(
+                                                                          (data) {
+                                                                    return DropdownMenuItem(
+                                                                        value: data
+                                                                            .id,
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: const EdgeInsets
+                                                                              .only(
+                                                                              bottom: 5.0),
+                                                                          child:
+                                                                              Text(
+                                                                            data.name,
+                                                                            overflow:
+                                                                                TextOverflow.visible,
+                                                                          ),
+                                                                        ));
+                                                                  }).toList(),
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    editCatId =
+                                                                        value;
+
+                                                                    productsController
+                                                                        .editCalculateCommission(
+                                                                            value);
+                                                                    productsController
+                                                                        .getSubCategory(
+                                                                            value);
+                                                                  },
+                                                                  validator:
+                                                                      (value) {
+                                                                    if (value ==
+                                                                        null) {
+                                                                      return 'Please enter value';
+                                                                    }
+                                                                    return null;
+                                                                  });
+                                                            })),
                                                       ],
                                                     ),
-                                                  ],
+                                                  );
+                                                }),
+                                            Obx(() {
+                                              return Visibility(
+                                                visible: productsController
+                                                            .editCommission
+                                                            .value ==
+                                                        "0"
+                                                    ? false
+                                                    : true,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 20),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "Commission",
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                                fontSize: 12),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          InkWell(
+                                                              onTap: () {
+                                                                productsController
+                                                                    .editSelectQuantity(
+                                                                        false);
+                                                              },
+                                                              child: Icon(
+                                                                (Icons.remove),
+                                                              )),
+                                                          const SizedBox(
+                                                              width: 5),
+                                                          Container(
+                                                            height: 20,
+                                                            width: 30,
+                                                            color: Colors.white,
+                                                            child: Center(
+                                                              child: Obx(() {
+                                                                return Text(
+                                                                  productsController
+                                                                      .editQuantityVal
+                                                                      .value
+                                                                      .toString(),
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                );
+                                                              }),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 5),
+                                                          InkWell(
+                                                              onTap: () {
+                                                                productsController
+                                                                    .editSelectQuantity(
+                                                                        true);
+                                                              },
+                                                              child: Icon(
+                                                                (Icons.add),
+                                                              )),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          })
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Sub-Category",
-                                            style: GoogleFonts.roboto(
-                                                fontSize: 12),
-                                          ),
-                                          Container(
-                                              height: 35,
-                                              child: Obx(() {
-                                                return DropdownButtonFormField(
-                                                  value: editSubCatId,
+                                              );
+                                            })
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Sub-Category",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12),
+                                            ),
+                                            Container(
+                                                height: 35,
+                                                child: Obx(() {
+                                                  return DropdownButtonFormField(
+                                                    value: editSubCatId,
+                                                    items: productsController
+                                                        .subCategoryLists
+                                                        .map((data) {
+                                                      return DropdownMenuItem(
+                                                          value: data.id,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    bottom:
+                                                                        5.0),
+                                                            child: Text(
+                                                              data.name,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .visible,
+                                                            ),
+                                                          ));
+                                                    }).toList(),
+                                                    onChanged: (value) {
+                                                      productsController
+                                                          .subCatId = value;
+                                                    },
+                                                  );
+                                                })),
+                                          ],
+                                        ),
+
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Delivery type",
+                                              style: GoogleFonts.roboto(
+                                                  fontSize: 12),
+                                            ),
+                                            Container(
+                                                height: 35,
+                                                child: DropdownButtonFormField(
+                                                  value: deliveryTypeId,
                                                   items: productsController
-                                                      .subCategoryLists
+                                                      .deliveryTypeList
                                                       .map((data) {
                                                     return DropdownMenuItem(
-                                                        value: data.id,
+                                                        value: data,
                                                         child: Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   bottom: 5.0),
                                                           child: Text(
-                                                            data.name,
+                                                            data,
                                                             overflow:
                                                                 TextOverflow
                                                                     .visible,
@@ -584,222 +705,182 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                         ));
                                                   }).toList(),
                                                   onChanged: (value) {
-                                                    productsController
-                                                        .subCatId = value;
+                                                    deliveryTypeId = value;
                                                   },
-                                                );
-                                              })),
-                                        ],
-                                      ),
+                                                )),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
 
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "Delivery type",
-                                            style: GoogleFonts.roboto(
-                                                fontSize: 12),
-                                          ),
-                                          Container(
-                                              height: 35,
-                                              child: DropdownButtonFormField(
-                                                value: deliveryTypeId,
-                                                items: productsController
-                                                    .deliveryTypeList
-                                                    .map((data) {
-                                                  return DropdownMenuItem(
-                                                      value: data,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 5.0),
-                                                        child: Text(
-                                                          data,
-                                                          overflow: TextOverflow
-                                                              .visible,
-                                                        ),
-                                                      ));
-                                                }).toList(),
-                                                onChanged: (value) {
-                                                  deliveryTypeId = value;
-                                                },
-                                              )),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-                                      ),
-
-                                      Obx(() {
-                                        return ListView.separated(
-                                            shrinkWrap: true,
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            itemBuilder: (context, index) {
-                                              final data = productsController
-                                                  .editAttributesList[index];
-                                              return Container(
-                                                width: 100.w,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(14),
-                                                  gradient: LinearGradient(
-                                                      begin: Alignment(
-                                                          1.4153012037277222,
-                                                          0.15562866628170013),
-                                                      end: Alignment(
-                                                          -0.15562868118286133,
-                                                          0.044075123965740204),
-                                                      colors: [
-                                                        Color.fromRGBO(213, 210,
-                                                            210, 0.749),
-                                                        Color.fromRGBO(223, 222,
-                                                            222, 0.678)
-                                                      ]),
-                                                ),
-                                                child: ListTile(
-                                                  leading: ClipRRect(
+                                        Obx(() {
+                                          return ListView.separated(
+                                              shrinkWrap: true,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
+                                              itemBuilder: (context, index) {
+                                                final data = productsController
+                                                    .editAttributesList[index];
+                                                return Container(
+                                                  width: 100.w,
+                                                  decoration: BoxDecoration(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            4),
-                                                    child: data.fileImage !=
-                                                            null
-                                                        ? Image.memory(
-                                                            Base64Decoder()
-                                                                .convert(data
-                                                                    .fileImage))
-                                                        : data.image != null
-                                                            ? Image.network(
-                                                                "$baseUrlForImage${data.image}")
-                                                            : Column(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: [
-                                                                  Icon(Icons
-                                                                      .apps),
-                                                                ],
-                                                              ),
+                                                            14),
+                                                    gradient: LinearGradient(
+                                                        begin: Alignment(
+                                                            1.4153012037277222,
+                                                            0.15562866628170013),
+                                                        end: Alignment(-0.15562868118286133, 0.044075123965740204),
+                                                        colors: [
+                                                          Color.fromRGBO(213,
+                                                              210, 210, 0.749),
+                                                          Color.fromRGBO(223,
+                                                              222, 222, 0.678)
+                                                        ]),
                                                   ),
-                                                  title: Text(
-                                                      "Attribute : ${data.value}"),
-                                                  subtitle: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                          "Quantity: ${data.quantity}"),
-                                                      Text(
-                                                          "Price: ${data.price}")
-                                                    ],
-                                                  ),
-                                                  trailing: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            // data.id != null
-                                                            //     ? productsController
-                                                            //         .deleteAttribute(
-                                                            //             data.id,
-                                                            //             widget
-                                                            //                 .id)
-                                                            //     : productsController
-                                                            //         .removeEditAttributeFromList(
-                                                            //             index,
-                                                            //             data.quantity);
+                                                  child: ListTile(
+                                                    leading: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                      child: data.fileImage !=
+                                                              null
+                                                          ? Image.memory(
+                                                              Base64Decoder()
+                                                                  .convert(data
+                                                                      .fileImage))
+                                                          : data.image != null
+                                                              ? Image.network(
+                                                                  "$baseUrlForImage${data.image}")
+                                                              : Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Icon(Icons
+                                                                        .apps),
+                                                                  ],
+                                                                ),
+                                                    ),
+                                                    title: Text(
+                                                        "Attribute : ${data.value}"),
+                                                    subtitle: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            "Quantity: ${data.quantity}"),
+                                                        Text(
+                                                            "Price: ${data.price}")
+                                                      ],
+                                                    ),
+                                                    trailing: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              // data.id != null
+                                                              //     ? productsController
+                                                              //         .deleteAttribute(
+                                                              //             data.id,
+                                                              //             widget
+                                                              //                 .id)
+                                                              //     : productsController
+                                                              //         .removeEditAttributeFromList(
+                                                              //             index,
+                                                              //             data.quantity);
 
-                                                            productsController.attributeEditDialogBox(
-                                                                data.id,
-                                                                id: widget.id,
-                                                                index: index,
-                                                                productId:
-                                                                    widget.id,
-                                                                context:
-                                                                    context,
-                                                                attributeId: data
-                                                                    .attributeId,
-                                                                discount: data
-                                                                    .discount
-                                                                    .toString(),
-                                                                price: data
-                                                                    .price
-                                                                    .toString(),
-                                                                quantity: data
-                                                                    .quantity
-                                                                    .toString(),
-                                                                value: data
-                                                                    .value
-                                                                    .toString());
-                                                          },
-                                                          icon:
-                                                              Icon(Icons.edit)),
-                                                    ],
+                                                              productsController.attributeEditDialogBox(
+                                                                  data.id,
+                                                                  id: widget.id,
+                                                                  index: index,
+                                                                  productId:
+                                                                      widget.id,
+                                                                  context:
+                                                                      context,
+                                                                  attributeId: data
+                                                                      .attributeId,
+                                                                  discount: data
+                                                                      .discount
+                                                                      .toString(),
+                                                                  price: data
+                                                                      .price
+                                                                      .toString(),
+                                                                  quantity: data
+                                                                      .quantity
+                                                                      .toString(),
+                                                                  value: data
+                                                                      .value
+                                                                      .toString());
+                                                            },
+                                                            icon: Icon(
+                                                                Icons.edit)),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                            separatorBuilder: (context, index) {
-                                              return SizedBox(
-                                                height: 10,
-                                              );
-                                            },
-                                            itemCount: productsController
-                                                .editAttributesList.length);
-                                      }),
-
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      EditAttributeWidget(
-                                          attributesList: productsController
-                                              .attributeLists),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          AddButton(
-                                              onClick: () {
-                                                // productsController
-                                                //     .listCount.value++;
-                                                // productsController
-                                                //     .editAttributesList
-                                                //     .add(EditAttribute(
-                                                //         id: null,
-                                                //         attributeId: null,
-                                                //         attribute: null,
-                                                //         value: ""));
-                                                // productsController
-                                                //     .editControllers
-                                                //     .add(
-                                                //         TextEditingController());
-                                                // log(productsController
-                                                //     .editAttributesList
-                                                //     .toString());
-                                                productsController
-                                                    .editAttributeToList();
+                                                );
                                               },
-                                              productsController:
-                                                  productsController),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 25,
-                                      ),
-                                    ],
+                                              separatorBuilder:
+                                                  (context, index) {
+                                                return SizedBox(
+                                                  height: 10,
+                                                );
+                                              },
+                                              itemCount: productsController
+                                                  .editAttributesList.length);
+                                        }),
+
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        EditAttributeWidget(
+                                            attributesList: productsController
+                                                .attributeLists),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            AddButton(
+                                                onClick: () {
+                                                  // productsController
+                                                  //     .listCount.value++;
+                                                  // productsController
+                                                  //     .editAttributesList
+                                                  //     .add(EditAttribute(
+                                                  //         id: null,
+                                                  //         attributeId: null,
+                                                  //         attribute: null,
+                                                  //         value: ""));
+                                                  // productsController
+                                                  //     .editControllers
+                                                  //     .add(
+                                                  //         TextEditingController());
+                                                  // log(productsController
+                                                  //     .editAttributesList
+                                                  //     .toString());
+                                                  productsController
+                                                      .editAttributeToList();
+                                                },
+                                                productsController:
+                                                    productsController),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 25,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1046,8 +1127,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                                 width: 24.w,
                                                                 height: 100,
                                                                 child: Stack(
-                                                                    children: <
-                                                                        Widget>[
+                                                                    children: <Widget>[
                                                                       ClipRRect(
                                                                         borderRadius:
                                                                             BorderRadius.circular(10),
@@ -1166,60 +1246,69 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                         MaterialStateProperty
                                                             .all(0),
                                                     backgroundColor:
-                                                        MaterialStateProperty
-                                                            .all(Colors
+                                                        MaterialStateProperty.all(
+                                                            Colors
                                                                 .transparent)),
                                                 onPressed: productsController
                                                         .editLoading.value
                                                     ? null
                                                     : () async {
-                                                        productsController.editProductDetails(
-                                                            context: context,
-                                                            tags: tagsController.text
-                                                                .toString(),
-                                                            categoryId: editCatId
-                                                                .toString(),
-                                                            discType:
-                                                                editDiscountType
-                                                                    .toString(),
-                                                            discount:
-                                                                discountController.text
-                                                                    .toString(),
-                                                            name: nameEditingController.text
-                                                                .toString(),
-                                                            price: priceEditingController
-                                                                .text
-                                                                .toString(),
-                                                            productId: widget.id
-                                                                .toString(),
-                                                            quantity: productsController
-                                                                .editQuantityEditingController
-                                                                .text
-                                                                .toString(),
-                                                            shortDescription:
-                                                                descriptionEditingController
-                                                                    .text
-                                                                    .toString(),
-                                                            subCatId: editSubCatId
-                                                                .toString(),
-                                                            deliveryCharge:
-                                                                deliveryChargeController
-                                                                    .text
-                                                                    .toString(),
-                                                            deliveryType:
-                                                                deliveryTypeId
-                                                                    .toString(),
-                                                            netWeight:
-                                                                netWeightController
-                                                                    .text
-                                                                    .toString()
-                                                            // tax:
-                                                            //     taxEditingController
-                                                            //         .text
-                                                            //         .toString(),
-                                                            // taxType: editTaxType
-                                                            //     .toString()
-                                                            );
+                                                        if (formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          productsController.editProductDetails(
+                                                              context: context,
+                                                              tags: tagsController.text
+                                                                  .toString(),
+                                                              categoryId: editCatId
+                                                                  .toString(),
+                                                              discType: editDiscountType
+                                                                  .toString(),
+                                                              discount:
+                                                                  discountController.text
+                                                                      .toString(),
+                                                              name: nameEditingController
+                                                                  .text
+                                                                  .toString(),
+                                                              price: priceEditingController
+                                                                  .text
+                                                                  .toString(),
+                                                              productId: widget.id
+                                                                  .toString(),
+                                                              quantity: productsController
+                                                                  .editQuantityEditingController
+                                                                  .text
+                                                                  .toString(),
+                                                              shortDescription:
+                                                                  descriptionEditingController
+                                                                      .text
+                                                                      .toString(),
+                                                              subCatId: editSubCatId
+                                                                  .toString(),
+                                                              deliveryCharge:
+                                                                  deliveryChargeController
+                                                                      .text
+                                                                      .toString(),
+                                                              deliveryType:
+                                                                  deliveryTypeId
+                                                                      .toString(),
+                                                              netWeight:
+                                                                  netWeightController
+                                                                      .text
+                                                                      .toString()
+                                                              // tax:
+                                                              //     taxEditingController
+                                                              //         .text
+                                                              //         .toString(),
+                                                              // taxType: editTaxType
+                                                              //     .toString()
+                                                              );
+                                                        } else {
+                                                          Get.snackbar("Error",
+                                                              "Please Check All Fields",
+                                                              backgroundColor:
+                                                                  Colors.red);
+                                                        }
                                                       },
                                                 child: productsController
                                                         .editLoading.value

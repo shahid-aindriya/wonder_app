@@ -13,7 +13,7 @@ import '../controllers/my_shops_controller.dart';
 
 class MyShopsView extends GetView<MyShopsController> {
   final MyShopsController shopController = Get.put(MyShopsController());
-  MyShopsView({Key? key}) : super(key: key);
+  MyShopsView({super.key});
   @override
   Widget build(BuildContext context) {
     shopController.getListOfShops();
@@ -291,7 +291,10 @@ class MyShopsView extends GetView<MyShopsController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.add),
+                        Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
                         Text(
                           '  Add Shops',
                           style: GoogleFonts.roboto(

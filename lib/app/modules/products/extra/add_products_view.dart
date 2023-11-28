@@ -804,7 +804,7 @@ class AddAttributeWidget extends StatelessWidget {
           },
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: productsController.controllers.value.length,
+          itemCount: productsController.controllers.length,
           itemBuilder: (contsext, index) {
             return Container(
               decoration: BoxDecoration(

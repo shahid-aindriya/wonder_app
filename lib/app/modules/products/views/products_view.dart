@@ -527,7 +527,7 @@ class ProductsView extends GetView<ProductsController> {
                                                                     color: Colors
                                                                         .blueGrey)),
                                                             Container(
-                                                              height: 25,
+                                                              height: 33,
                                                               child: Obx(() {
                                                                 return Switch
                                                                     .adaptive(

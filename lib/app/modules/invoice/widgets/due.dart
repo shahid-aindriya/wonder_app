@@ -133,7 +133,10 @@ class Due extends GetView<InvoiceController> {
                                     backgroundColor: MaterialStateProperty.all(
                                         Colors.transparent)),
                                 onPressed: () async {},
-                                child: Text("Pay")))),
+                                child: Text(
+                                  "Pay",
+                                  style: TextStyle(color: Colors.white),
+                                )))),
                   ],
                 ),
                 SizedBox(

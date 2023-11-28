@@ -8,11 +8,12 @@ final FirebaseDatabaseController firebaseDatabaseController =
     Get.put(FirebaseDatabaseController());
 
 class FirebaseDatabaseController extends GetxController {
-  // String dataBaseUrl = 'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app';
+  String dataBaseUrl =
+      'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app';
 
   // *********Test
-  String dataBaseUrl =
-      'https://wonderapptest-c9a28-default-rtdb.asia-southeast1.firebasedatabase.app';
+  // String dataBaseUrl =
+  //     'https://wonderapptest-c9a28-default-rtdb.asia-southeast1.firebasedatabase.app';
 
 // *********************************************ExpireDays
   Future<int?> getExpireDays() async {
@@ -30,14 +31,9 @@ class FirebaseDatabaseController extends GetxController {
     rtdbRef.onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
       Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
-      if (values != null) {
-        String days = values["expiry_days"];
-        int convertDays = int.parse(days.toString());
-        completer.complete(convertDays);
-      } else {
-        completer.complete(
-            null); // You might want to handle this case based on your requirement.
-      }
+      String days = values["expiry_days"];
+      int convertDays = int.parse(days.toString());
+      completer.complete(convertDays);
     });
 
     return completer.future;
@@ -153,13 +149,9 @@ class FirebaseDatabaseController extends GetxController {
     rtdbRef.onValue.listen((event) {
       DataSnapshot snapshot = event.snapshot;
       Map<dynamic, dynamic> values = snapshot.value as Map<dynamic, dynamic>;
-      if (values != null) {
-        String percentage = values["percentage"];
-        double levelPercentsge = double.parse(percentage.toString());
-        completer.complete(levelPercentsge);
-      } else {
-        completer.complete(null);
-      }
+      String percentage = values["percentage"];
+      double levelPercentsge = double.parse(percentage.toString());
+      completer.complete(levelPercentsge);
     });
 
     return completer.future;

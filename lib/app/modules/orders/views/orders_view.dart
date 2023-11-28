@@ -19,7 +19,7 @@ import '../controllers/orders_controller.dart';
 import '../extra/order_details_view.dart';
 
 class OrdersView extends GetView<OrdersController> {
-  OrdersView({Key? key}) : super(key: key);
+  OrdersView({super.key});
 
   final AddInvoiceController addInvoiceController = Get.find();
   @override
