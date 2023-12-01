@@ -190,8 +190,8 @@ class ProductsController extends GetxController {
     File compressedFile2 = await FlutterNativeImage.compressImage(
         imageFile.path,
         quality: 80,
-        targetWidth: 600,
-        targetHeight: 700);
+        targetWidth: 700,
+        targetHeight: 800);
     File compressedFile = await FlutterNativeImage.compressImage(
         compressedFile2.path,
         quality: 100,
@@ -395,6 +395,7 @@ class ProductsController extends GetxController {
 
   var addLoading = false.obs;
   addProducts(context) async {
+    log(subCatId.toString());
     final request = http.MultipartRequest(
       'POST',
       Uri.parse("${baseUrl.value}vendor-add-shop-product/"),
@@ -865,7 +866,9 @@ class ProductsController extends GetxController {
                     )
                   : Text("Confirm",
                       style: GoogleFonts.roboto(
-                          fontSize: 16, fontWeight: FontWeight.w400)));
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400)));
         }),
       ),
       cancel: Obx(() {

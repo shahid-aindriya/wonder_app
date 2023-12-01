@@ -439,39 +439,39 @@ class AddProductsView extends StatelessWidget {
                       SizedBox(
                         height: 15,
                       ),
-                      AddAttributeWidget(
-                        attributesList: productsController.attributeLists,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          AddButton(
-                              onClick: () {
-                                productsController.addAttributeToList();
-                                // productsController.controllers
-                                //     .add(TextEditingController());
-                              },
-                              productsController: productsController),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Obx(() {
-                            return RemoveButton(
-                                onTap: () {
-                                  productsController.idOfAttribute.removeLast();
-                                  productsController.controllers.removeLast();
-                                },
-                                visibility:
-                                    productsController.controllers.length > 1
-                                        ? true
-                                        : false,
-                                productsController: productsController);
-                          }),
-                        ],
-                      ),
+                      // AddAttributeWidget(
+                      //   attributesList: productsController.attributeLists,
+                      // ),
+                      // SizedBox(
+                      //   height: 15,
+                      // ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     AddButton(
+                      //         onClick: () {
+                      //           productsController.addAttributeToList();
+                      //           // productsController.controllers
+                      //           //     .add(TextEditingController());
+                      //         },
+                      //         productsController: productsController),
+                      //     SizedBox(
+                      //       width: 10,
+                      //     ),
+                      //     Obx(() {
+                      //       return RemoveButton(
+                      //           onTap: () {
+                      //             productsController.idOfAttribute.removeLast();
+                      //             productsController.controllers.removeLast();
+                      //           },
+                      //           visibility:
+                      //               productsController.controllers.length > 1
+                      //                   ? true
+                      //                   : false,
+                      //           productsController: productsController);
+                      //     }),
+                      //   ],
+                      // ),
                       SizedBox(
                         height: 25,
                       ),
