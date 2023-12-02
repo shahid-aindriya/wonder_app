@@ -189,7 +189,7 @@ class ProductsController extends GetxController {
     //     await FlutterNativeImage.getImageProperties(imageFile.path);
     File compressedFile2 = await FlutterNativeImage.compressImage(
         imageFile.path,
-        quality: 80,
+        quality: 100,
         targetWidth: 700,
         targetHeight: 800);
     File compressedFile = await FlutterNativeImage.compressImage(

@@ -681,7 +681,7 @@ class AddProductsView extends StatelessWidget {
                                             child: Image.file(
                                               productsController
                                                   .multiImages[index],
-                                              fit: BoxFit.fill,
+                                              fit: BoxFit.contain,
                                             ),
                                           ),
                                         ]))),

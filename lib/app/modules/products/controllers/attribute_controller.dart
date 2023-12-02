@@ -114,7 +114,7 @@ class AttributeController extends GetxController {
     // log(responseBody.toString());
     if (response.statusCode == 201) {
       await getAttributeList(id);
-      attributeId = null;
+
       editValueAttributeController.clear();
       editAttributePriceEditingController.clear();
       editAttributeDiscountEditingController.clear();
