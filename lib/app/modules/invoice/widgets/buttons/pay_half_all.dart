@@ -52,6 +52,7 @@ class PayHalf extends StatelessWidget {
                               backgroundColor: MaterialStateProperty.all(
                                   Colors.transparent)),
                           onPressed: () async {
+                            // widget.invoiceController.initPlatformState();
                             widget.invoiceController.openCheckoutForAllPay(
                                 data: amount,
                                 amounts: widget.invoiceController

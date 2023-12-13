@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "266394939528",
+    "firebase_url": "https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "wonderapp-73f65",
     "storage_bucket": "wonderapp-73f65.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "266394939528-7a4rmdque7f6o10t66c1p89ohtt87mhl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wonder.wonder_app",
+            "certificate_hash": "4612b41474bb980f8deeb43145b4f4f2555123d3"
+          }
+        },
         {
           "client_id": "266394939528-l1ihp07l653h4qnuj8qoo4b9mc8kv99i.apps.googleusercontent.com",
           "client_type": 3

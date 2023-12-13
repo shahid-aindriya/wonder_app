@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  cc_avenue:
+    dependency: "direct main"
+    description:
+      name: cc_avenue
+      sha256: "15d75b65354be6ce20be75354c22aa9921735d5279aef72825331931da021907"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   characters:
     dependency: transitive
     description:

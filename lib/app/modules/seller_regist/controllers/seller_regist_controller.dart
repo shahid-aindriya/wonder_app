@@ -29,7 +29,7 @@ class SellerRegistController extends GetxController {
       return;
     } else {
       // image = File(pimage.path);
-
+      log(pimage.path);
       final ims = await cropsImage(pimage.path);
 
       final bytes = File(ims.path).readAsBytesSync();

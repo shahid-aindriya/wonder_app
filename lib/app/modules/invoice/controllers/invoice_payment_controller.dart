@@ -91,8 +91,8 @@ class InvoicePaymentController extends GetxController {
             calculatePercentage(shopHalfCommission, commissionAmount);
         getBalanceAmount = commissionAmount;
         walletType = "Direct";
-        log(shopWalletAmount.toString());
-        log(vendorCommission.toString());
+        log("wallet${shopWalletAmount.toString()}");
+        log("commiss${vendorCommission.toString()}");
         if (shopWalletAmount! >= vendorCommission!) {
           log("custId:  ${customerId.toString()}");
           Map<dynamic, dynamic> userData =
