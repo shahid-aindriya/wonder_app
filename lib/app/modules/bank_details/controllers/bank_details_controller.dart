@@ -53,7 +53,8 @@ class BankDetailsController extends GetxController {
     return result.toList();
   }
 
-  addBankDetails({shopId, int? accountNum, accType, ifscCode, name}) async {
+  addBankDetails(alredySuccess,
+      {shopId, int? accountNum, accType, ifscCode, name}) async {
     final prefs = await SharedPreferences.getInstance();
     final userId = prefs.getInt("userId");
     // log(name);
@@ -80,6 +81,11 @@ class BankDetailsController extends GetxController {
       if (request.statusCode == 201) {
         final bankaddresponse = bankaddresponseFromJson(request.body);
         if (bankaddresponse.success == true) {
+          if (alredySuccess == true) {
+            Get.back();
+            return;
+          }
+
           Get.to(SuccessView());
         }
       }

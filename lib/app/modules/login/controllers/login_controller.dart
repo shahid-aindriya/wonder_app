@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:wonder_app/app/modules/store_details/views/store_details_view.dart';
@@ -25,6 +26,8 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
   Future<dynamic> loginFunct({email, password, context}) async {
     final prefs = await SharedPreferences.getInstance();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String currentVersion = packageInfo.version;
     var body = {"email": email, "password": password};
     isLoading.value = true;
     try {
@@ -37,6 +40,7 @@ class LoginController extends GetxController {
 
         if (loginResponseModel.isApproved == true &&
             loginResponseModel.haveShop == true) {
+          prefs.setString("currentVersion", currentVersion);
           prefs.setInt("userId", loginResponseModel.userId!);
           Get.offAll(BottombarView());
           MotionToast.success(
@@ -56,6 +60,7 @@ class LoginController extends GetxController {
           ).show(context);
         } else if (loginResponseModel.isApproved == true &&
             loginResponseModel.haveShop == false) {
+          prefs.setString("currentVersion", currentVersion);
           prefs.setInt("userId", loginResponseModel.userId!);
           Get.to(StoreDetailsView());
         } else if (loginResponseModel.message == "Pending for approval") {

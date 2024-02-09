@@ -13,10 +13,13 @@ import 'package:motion_toast/resources/arrays.dart';
 import 'package:razorpay_web/razorpay_web.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wonder_app/app/modules/add_invoice/controllers/add_invoice_controller.dart';
 import 'package:wonder_app/app/modules/invoice/model/invoice_data.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:wonder_app/app/modules/invoice/widgets/payment/pay_data_model.dart';
+import 'package:wonder_app/app/modules/invoice/widgets/payment/web_view_page.dart';
 import 'package:wonder_app/app/modules/request_pending/views/request_pending_view.dart';
 
 import '../../../data/urls.dart';
@@ -86,7 +89,11 @@ class InvoiceController extends GetxController {
 
   dynamic selectShopId;
   RxString newShopId = "".obs;
-
+  RxString newShopId2 = "".obs;
+  idAssignFunct(value) {
+    newShopId2.value = value;
+    update();
+  }
   // getInvoiceLists() async {
   //   try {
   //     final prefs = await SharedPreferences.getInstance();
@@ -152,9 +159,11 @@ class InvoiceController extends GetxController {
       final data = jsonDecode(request.body);
       if (data["add_invoice"] == true) {
         isAddInvoiceTrue.value = true;
+        update();
         return;
       } else {
         isAddInvoiceTrue.value = false;
+        update();
         return;
       }
     }
@@ -1010,15 +1019,21 @@ class InvoiceController extends GetxController {
   paymentSuccessForAll({
     razorId,
   }) async {
+    log(selectShopId.toString());
+    log(halfAmount.toString());
+    log(idOfVerifiedList.toString());
+    log(payHalfWithGst.toString());
+    log(totalAmount.value.toString());
     var body = {
       "shop_id": selectShopId,
       "amount": halfAmount,
       "invoice_ids": idOfVerifiedList,
-      "razorpay_transaction_id": razorId,
+      // "razorpay_transaction_id": razorId,
       "pay_half_with_gst": payHalfWithGst,
       "razorpay_status": "completed",
       "total_amount": totalAmount.value
     };
+
     try {
       isVerifyLoading.value = true;
       final requests = await http.post(
@@ -1425,17 +1440,46 @@ class InvoiceController extends GetxController {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       await CcAvenue.cCAvenueInit(
-          transUrl: 'https://test.ccavenue.com/transaction/initTrans',
-          accessCode: 'AVFJ30KK37AQ90JFQA',
+          transUrl:
+              'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction',
+          accessCode: 'AVOJ05KL43CL47JOLC',
           amount: '10',
           cancelUrl: 'http://122.182.6.216/merchant/ccavResponseHandler.jsp',
           currencyType: 'INR',
           merchantId: '3007432',
           orderId: '519',
           redirectUrl: 'http://122.182.6.216/merchant/ccavResponseHandler.jsp',
-          rsaKeyUrl: 'https://secure.ccavenue.com/transaction/jsp/GetRSA.jsp');
-    } on PlatformException {
-      print('PlatformException');
+          rsaKeyUrl: 'https://test.ccavenue.com/transaction/getRSAKey');
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  fetchMerchantEncryptedData({context, amount, invoiceController}) async {
+    print(">>>>>>>>>>>>>>>>>>>>>>>>");
+    try {
+      var body = {"shop_id": selectShopId, "amount": amount};
+
+      final response = await http.post(
+          Uri.parse("${baseUrl.value}ccaveneue-shop-pay-amount/"),
+          headers: headers,
+          body: jsonEncode(body));
+      print("response is ${response.body}");
+
+      final json = jsonDecode(response.body);
+      final data = PaymentData.fromJson(json);
+      print("...................$data");
+      if (data.success == true) {
+        Get.off(WebviewPage(data: data, invoiceController: invoiceController));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Please try again.")));
+      }
+    } catch (e) {
+      print(e.toString());
+      // setState(() {
+      //   _loading = false;
+      // });
     }
   }
 }

@@ -31,7 +31,7 @@ class InvoiceTab extends GetView<InvoiceController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Lottie.asset("assets/images/13659-no-data.json"),
+                        SvgPicture.asset("assets/images/no data found.svg")
                       ],
                     ),
                   ),
@@ -115,7 +115,7 @@ class InvoiceTab extends GetView<InvoiceController> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: AutoSizeText(
                                             maxLines: 2,
-                                            "₹${datas.preTaxAmount}",
+                                            '₹ ${double.tryParse(datas.preTaxAmount.toString())!.toStringAsFixed(1).toString()}',
                                             maxFontSize: 18,
                                             minFontSize: 12,
                                             style: GoogleFonts.roboto(

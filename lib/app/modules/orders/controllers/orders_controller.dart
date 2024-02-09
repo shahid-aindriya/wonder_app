@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:motion_toast/motion_toast.dart';
 import 'package:motion_toast/resources/arrays.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 
@@ -33,7 +34,7 @@ class OrdersController extends GetxController {
         Uri.parse("${baseUrl.value}vendor-list-shop-order/"),
         body: jsonEncode(body),
         headers: headers.value);
-    log(request.body);
+    log(request.body.toString());
     if (request.statusCode == 201) {
       final orderModel = orderModelFromJson(request.body);
       ordersList.assignAll(orderModel.orderData);
@@ -50,8 +51,17 @@ class OrdersController extends GetxController {
     'Delivered',
     'Completed'
   ];
+
+  List<String> returnReasonsList2 = [
+    'Pending',
+    'Received',
+    'Confirmed',
+    'Ready to pickup',
+    'On the way',
+    'Delivered',
+  ];
   final isreturnLoading = false.obs;
-  showReturnPopUp(context, {required orderId}) {
+  showReturnPopUp(context, {required orderId, status}) {
     Get.defaultDialog(
       title: "Change Order Status",
       titleStyle: GoogleFonts.roboto(
@@ -85,17 +95,29 @@ class OrdersController extends GetxController {
         onChanged: (value) async {
           selectedValue = value;
         },
-        items: returnReasonsList.map((data) {
-          return DropdownMenuItem(
-              value: data,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 5.0),
-                child: Text(
-                  data,
-                  overflow: TextOverflow.visible,
-                ),
-              ));
-        }).toList(),
+        items: status == true
+            ? returnReasonsList.map((data) {
+                return DropdownMenuItem(
+                    value: data,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Text(
+                        data,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ));
+              }).toList()
+            : returnReasonsList2.map((data) {
+                return DropdownMenuItem(
+                    value: data,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Text(
+                        data,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ));
+              }).toList(),
       ),
       contentPadding: EdgeInsets.only(top: 15, bottom: 15, left: 10, right: 10),
       confirm: Container(
@@ -141,7 +163,9 @@ class OrdersController extends GetxController {
                     )
                   : Text("Submit",
                       style: GoogleFonts.roboto(
-                          fontSize: 16, fontWeight: FontWeight.w400)));
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400)));
         }),
       ),
       cancel: Obx(() {
@@ -230,11 +254,170 @@ class OrdersController extends GetxController {
     final request = await http.post(
         Uri.parse("${baseUrl.value}vendor-shop-order-details/"),
         body: jsonEncode(body),
-        headers: headers.value);
+        headers: headers);
     log(request.body);
     if (request.statusCode == 201) {
       final orderDetailsModel = orderDetailsModelFromJson(request.body);
       orderDetailsList.assign(orderDetailsModel.orderData);
     }
+  }
+
+  final TextEditingController trackIdController = TextEditingController();
+  final TextEditingController trackUrlController = TextEditingController();
+
+  showTrackingIdPopUp(
+    context, {
+    required orderId,
+  }) {
+    Alert(
+      context: context,
+      content: Column(
+        children: <Widget>[
+          Form(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      "Tracking ID",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                TextFormField(
+                  controller: trackIdController,
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 0,
+                            color: Color.fromARGB(255, 240, 240, 240))),
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 202, 201, 201),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 0,
+                            color: Color.fromARGB(255, 240, 240, 240))),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Text("Tracking URL",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500))
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                TextFormField(
+                  controller: trackUrlController,
+                  decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.only(left: 10, right: 10, top: 0, bottom: 0),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 0,
+                            color: Color.fromARGB(255, 240, 240, 240))),
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 202, 201, 201),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 0,
+                            color: Color.fromARGB(255, 240, 240, 240))),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      buttons: [
+        DialogButton(
+          gradient: LinearGradient(
+            begin: Alignment(-0.934, -1),
+            end: Alignment(1.125, 1.333),
+            colors: <Color>[Color(0xe53f46bd), Color(0xe5417de8)],
+            stops: <double>[0, 1],
+          ),
+          radius: BorderRadius.circular(10),
+          onPressed: isreturnLoading.value
+              ? null
+              : () {
+                  updateTrackId(orderId);
+                },
+          child: Obx(() {
+            return isreturnLoading.value
+                ? CircularProgressIndicator(
+                    color: Colors.white,
+                  )
+                : Text(
+                    "Update",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  );
+          }),
+        ),
+      ],
+    ).show();
+  }
+
+  updateTrackId(orderId) async {
+    isreturnLoading.value = true;
+    final body = {
+      'order_id': orderId,
+      "tracking_number": trackIdController.text,
+      "tracking_url": trackUrlController.text,
+    };
+    final request = await http.post(
+        Uri.parse("${baseUrl.value}vendor-edit-order-tracking-data/"),
+        body: jsonEncode(body),
+        headers: headers);
+    log(request.body);
+    if (request.statusCode == 201) {
+      isreturnLoading.value = false;
+      Get.back();
+      MotionToast.success(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Success ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text('updated successfully'),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(Get.context!);
+    } else {
+      isreturnLoading.value = false;
+      Get.back();
+      MotionToast.error(
+        dismissable: true,
+        enableAnimation: false,
+        position: MotionToastPosition.top,
+        title: const Text(
+          'Failure ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        description: const Text("Status couldn't be updated"),
+        animationCurve: Curves.bounceIn,
+        borderRadius: 0,
+        animationDuration: const Duration(milliseconds: 1000),
+      ).show(Get.context!);
+    }
+    isreturnLoading.value = false;
   }
 }

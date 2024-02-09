@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wonder_app/app/modules/bottom_bar/views/bottom_bar_view.dart';
 import 'package:wonder_app/app/modules/login/views/login_view.dart';
@@ -14,8 +15,12 @@ class SplashScreenController extends GetxController {
     final pref = await SharedPreferences.getInstance();
     final loggedName = pref.getInt('userId');
     bool alreadyCleared = pref.getBool('dataCleared1') ?? false;
-
-    if (loggedName == null || !alreadyCleared) {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final currentVersion = pref.getString('currentVersion');
+    final updatedVersion = packageInfo.version;
+    if (loggedName == null ||
+        !alreadyCleared ||
+        currentVersion != updatedVersion) {
       await pref.clear();
       await pref.setBool('dataCleared1', true);
       await gotoLogin();

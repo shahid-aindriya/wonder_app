@@ -543,7 +543,22 @@ class ShopDetailsController extends GetxController {
       if (request.statusCode == 201) {
         final bankaddresponse = jsonDecode(request.body);
         if (bankaddresponse['success'] == true) {
-          Get.to(SuccessView());
+          Get.back();
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Success ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            description: const Text('updated Succesfully'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(Get.context!);
         }
       }
     } catch (e) {
@@ -599,7 +614,22 @@ class ShopDetailsController extends GetxController {
       if (request.statusCode == 201) {
         final bankaddresponse = bankaddresponseFromJson(request.body);
         if (bankaddresponse.success == true) {
-          Get.to(SuccessView());
+          Get.back();
+          MotionToast.success(
+            dismissable: true,
+            enableAnimation: false,
+            position: MotionToastPosition.top,
+            title: const Text(
+              'Success ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            description: const Text('updated Succesfully'),
+            animationCurve: Curves.bounceIn,
+            borderRadius: 0,
+            animationDuration: const Duration(milliseconds: 1000),
+          ).show(Get.context!);
         }
       }
     } catch (e) {

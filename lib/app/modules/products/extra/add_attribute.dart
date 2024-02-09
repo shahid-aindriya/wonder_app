@@ -1,16 +1,12 @@
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/products/controllers/attribute_controller.dart';
 import 'package:wonder_app/app/modules/products/controllers/products_controller.dart';
-
-import 'buttons/add_button.dart';
+import 'package:wonder_app/app/modules/products/extra/edit_single_attribute.dart';
 
 class AddAttributeView extends GetView<AttributeController> {
   AddAttributeView({
@@ -24,6 +20,7 @@ class AddAttributeView extends GetView<AttributeController> {
       Get.put(AttributeController());
   @override
   Widget build(BuildContext context) {
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -129,8 +126,6 @@ class AddAttributeView extends GetView<AttributeController> {
                                   children: [
                                     IconButton(
                                         onPressed: () {
-                                          attributeController
-                                              .getAttributeList(productId);
                                           // data.id != null
                                           //     ? productsController
                                           //         .deleteAttribute(
@@ -141,6 +136,11 @@ class AddAttributeView extends GetView<AttributeController> {
                                           //         .removeEditAttributeFromList(
                                           //             index,
                                           //             data.quantity);
+
+                                          Get.to(EditSingleAttribute(
+                                            attributeId: data.id,
+                                            productId: productId,
+                                          ));
                                         },
                                         icon: Icon(Icons.edit)),
                                   ],
@@ -253,6 +253,8 @@ class AddAttributeView extends GetView<AttributeController> {
                                           Container(
                                               height: 35,
                                               child: TextField(
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 controller: attributeController
                                                     .editQuantityAttributeController,
                                                 onChanged: (value) {},
@@ -279,6 +281,8 @@ class AddAttributeView extends GetView<AttributeController> {
                                             Container(
                                                 height: 35,
                                                 child: TextField(
+                                                  keyboardType:
+                                                      TextInputType.number,
                                                   controller: attributeController
                                                       .editAttributePriceEditingController,
                                                   onChanged: (value) {},
@@ -302,6 +306,8 @@ class AddAttributeView extends GetView<AttributeController> {
                                           Container(
                                               height: 35,
                                               child: TextField(
+                                                keyboardType:
+                                                    TextInputType.number,
                                                 controller: attributeController
                                                     .editAttributeDiscountEditingController,
                                               )),
@@ -352,7 +358,9 @@ class AddAttributeView extends GetView<AttributeController> {
                                                     child: IconButton(
                                                         onPressed: () {
                                                           attributeController
-                                                              .selectMultipleImages();
+                                                              .showPopup(
+                                                                  context,
+                                                                  true);
                                                         },
                                                         icon: Icon(
                                                             Icons.add_a_photo)),
@@ -412,9 +420,9 @@ class AddAttributeView extends GetView<AttributeController> {
                                                                   ),
                                                                 ),
                                                               ]))),
-                                                  Positioned(
-                                                    top: 0,
-                                                    left: 80,
+                                                  Align(
+                                                    alignment:
+                                                        Alignment.topRight,
                                                     child: InkWell(
                                                         onTap: () {
                                                           attributeController
@@ -452,7 +460,9 @@ class AddAttributeView extends GetView<AttributeController> {
                                                         child: IconButton(
                                                             onPressed: () {
                                                               attributeController
-                                                                  .selectMultipleImages();
+                                                                  .showPopup(
+                                                                      context,
+                                                                      true);
                                                             },
                                                             icon: Icon(Icons
                                                                 .add_a_photo)),
@@ -505,7 +515,9 @@ class AddAttributeView extends GetView<AttributeController> {
                                                     Colors.transparent)),
                                         onPressed: () {
                                           attributeController.addAttribute(
-                                              productId, context);
+                                              productId,
+                                              context,
+                                              productsController);
                                         },
                                         child: attributeController
                                                 .isAttributeLoading.value

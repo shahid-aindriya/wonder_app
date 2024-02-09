@@ -32,7 +32,7 @@ class VerifiedInvoices extends StatefulWidget {
 }
 
 class _VerifiedInvoicesState extends State<VerifiedInvoices> {
-  onWillPop() async {
+  onWillPop2() async {
     // Return true to allow the back button to work normally.
     widget.invoiceController.selecteddCommission.value = 0;
     widget.invoiceController.checkButton.value = false;
@@ -68,7 +68,7 @@ class _VerifiedInvoicesState extends State<VerifiedInvoices> {
         ),
         child: WillPopScope(
           onWillPop: () async {
-            await onWillPop();
+            await onWillPop2();
             throw Exception();
           },
           child: Scaffold(

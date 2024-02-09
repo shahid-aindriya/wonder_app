@@ -113,6 +113,7 @@ class GstDetailsController extends GetxController {
         if (addshopresponse.success == true) {
           Get.off(BankDetailsView(
             shopId: shopId,
+            alreadySuccess: false,
           ));
           MotionToast.success(
             dismissable: true,

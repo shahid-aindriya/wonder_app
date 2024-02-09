@@ -163,7 +163,7 @@ class EditAttribute {
   dynamic attributeId;
   dynamic attribute;
   dynamic value;
-  dynamic image;
+  List<AllImage>? image;
   dynamic quantity;
   dynamic fileImage;
   dynamic price;
@@ -184,7 +184,8 @@ class EditAttribute {
       attributeId: json["attribute_id"],
       attribute: json["attribute"],
       value: json["value"],
-      image: json["image"],
+      image:
+          List<AllImage>.from(json["image"].map((x) => AllImage.fromJson(x))),
       quantity: json["quantity"],
       price: json['price'],
       discount: json['discount']);

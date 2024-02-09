@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -126,7 +127,7 @@ class WalletTab extends GetView<InvoiceController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  child: Image.asset("assets/images/transact.png"),
+                  child: SvgPicture.asset("assets/images/transactions.svg"),
                 ),
                 SizedBox(
                   width: 5,
@@ -254,14 +255,16 @@ class WalletTab extends GetView<InvoiceController> {
                 ? Column(
                     children: [
                       SizedBox(
-                        height: 2.h,
+                        height: 10.h,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.only(
+                          right: 10,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Lottie.asset("assets/images/13659-no-data.json"),
+                            SvgPicture.asset("assets/images/no data found.svg")
                           ],
                         ),
                       ),

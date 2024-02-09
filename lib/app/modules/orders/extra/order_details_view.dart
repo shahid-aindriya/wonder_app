@@ -7,6 +7,9 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
 import 'package:wonder_app/app/modules/orders/controllers/orders_controller.dart';
 import 'package:wonder_app/app/modules/orders/views/orders_view.dart';
+import 'package:wonder_app/app/modules/orders/widgets/accept_and_reject.dart';
+import 'package:wonder_app/app/modules/orders/widgets/accepted_return_widget.dart';
+import 'package:wonder_app/app/modules/orders/widgets/return_complete_widget.dart';
 
 class OrderDetailsView extends StatelessWidget {
   OrderDetailsView({super.key, required this.id});
@@ -144,7 +147,7 @@ class OrderDetailsView extends StatelessWidget {
                                 ),
                                 Row(
                                   children: [
-                                    Text(data.userAddressData.name,
+                                    Text(data.userAddressData.name.toString(),
                                         style: GoogleFonts.roboto(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500)),
@@ -163,6 +166,23 @@ class OrderDetailsView extends StatelessWidget {
                           ),
                         ),
                       ),
+                      Visibility(
+                        visible:
+                            data.returnInitiatedStatus == true ? true : false,
+                        child: AcceptAndRejectReturn(
+                          id: id,
+                          ordersController: ordersController,
+                        ),
+                      ),
+                      Visibility(
+                          visible: data.returnRequestAcceptStatus == true
+                              ? true
+                              : false,
+                          child: AcceptedReturnWidget()),
+                      Visibility(
+                          visible:
+                              data.returnCompletedStatus == true ? true : false,
+                          child: ReturnCompletedWidget()),
                       Padding(
                         padding: EdgeInsets.only(
                             left: 4.w, right: 4.w, top: 10, bottom: 20),
@@ -189,6 +209,7 @@ class OrderDetailsView extends StatelessWidget {
                                         ? null
                                         : () {
                                             ordersController.showReturnPopUp(
+                                                status: data.returnPeriodOver,
                                                 context,
                                                 orderId: id);
                                           },
@@ -200,6 +221,35 @@ class OrderDetailsView extends StatelessWidget {
                                   )
                                 ],
                               ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Tracking Id & URL",
+                                    style: GoogleFonts.roboto(
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      ordersController.showTrackingIdPopUp(
+                                        context,
+                                        orderId: id,
+                                      );
+                                    },
+                                    child: select_card(
+                                        color: Colors.white,
+                                        text: "Enter Tracking Id & Url",
+                                        textColor:
+                                            Color.fromARGB(255, 178, 178, 182)),
+                                  )
+                                ],
+                              ),
+
                               // SizedBox(
                               //   height: 10,
                               // ),
@@ -280,7 +330,7 @@ class OrderDetailsView extends StatelessWidget {
                                         color: Color.fromARGB(255, 0, 0, 0)),
                                   ),
                                   Text(
-                                    "₹${data.price}",
+                                    "₹${double.tryParse(data.price.toString())!.toStringAsFixed(1).toString()}",
                                     style: GoogleFonts.roboto(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
@@ -301,12 +351,33 @@ class OrderDetailsView extends StatelessWidget {
                                         fontSize: 16,
                                         color: Color.fromARGB(255, 0, 0, 0)),
                                   ),
-                                  Text(
-                                    data.paymentStatus.toString(),
-                                    style: GoogleFonts.roboto(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff4956b2)),
+                                  Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 6,
+                                        width: 6,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: data.paymentStatus == true
+                                                ? Color.fromARGB(
+                                                    255, 1, 134, 54)
+                                                : Colors.red),
+                                      ),
+                                      Text(
+                                          data.paymentStatus == true
+                                              ? " Paid"
+                                              : " Un-Paid",
+                                          style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.w500,
+                                            color: data.paymentStatus == true
+                                                ? Color.fromARGB(
+                                                    255, 1, 134, 54)
+                                                : Colors.red,
+                                            fontSize: 15,
+                                          ))
+                                    ],
                                   ),
                                 ],
                               ),
@@ -354,7 +425,7 @@ class OrderDetailsView extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        data.productName,
+                                        data.productName.toString(),
                                         style: GoogleFonts.roboto(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500),
@@ -377,7 +448,7 @@ class OrderDetailsView extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            "₹${data.price}",
+                                            "₹${double.tryParse(data.price.toString())!.toStringAsFixed(1).toString()}",
                                             style: GoogleFonts.roboto(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w500,

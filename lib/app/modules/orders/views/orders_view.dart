@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -40,6 +43,7 @@ class OrdersView extends GetView<OrdersController> {
           drawer: DrawerTab(addInvoiceController: addInvoiceController),
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            toolbarHeight: 80,
             leading: Builder(builder: (contezxt) {
               return InkWell(
                 onTap: () async {
@@ -98,6 +102,7 @@ class OrdersView extends GetView<OrdersController> {
                       return Obx(() {
                         return Container(
                             width: 60.w,
+                            height: 50,
                             child: DropdownButtonFormField(
                               isExpanded: true,
                               isDense: true,
@@ -149,6 +154,7 @@ class OrdersView extends GetView<OrdersController> {
                                 invoiceController.changeShop(
                                   value: value,
                                 );
+                                log(value.toString());
                                 await invoiceController.checkVerifiedVendor();
                                 await ordersController.getListOfOrders(value);
                                 await myEarningsController.getMyEarnings(value);
@@ -306,7 +312,7 @@ class OrdersView extends GetView<OrdersController> {
                 ),
                 Obx(() {
                   return ordersController.ordersList.isEmpty
-                      ? Lottie.asset("assets/images/13659-no-data.json")
+                      ? SvgPicture.asset("assets/images/no data found.svg")
                       : Obx(() {
                           return ListView.separated(
                               shrinkWrap: true,
@@ -347,7 +353,7 @@ class OrdersView extends GetView<OrdersController> {
                                                     fontSize: 18),
                                               ),
                                               Text(
-                                                "₹${data.price}",
+                                                "₹${double.tryParse(data.price.toString())!.toStringAsFixed(1).toString()}",
                                                 style: GoogleFonts.roboto(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
@@ -441,8 +447,8 @@ class OrdersView extends GetView<OrdersController> {
                                                     decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
                                                         color:
-                                                            data.paymentMethod ==
-                                                                    "Online"
+                                                            data.paymentStatus ==
+                                                                    true
                                                                 ? Color
                                                                     .fromARGB(
                                                                         255,
@@ -452,16 +458,15 @@ class OrdersView extends GetView<OrdersController> {
                                                                 : Colors.red),
                                                   ),
                                                   Text(
-                                                      data.paymentMethod ==
-                                                              "Online"
+                                                      data.paymentStatus == true
                                                           ? " Paid"
                                                           : " Un-Paid",
                                                       style: GoogleFonts.roboto(
                                                         fontWeight:
                                                             FontWeight.w500,
                                                         color:
-                                                            data.paymentMethod ==
-                                                                    "Online"
+                                                            data.paymentStatus ==
+                                                                    true
                                                                 ? Color
                                                                     .fromARGB(
                                                                         255,

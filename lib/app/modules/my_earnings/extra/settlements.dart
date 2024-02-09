@@ -23,34 +23,34 @@ class Settlements extends StatelessWidget {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Color.fromARGB(117, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(10)),
-              child: IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Color(0xff4956b2),
-                  )),
-            ),
-          ),
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          title: Text(
-            'Settlements',
-            style: GoogleFonts.jost(
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-              color: Color(0xff4956b2),
-            ),
-          ),
-        ),
+        // appBar: AppBar(
+        //   leading: Padding(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: Container(
+        //       decoration: BoxDecoration(
+        //           color: Color.fromARGB(117, 255, 255, 255),
+        //           borderRadius: BorderRadius.circular(10)),
+        //       child: IconButton(
+        //           onPressed: () {
+        //             Get.back();
+        //           },
+        //           icon: Icon(
+        //             Icons.arrow_back_ios_new,
+        //             color: Color(0xff4956b2),
+        //           )),
+        //     ),
+        //   ),
+        //   elevation: 0,
+        //   backgroundColor: Colors.transparent,
+        //   title: Text(
+        //     'Settlements',
+        //     style: GoogleFonts.jost(
+        //       fontSize: 22,
+        //       fontWeight: FontWeight.w500,
+        //       color: Color(0xff4956b2),
+        //     ),
+        //   ),
+        // ),
         body: Column(
           children: [
             SizedBox(
@@ -122,7 +122,7 @@ class Settlements extends StatelessWidget {
                 Column(
                   children: [
                     Text(
-                      "Pending Amount",
+                      "Unsettled Amount",
                       style: GoogleFonts.roboto(color: Color(0xff4956b2)),
                     ),
                     SizedBox(

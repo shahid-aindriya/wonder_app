@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -243,7 +244,7 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                                             child: Center(
                                                               child:
                                                                   AutoSizeText(
-                                                                "₹${newData.invoiceData.preTaxAmount}",
+                                                                "₹${double.tryParse(newData.invoiceData.preTaxAmount)!.toStringAsFixed(1).toString()}",
                                                                 maxLines: 2,
                                                                 minFontSize: 25,
                                                                 maxFontSize: 31,
@@ -549,26 +550,51 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                                     ],
                                                   ),
                                                   ListTile(
-                                                      leading: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          child: newData
-                                                                      .invoiceData
-                                                                      .userImage ==
-                                                                  ''
-                                                              ? Image.asset(
-                                                                  "assets/images/User.png")
-                                                              : Image.network(
-                                                                  "$baseUrlForImage${newData.invoiceData.userImage}")),
+                                                      leading: newData
+                                                                  .invoiceData
+                                                                  .userImage ==
+                                                              ''
+                                                          ? ClipRRect(
+                                                              borderRadius:
+                                                                  BorderRadius.circular(
+                                                                      10),
+                                                              child: SvgPicture.asset(
+                                                                  "assets/images/user.svg"))
+                                                          : Container(
+                                                              height: 50,
+                                                              width: 50,
+                                                              decoration: BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  image: DecorationImage(
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                      image: NetworkImage(
+                                                                          "$baseUrlForImage${newData.invoiceData.userImage}"))),
+                                                            ),
+                                                      //  ClipRRect(
+                                                      //     borderRadius:
+                                                      //         BorderRadius
+                                                      //             .circular(10),
+                                                      //     child: newData
+                                                      //                 .invoiceData
+                                                      //                 .userImage ==
+                                                      //             ''
+                                                      //         ? Image.asset(
+                                                      //             "assets/images/User.png")
+                                                      //         : Image.network(
+                                                      //             "$baseUrlForImage${newData.invoiceData.userImage}")),
                                                       title: Text(
                                                           newData.invoiceData
                                                               .customerName
                                                               .toString(),
                                                           style: GoogleFonts.roboto(
                                                               fontSize: 18,
-                                                              color: Colors.black,
-                                                              fontWeight: FontWeight.w500)),
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500)),
                                                       subtitle: Text(
                                                         newData
                                                             .invoiceData.phone
@@ -591,12 +617,10 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                                         child: Container(
                                                           height: 50,
                                                           width: 50,
-                                                          decoration: BoxDecoration(
-                                                              image: DecorationImage(
-                                                                  image: AssetImage(
-                                                                    "assets/images/call.png",
-                                                                  ),
-                                                                  fit: BoxFit.contain)),
+                                                          decoration:
+                                                              BoxDecoration(),
+                                                          child: SvgPicture.asset(
+                                                              "assets/images/call_icon.svg"),
                                                         ),
                                                       ))
                                                 ],
@@ -660,7 +684,7 @@ class InvoiceDetailsView extends GetView<InvoiceDetailsController> {
                                                               Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .only(
+                                                                        .only(
                                                                         top:
                                                                             20.0),
                                                                 child: Text(newData

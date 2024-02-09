@@ -17,7 +17,7 @@ class BottombarView extends GetView<BottomBarController> {
       InvoiceView(),
       OrdersView(),
       ProductsView(),
-      MyEarningsView(),
+      // MyEarningsView(),
       ChatView()
     ];
     return Container(
@@ -85,17 +85,17 @@ class BottombarView extends GetView<BottomBarController> {
                           size: 24,
                         ),
                         label: 'Products'),
+                    // BottomNavigationBarItem(
+                    //     icon: CustomSvgIcon(
+                    //       assetPath: selectedPageIndex.value != 3
+                    //           ? 'assets/images/bottom/commission.svg'
+                    //           : 'assets/images/bottom/commission-2.svg',
+                    //       size: 24,
+                    //     ),
+                    //     label: 'Earnings'),
                     BottomNavigationBarItem(
                         icon: CustomSvgIcon(
                           assetPath: selectedPageIndex.value != 3
-                              ? 'assets/images/bottom/commission.svg'
-                              : 'assets/images/bottom/commission-2.svg',
-                          size: 24,
-                        ),
-                        label: 'Earnings'),
-                    BottomNavigationBarItem(
-                        icon: CustomSvgIcon(
-                          assetPath: selectedPageIndex.value != 4
                               ? 'assets/images/bottom/chat_unselected.svg'
                               : 'assets/images/bottom/chat_selected.svg',
                           size: 24,

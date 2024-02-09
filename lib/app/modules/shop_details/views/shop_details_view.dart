@@ -382,6 +382,7 @@ class ShopDetailsView extends GetView<ShopDetailsController> {
                                 log(data!.id.toString());
 
                                 Get.to(() => BankDetailsOfShop(
+                                
                                       shopId: data!.id,
                                       data: data!.bankData,
                                       accounType: data!.bankData.accountType,

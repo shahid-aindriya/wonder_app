@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:wonder_app/app/modules/orders/model/order_model.dart';
+
 OrderDetailsModel orderDetailsModelFromJson(String str) =>
     OrderDetailsModel.fromJson(json.decode(str));
 
@@ -32,14 +34,15 @@ class OrderData {
   String orderNumber;
   String status;
   bool paymentStatus;
-  int productId;
-  String productName;
-  String productImage;
+  dynamic productId;
+  dynamic productName;
+  dynamic productImage;
   dynamic productAttributeId;
   dynamic productAttribute;
   dynamic productAttributeValue;
   dynamic productAttributeImage;
   String price;
+  String totalAmount;
   String paymentMethod;
   String quantity;
   DateTime createdAt;
@@ -50,7 +53,8 @@ class OrderData {
   bool orderDeliveredStatus;
   bool returnInitiatedStatus;
   bool returnRequestAcceptStatus;
-  bool returnProceedStatus;
+  bool returnCompletedStatus;
+  bool returnPeriodOver;
   UserAddressData userAddressData;
 
   OrderData({
@@ -66,6 +70,7 @@ class OrderData {
     required this.productAttributeValue,
     required this.productAttributeImage,
     required this.price,
+    required this.totalAmount,
     required this.paymentMethod,
     required this.quantity,
     required this.createdAt,
@@ -76,7 +81,8 @@ class OrderData {
     required this.orderDeliveredStatus,
     required this.returnInitiatedStatus,
     required this.returnRequestAcceptStatus,
-    required this.returnProceedStatus,
+    required this.returnCompletedStatus,
+    required this.returnPeriodOver,
     required this.userAddressData,
   });
 
@@ -93,6 +99,7 @@ class OrderData {
         productAttributeValue: json["product_attribute_value"],
         productAttributeImage: json["product_attribute_image"],
         price: json["price"],
+        totalAmount: json["total_amount"],
         paymentMethod: json["payment_method"],
         quantity: json["quantity"],
         createdAt: DateTime.parse(json["created_at"]),
@@ -103,7 +110,8 @@ class OrderData {
         orderDeliveredStatus: json["order_delivered_status"],
         returnInitiatedStatus: json["return_initiated_status"],
         returnRequestAcceptStatus: json["return_request_accept_status"],
-        returnProceedStatus: json["return_proceed_status"],
+        returnCompletedStatus: json["return_completed_status"],
+        returnPeriodOver: json["return_period_over"],
         userAddressData: UserAddressData.fromJson(json["user_address_data"]),
       );
 
@@ -115,8 +123,13 @@ class OrderData {
         "product_id": productId,
         "product_name": productName,
         "product_image": productImage,
+        "product_attribute_id": productAttributeId,
+        "product_attribute": productAttribute,
+        "product_attribute_value": productAttributeValue,
+        "product_attribute_image": productAttributeImage,
         "price": price,
         "payment_method": paymentMethod,
+        "quantity": quantity,
         "created_at": createdAt.toIso8601String(),
         "order_received_status": orderReceivedStatus,
         "order_confirmed_status": orderConfirmedStatus,
@@ -125,64 +138,8 @@ class OrderData {
         "order_delivered_status": orderDeliveredStatus,
         "return_initiated_status": returnInitiatedStatus,
         "return_request_accept_status": returnRequestAcceptStatus,
-        "return_proceed_status": returnProceedStatus,
+        "return_completed_status": returnCompletedStatus,
+        "return_period_over": returnPeriodOver,
         "user_address_data": userAddressData.toJson(),
-      };
-}
-
-class UserAddressData {
-  int id;
-  int userId;
-  String name;
-  String phoneNumber;
-  String pinCode;
-  String city;
-  String state;
-  String houseName;
-  String roadName;
-  String landMark;
-  String typeOfAddress;
-
-  UserAddressData({
-    required this.id,
-    required this.userId,
-    required this.name,
-    required this.phoneNumber,
-    required this.pinCode,
-    required this.city,
-    required this.state,
-    required this.houseName,
-    required this.roadName,
-    required this.landMark,
-    required this.typeOfAddress,
-  });
-
-  factory UserAddressData.fromJson(Map<String, dynamic> json) =>
-      UserAddressData(
-        id: json["id"],
-        userId: json["user_id"],
-        name: json["name"],
-        phoneNumber: json["phone_number"],
-        pinCode: json["pin_code"],
-        city: json["city"],
-        state: json["state"],
-        houseName: json["house_name"],
-        roadName: json["road_name"],
-        landMark: json["land_mark"],
-        typeOfAddress: json["type_of_address"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "user_id": userId,
-        "name": name,
-        "phone_number": phoneNumber,
-        "pin_code": pinCode,
-        "city": city,
-        "state": state,
-        "house_name": houseName,
-        "road_name": roadName,
-        "land_mark": landMark,
-        "type_of_address": typeOfAddress,
       };
 }

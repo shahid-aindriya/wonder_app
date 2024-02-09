@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,14 +8,12 @@ import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:wonder_app/app/data/urls.dart';
-import 'package:wonder_app/app/modules/products/extra/add_attribute.dart';
 import 'package:wonder_app/app/modules/products/extra/buttons/add_attribute_button.dart';
-import 'package:wonder_app/app/modules/products/refactors/edit_attribute_widget.dart';
+import 'package:wonder_app/app/modules/products/extra/edit_single_attribute.dart';
 
 import '../controllers/products_controller.dart';
 import '../views/products_view.dart';
 import 'add_products_view.dart';
-import 'buttons/add_button.dart';
 
 class EditProductDetails extends StatefulWidget {
   EditProductDetails({super.key, this.id});
@@ -56,6 +53,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
   dynamic editSubCatId;
 
   dynamic editReturnAvailability;
+  dynamic editReturnAvailability2;
   dynamic deliveryTypeId;
 
   final formKey = GlobalKey<FormState>();
@@ -135,6 +133,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                 deliveryChargeController.text = data.deliveryCharge.toString();
                 deliveryTypeId = data.deliveryType;
                 netWeightController.text = data.productWeight;
+
                 // taxEditingController.text = data.tax;
                 // editTaxType = data.taxType == "null" ? null : data.taxType;
                 editCatId = data.categoryId;
@@ -145,8 +144,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                 editReturnAvailability = data.returnAvailablility == false
                     ? "Not-Available"
                     : "Available";
+                editReturnAvailability2 = data.returnAvailablility;
                 return Obx(() {
                   return ListView.builder(
+                      shrinkWrap: true,
                       itemCount: productsController.editProductsList.length,
                       itemBuilder: (contexts, index) {
                         log(productsController
@@ -200,6 +201,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                         Container(
                                             height: 35,
                                             child: TextFormField(
+                                              decoration: InputDecoration(
+                                                  contentPadding:
+                                                      EdgeInsets.only(
+                                                          top: 5, bottom: 5)),
                                               controller: nameEditingController,
                                               validator: (value) {
                                                 if (value!.isEmpty) {
@@ -217,8 +222,8 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                               GoogleFonts.roboto(fontSize: 12),
                                         ),
                                         Container(
-                                            height: 35,
                                             child: TextFormField(
+                                                maxLines: 4,
                                                 controller:
                                                     descriptionEditingController,
                                                 validator: (value) {
@@ -754,9 +759,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                               Base64Decoder()
                                                                   .convert(data
                                                                       .fileImage))
-                                                          : data.image != null
+                                                          : data.image!
+                                                                  .isNotEmpty
                                                               ? Image.network(
-                                                                  "$baseUrlForImage${data.image}")
+                                                                  "$baseUrlForImage${data.image!.first.image}")
                                                               : Column(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -798,28 +804,35 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                               //             index,
                                                               //             data.quantity);
 
-                                                              productsController.attributeEditDialogBox(
-                                                                  data.id,
-                                                                  id: widget.id,
-                                                                  index: index,
-                                                                  productId:
-                                                                      widget.id,
-                                                                  context:
-                                                                      context,
-                                                                  attributeId: data
-                                                                      .attributeId,
-                                                                  discount: data
-                                                                      .discount
-                                                                      .toString(),
-                                                                  price: data
-                                                                      .price
-                                                                      .toString(),
-                                                                  quantity: data
-                                                                      .quantity
-                                                                      .toString(),
-                                                                  value: data
-                                                                      .value
-                                                                      .toString());
+                                                              // productsController.attributeEditDialogBox(
+                                                              //     data.id,
+                                                              //     id: widget.id,
+                                                              //     index: index,
+                                                              //     productId:
+                                                              //         widget.id,
+                                                              //     context:
+                                                              //         context,
+                                                              //     attributeId: data
+                                                              //         .attributeId,
+                                                              //     discount: data
+                                                              //         .discount
+                                                              //         .toString(),
+                                                              //     price: data
+                                                              //         .price
+                                                              //         .toString(),
+                                                              //     quantity: data
+                                                              //         .quantity
+                                                              //         .toString(),
+                                                              //     value: data
+                                                              //         .value
+                                                              //         .toString());
+                                                              Get.to(
+                                                                  EditSingleAttribute(
+                                                                attributeId:
+                                                                    data.id,
+                                                                productId:
+                                                                    widget.id,
+                                                              ));
                                                             },
                                                             icon: Icon(
                                                                 Icons.edit)),
@@ -930,8 +943,10 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                           value: editReturnAvailability,
                                           ontap: (p0) {
                                             log(p0.toString());
-                                            productsController
-                                                .returnAvailability = p0;
+                                            editReturnAvailability =
+                                                p0 == "Available"
+                                                    ? "available"
+                                                    : "not-available";
                                           },
                                           dropDownList: productsController
                                               .availabilityList),
@@ -1116,6 +1131,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                 const SliverGridDelegateWithFixedCrossAxisCount(
                                               crossAxisCount: 3,
                                               crossAxisSpacing: 0,
+
                                               // mainAxisSpacing: 5
                                               // Horizontally only 3 images will show
                                             ),
@@ -1135,7 +1151,7 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                             top: 8,
                                                             left: 0,
                                                             child: Container(
-                                                                width: 24.w,
+                                                                width: 22.w,
                                                                 height: 100,
                                                                 child: Stack(
                                                                     children: <Widget>[
@@ -1154,9 +1170,9 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                                               ),
                                                                       ),
                                                                     ]))),
-                                                        Positioned(
-                                                          top: 0,
-                                                          left: 80,
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .topRight,
                                                           child: InkWell(
                                                               onTap: () {
                                                                 productsController.deleteImageFromList(
@@ -1200,8 +1216,9 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                           child: IconButton(
                                                               onPressed: () {
                                                                 productsController
-                                                                    .selectMultipleImages(
-                                                                        false);
+                                                                    .showPopup(
+                                                                        context,
+                                                                        "Edit");
                                                               },
                                                               icon: Icon(Icons
                                                                   .add_a_photo)),
@@ -1268,6 +1285,8 @@ class _EditProductDetailsState extends State<EditProductDetails> {
                                                             .currentState!
                                                             .validate()) {
                                                           productsController.editProductDetails(
+                                                              editReturnAvailability:
+                                                                  editReturnAvailability,
                                                               context: context,
                                                               tags: tagsController.text
                                                                   .toString(),

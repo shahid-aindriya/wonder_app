@@ -55,6 +55,7 @@ class TransactionDatum {
   dynamic paymentGatewayAmount;
   dynamic deliveryCharge;
   dynamic onlineGstAmount;
+  dynamic totalAmount;
   dynamic onlineTdsAmount;
   dynamic offlineGstAmount;
   dynamic offlineTdsAmount;
@@ -69,6 +70,7 @@ class TransactionDatum {
     required this.userId,
     required this.shopId,
     required this.amount,
+    required this.totalAmount,
     required this.walletType,
     required this.onlineAmount,
     required this.offlineAmount,
@@ -91,6 +93,7 @@ class TransactionDatum {
         customerName: json["customer_name"],
         phone: json["phone"],
         userId: json["user_id"],
+        totalAmount: json["total_amount"],
         shopId: json["shop_id"],
         amount: json["amount"],
         walletType: json["wallet_type"],

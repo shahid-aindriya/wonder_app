@@ -156,8 +156,11 @@ class AmountDetails extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Obx(() {
                                     return Text(
-                                        addInvoiceController.amountDetailsList
-                                            .first["total_verified"]
+                                        double.tryParse(addInvoiceController
+                                                .amountDetailsList
+                                                .first["total_verified"]
+                                                .toString())!
+                                            .toStringAsFixed(1)
                                             .toString(),
                                         style: GoogleFonts.jost(
                                             fontSize: 18,

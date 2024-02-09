@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -152,7 +153,8 @@ class Due extends GetView<InvoiceController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        child: Image.asset("assets/images/transact.png"),
+                        child:
+                            SvgPicture.asset("assets/images/transactions.svg"),
                       ),
                       SizedBox(
                         width: 5,
@@ -172,12 +174,12 @@ class Due extends GetView<InvoiceController> {
                       ? Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(right: 10),
+                              padding: EdgeInsets.only(right: 10, top: 10.h),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Lottie.asset(
-                                      "assets/images/13659-no-data.json"),
+                                  SvgPicture.asset(
+                                      "assets/images/no data found.svg")
                                 ],
                               ),
                             ),

@@ -31,11 +31,11 @@ class OrderDatum {
   String orderNumber;
   String status;
   bool paymentStatus;
-  int productId;
-  String productName;
-  String productImage;
-  String price;
-  String paymentMethod;
+  dynamic productId;
+  dynamic productName;
+  dynamic productImage;
+  dynamic price;
+  dynamic paymentMethod;
   DateTime createdAt;
   UserAddressData userAddressData;
 

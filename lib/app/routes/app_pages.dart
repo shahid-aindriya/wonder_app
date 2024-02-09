@@ -2,8 +2,7 @@ import 'package:get/get.dart';
 
 import '../modules/add_invoice/bindings/add_invoice_binding.dart';
 import '../modules/add_invoice/views/add_invoice_view.dart';
-import '../modules/bank_details/bindings/bank_details_binding.dart';
-import '../modules/bank_details/views/bank_details_view.dart';
+
 import '../modules/bank_transactions/bindings/bank_transactions_binding.dart';
 import '../modules/bank_transactions/views/bank_transactions_view.dart';
 import '../modules/bottom_bar/bindings/bottom_bar_binding.dart';
@@ -108,11 +107,6 @@ class AppPages {
       name: _Paths.REGISTRATION_DETAILS,
       page: () => RegistrationDetailsView(),
       binding: RegistrationDetailsBinding(),
-    ),
-    GetPage(
-      name: _Paths.BANK_DETAILS,
-      page: () => BankDetailsView(),
-      binding: BankDetailsBinding(),
     ),
     GetPage(
       name: _Paths.SUCCESS,

@@ -119,6 +119,8 @@ class ProductsController extends GetxController {
         final bytes = File(ims.path).readAsBytesSync();
         compressedImage = testComporessList(bytes);
         profileImage = base64Encode(await compressedImage);
+        final newImg = File(ims.path);
+        multiImages.add(newImg);
         update();
         return;
       } else {
@@ -131,6 +133,10 @@ class ProductsController extends GetxController {
         final bytes = File(ims.path).readAsBytesSync();
         compressedImage = testComporessList(bytes);
         editImage = base64Encode(await compressedImage);
+        final newImg = File(ims.path);
+        final AllImage allImage = AllImage(image: newImg);
+        multiEditImages.add(newImg);
+        imageList.add(allImage);
         update();
         return;
       } else {
@@ -143,9 +149,9 @@ class ProductsController extends GetxController {
   testComporessList(Uint8List list) async {
     var result = await FlutterImageCompress.compressWithList(
       list,
-      minHeight: 600,
-      minWidth: 400,
-      quality: 70,
+      minHeight: 225,
+      minWidth: 225,
+      quality: 100,
       format: CompressFormat.jpeg,
       rotate: 0,
     );
@@ -158,8 +164,11 @@ class ProductsController extends GetxController {
   RxList<File> multiImages = <File>[].obs;
   selectMultipleImages(value) async {
     try {
-      List<XFile> pimage = await ImagePicker()
-          .pickMultiImage(imageQuality: 80, maxHeight: 1080, maxWidth: 1920);
+      List<XFile> pimage = await ImagePicker().pickMultiImage(
+          imageQuality: 100,
+          maxHeight: 750,
+          maxWidth: 750,
+          requestFullMetadata: true);
       if (pimage.isEmpty) {
         return;
       } else {
@@ -187,17 +196,18 @@ class ProductsController extends GetxController {
   compressImage(File imageFile) async {
     // ImageProperties properties =
     //     await FlutterNativeImage.getImageProperties(imageFile.path);
-    File compressedFile2 = await FlutterNativeImage.compressImage(
-        imageFile.path,
-        quality: 100,
-        targetWidth: 700,
-        targetHeight: 800);
-    File compressedFile = await FlutterNativeImage.compressImage(
-        compressedFile2.path,
-        quality: 100,
-        percentage: 70);
-    // File compressedFile = await FlutterNativeImage.compressImage(imageFile.path,
-    //     quality: 100, percentage: 100);
+    // File compressedFile2 = await FlutterNativeImage.compressImage(
+    //     imageFile.path,
+    //     quality: 100,
+    //     percentage: 100,
+    //     targetHeight: 750,
+    //     targetWidth: 750);
+    // File compressedFile = await FlutterNativeImage.compressImage(
+    //     compressedFile2.path,
+    //     quality: 100,
+    //     percentage: 70);
+    File compressedFile = await FlutterNativeImage.compressImage(imageFile.path,
+        targetHeight: 750, targetWidth: 750, quality: 100, percentage: 100);
     return compressedFile;
   }
 
@@ -416,7 +426,7 @@ class ProductsController extends GetxController {
     request.fields['discount_type'] = discType.toString();
     // request.fields['tax_type'] = taxType.toString();
     request.fields['return_reason_ids'] = idOfREturnLists.join(",");
-    request.fields['attributes'] = jsonEncode(attributeAddList.toJson());
+    // request.fields['attributes'] = jsonEncode(attributeAddList.toJson());
     request.fields['return_availablility'] = returnAvailability.toString();
     request.fields['tags'] = tagsController.text.toString();
     request.fields['delivery_type'] = deliveryTypeId.toString();
@@ -690,6 +700,7 @@ class ProductsController extends GetxController {
       discount,
       discType,
       context,
+      editReturnAvailability,
       tags,
       deliveryType,
       deliveryCharge,
@@ -700,7 +711,7 @@ class ProductsController extends GetxController {
     );
     editLoading.value = true;
     // for (var element in editAttributesList) {
-    //   log(element.attribute.toString());
+    log(editReturnAvailability.toString());
     //   log(element.attributeId.toString());
     //   log(element.fileImage.toString());
     //   log(element.image.toString());
@@ -715,6 +726,7 @@ class ProductsController extends GetxController {
     request.fields["price"] = price;
     request.fields["quantity"] = quantity;
     request.fields["short_description"] = shortDescription;
+    request.fields['return_availablility'] = editReturnAvailability.toString();
     // request.fields["tax"] = tax;
     // request.fields["tax_type"] = taxType;
     request.fields["discount"] = discount;
@@ -1036,13 +1048,13 @@ class ProductsController extends GetxController {
       quantity,
       id,
       productId,
-      index}) {
+      index}) async {
     attriId = attributeId;
     valueAttController.text = value;
     discountAttController.text = discount;
     priceAttController.text = price;
     quantityAttController.text = quantity;
-
+    await getAllAttribute();
     Alert(
       context: context,
       title: "Edit Attribute",

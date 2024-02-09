@@ -127,6 +127,7 @@ class _MyAppState extends State<MyApp> {
             ));
         speaks(notification.body!);
         if (message.notification != null) {
+          speaks(notification.body!);
           //notification from server to voice
         }
       }

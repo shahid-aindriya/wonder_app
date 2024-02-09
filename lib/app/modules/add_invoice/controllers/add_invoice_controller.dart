@@ -18,8 +18,6 @@ import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 import '../../../data/urls.dart';
 import '../../my_shops/model/shops_list_model.dart';
 
-
-
 class AddInvoiceController extends GetxController {
   //TODO: Implement AddInvoiceController
   @override
@@ -199,8 +197,6 @@ class AddInvoiceController extends GetxController {
     isLoading.value = false;
   }
 
- 
-
   testComporessList(Uint8List list) async {
     var result = await FlutterImageCompress.compressWithList(
       list,
@@ -323,7 +319,9 @@ class AddInvoiceController extends GetxController {
                     )
                   : Text("Confirm",
                       style: GoogleFonts.roboto(
-                          fontSize: 16, fontWeight: FontWeight.w400)));
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400)));
         }),
       ),
       cancel: Obx(() {

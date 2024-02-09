@@ -82,6 +82,9 @@ class AddProductsView extends StatelessWidget {
                       Container(
                           height: 35,
                           child: TextFormField(
+                            decoration: InputDecoration(
+                                contentPadding:
+                                    EdgeInsets.only(top: 5, bottom: 5)),
                             controller:
                                 productsController.nameEditingController,
                           )),
@@ -93,12 +96,11 @@ class AddProductsView extends StatelessWidget {
                         style: GoogleFonts.roboto(fontSize: 12),
                       ),
                       Container(
-                          height: 40,
                           child: TextFormField(
-                            maxLines: 1,
-                            controller:
-                                productsController.descriptionEditingController,
-                          )),
+                        maxLines: 4,
+                        controller:
+                            productsController.descriptionEditingController,
+                      )),
                       SizedBox(
                         height: 20,
                       ),
@@ -555,7 +557,10 @@ class AddProductsView extends StatelessWidget {
                           name: "Return Availability",
                           ontap: (p0) {
                             log(p0.toString());
-                            productsController.returnAvailability = p0;
+                            productsController.returnAvailability =
+                                p0 == "Available"
+                                    ? "available"
+                                    : "not-available";
                           },
                           dropDownList: productsController.availabilityList),
                       SizedBox(height: 15),
@@ -616,7 +621,7 @@ class AddProductsView extends StatelessWidget {
                     height: 140,
                     child: InkWell(
                       onTap: () {
-                        productsController.selectMultipleImages(true);
+                        productsController.showPopup(context, "Add");
                       },
                       child: Card(
                         shape: RoundedRectangleBorder(
@@ -672,8 +677,8 @@ class AddProductsView extends StatelessWidget {
                                     top: 8,
                                     left: 0,
                                     child: Container(
-                                        width: 24.w,
-                                        height: 14.h,
+                                        width: 22.w,
+                                        height: 100,
                                         child: Stack(children: <Widget>[
                                           ClipRRect(
                                             borderRadius:
@@ -685,9 +690,8 @@ class AddProductsView extends StatelessWidget {
                                             ),
                                           ),
                                         ]))),
-                                Positioned(
-                                  top: 0,
-                                  left: 80,
+                                Align(
+                                  alignment: Alignment.topRight,
                                   child: InkWell(
                                       onTap: () {
                                         productsController.multiImages

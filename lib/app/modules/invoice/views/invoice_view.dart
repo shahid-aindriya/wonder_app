@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +12,8 @@ import 'package:wonder_app/app/data/colors.dart';
 import 'package:wonder_app/app/modules/add_invoice/views/add_invoice_view.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/search_invoice.dart';
 import 'package:wonder_app/app/modules/invoice/widgets/verifed_invoice/verified_invoices.dart';
+import 'package:wonder_app/app/modules/my_earnings/extra/settlements.dart';
+import 'package:wonder_app/app/modules/my_earnings/views/my_earnings_view.dart';
 import 'package:wonder_app/app/modules/orders/controllers/orders_controller.dart';
 
 import '../../add_invoice/controllers/add_invoice_controller.dart';
@@ -152,6 +155,8 @@ class InvoiceView extends GetView<InvoiceController> {
                                         Color.fromARGB(255, 231, 231, 231)),
                                 value: invoiceController.selectShopId,
                                 onChanged: (value) async {
+                                  await invoiceController.idAssignFunct(value);
+                                  invoiceController.selectShopId = value;
                                   invoiceController.invoiceListsFilter.value
                                       .clear();
                                   invoiceController.walletTransactionLists
@@ -173,7 +178,7 @@ class InvoiceView extends GetView<InvoiceController> {
                                     value: value,
                                   );
                                   await invoiceController.checkVerifiedVendor();
-                                     await ordersController.getListOfOrders(value);
+                                  await ordersController.getListOfOrders(value);
                                   await myEarningsController
                                       .getMyEarnings(value);
                                   await invoiceController
@@ -263,7 +268,7 @@ class InvoiceView extends GetView<InvoiceController> {
                     unselectedLabelColor: Color.fromARGB(255, 151, 151, 155),
                     labelStyle: GoogleFonts.roboto(
                         color: textGradientBlue,
-                        fontSize: 18,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500),
                     labelColor: textGradientBlue,
                     indicator: BoxDecoration(
@@ -287,11 +292,11 @@ class InvoiceView extends GetView<InvoiceController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
-                                  ImageIcon(AssetImage(
-                                      "assets/images/invoice-icon.png")),
+                                  FaIcon(FontAwesomeIcons.fileLines, size: 15),
                                   Text(
-                                    "Invoices",
+                                    " Invoices",
                                   ),
                                 ],
                               )
@@ -305,14 +310,17 @@ class InvoiceView extends GetView<InvoiceController> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
-                                  ImageIcon(
-                                      AssetImage("assets/images/Wallet.png")),
+                                  FaIcon(
+                                    FontAwesomeIcons.piggyBank,
+                                    size: 15,
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 2.0, left: 2),
+                                        top: 0.0, left: 5),
                                     child: Text(
-                                      "Wallet",
+                                      "Earnings",
                                     ),
                                   ),
                                 ],
@@ -326,18 +334,23 @@ class InvoiceView extends GetView<InvoiceController> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Wrap(
-                                children: [
-                                  ImageIcon(
-                                      AssetImage("assets/images/due.png")),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 2.0, left: 2),
-                                    child: Text(
-                                      "Due",
+                              Flexible(
+                                child: Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.bank,
+                                      size: 15,
                                     ),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 0.0, left: 5),
+                                      child: Text(
+                                        "Settlements",
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               )
                             ],
                           ),
@@ -464,8 +477,10 @@ class InvoiceView extends GetView<InvoiceController> {
                           Expanded(child: InvoiceTab()),
                         ],
                       ),
-                      WalletTab(),
-                      Due()
+
+                      MyEarningsView(),
+                      // WalletTab(),
+                      Settlements()
                     ],
                   ),
                 ),
@@ -473,24 +488,28 @@ class InvoiceView extends GetView<InvoiceController> {
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.miniCenterFloat,
-            floatingActionButton: Obx(() {
-              return (invoiceController.isAddInvoiceTrue.value == false ||
-                      invoiceController.selectShopId == null)
-                  ? Container()
-                  : FloatingActionButton(
-                      backgroundColor: Color.fromARGB(255, 57, 55, 166),
-                      onPressed: () {
-                        Get.to(AddInvoiceView(
-                          shopId: invoiceController.selectShopId,
-                          invoiceController: invoiceController,
-                        ));
-                      },
-                      child: Icon(
-                        Icons.add,
-                        size: 30,
-                        color: Colors.white,
-                      ));
-            }),
+            floatingActionButton: FutureBuilder(
+                future: invoiceController.checkVerifiedVendor(),
+                builder: (contexzt, snap) {
+                  return Obx(() {
+                    return (invoiceController.isAddInvoiceTrue.value == false ||
+                            invoiceController.newShopId2.value.isEmpty)
+                        ? Container()
+                        : FloatingActionButton(
+                            backgroundColor: Color.fromARGB(255, 57, 55, 166),
+                            onPressed: () {
+                              Get.to(AddInvoiceView(
+                                shopId: invoiceController.selectShopId,
+                                invoiceController: invoiceController,
+                              ));
+                            },
+                            child: Icon(
+                              Icons.add,
+                              size: 30,
+                              color: Colors.white,
+                            ));
+                  });
+                }),
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,14 +100,21 @@ class ProfileViewView extends GetView<ProfileViewController> {
                                               ? true
                                               : false,
                                           child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 218, 215, 215),
+                                                borderRadius:
+                                                    BorderRadius.circular(25)),
                                             width: 144,
                                             height: 144,
                                             child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(25),
                                                 child: data.image == ""
-                                                    ? Image.asset(
-                                                        "assets/images/User.png")
+                                                    ? SvgPicture.asset(
+                                                        "assets/images/user.svg",
+                                                        fit: BoxFit.cover,
+                                                      )
                                                     : Image.network(
                                                         "$baseUrlForImage${data.image}",
                                                         fit: BoxFit.cover,

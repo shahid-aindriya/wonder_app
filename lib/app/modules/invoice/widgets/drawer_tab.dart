@@ -52,7 +52,8 @@ class DrawerTab extends StatelessWidget {
               height: 124,
               width: 30.w,
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(25)),
+                  color: Color.fromARGB(255, 218, 215, 215),
+                  borderRadius: BorderRadius.circular(25)),
               child: Padding(
                 padding: const EdgeInsets.all(3.0),
                 child: Obx(() {
@@ -60,7 +61,10 @@ class DrawerTab extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                     child: (invoiceController.userDetailLists.isEmpty ||
                             invoiceController.userDetailLists.first.image == '')
-                        ? Image.asset("assets/images/User.png")
+                        ? SvgPicture.asset(
+                            "assets/images/user.svg",
+                            fit: BoxFit.cover,
+                          )
                         : Image.network(
                             "$baseUrlForImage${invoiceController.userDetailLists.first.image}",
                             fit: BoxFit.fitWidth,
@@ -308,12 +312,6 @@ class DrawerTab extends StatelessWidget {
             ),
             ListTile(
               onTap: () {
-                if (invoiceController.selectShopId == null) {
-                  Get.snackbar("Error", "Select a Shop to Proceed",
-                      backgroundColor: Colors.red);
-                  return;
-                }
-
                 Get.to(TaxesView());
               },
               leading: SvgPicture.asset(

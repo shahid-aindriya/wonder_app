@@ -10,8 +10,8 @@ import '../controllers/bank_details_controller.dart';
 
 class BankDetailsView extends GetView<BankDetailsController> {
   final shopId;
-
-  BankDetailsView({this.shopId});
+  final alreadySuccess;
+  BankDetailsView({this.shopId, required this.alreadySuccess});
   final TextEditingController holderNameController = TextEditingController();
   final TextEditingController accountNumberController = TextEditingController();
   final TextEditingController ifscCodeController = TextEditingController();
@@ -507,6 +507,7 @@ class BankDetailsView extends GetView<BankDetailsController> {
                             } else if (formKey.currentState!.validate()) {
                               bankDetailsController.addBankDetails(
                                   accType: accountTypeController.text,
+                                  alreadySuccess,
                                   accountNum: int.tryParse(
                                       accountNumberController.text),
                                   ifscCode: ifscCodeController.text,

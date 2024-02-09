@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:wonder_app/app/modules/invoice/views/invoice_view.dart';
 import '../../model/verified_model.dart';
 import '../verifed_invoice/verified_invoices.dart';
 
@@ -52,19 +53,36 @@ class PayHalf extends StatelessWidget {
                               backgroundColor: MaterialStateProperty.all(
                                   Colors.transparent)),
                           onPressed: () async {
-                            // widget.invoiceController.initPlatformState();
-                            widget.invoiceController.openCheckoutForAllPay(
-                                data: amount,
-                                amounts: widget.invoiceController
+                            if (widget.invoiceController.additionSelectAmount
+                                        .value ==
+                                    0 &&
+                                amount.payHalfWithGst == 0) {
+                              Get.snackbar("Error", "The amount is 0",
+                                  backgroundColor: Colors.red);
+                              return;
+                            }
+
+                            widget.invoiceController.fetchMerchantEncryptedData(
+                                amount: widget.invoiceController
                                             .additionSelectAmount.value !=
                                         0
                                     ? widget.invoiceController
                                         .additionSelectAmount.value
                                     : amount.payHalfWithGst,
-                                email: amount.email,
-                                name: amount.name,
-                                phone: phoneData,
-                                razorKey: amount.razorKey);
+                                context: context,
+                                invoiceController: invoiceController);
+                            // widget.invoiceController.openCheckoutForAllPay(
+                            //     data: amount,
+                            //     amounts: widget.invoiceController
+                            //                 .additionSelectAmount.value !=
+                            //             0
+                            //         ? widget.invoiceController
+                            //             .additionSelectAmount.value
+                            //         : amount.payHalfWithGst,
+                            //     email: amount.email,
+                            //     name: amount.name,
+                            //     phone: phoneData,
+                            //     razorKey: amount.razorKey);
                           },
                           child: Obx(() {
                             return widget.invoiceController.additionSelectAmount

@@ -157,6 +157,7 @@ class SellerRegistController extends GetxController {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: path,
       compressFormat: ImageCompressFormat.jpg,
+      aspectRatio: CropAspectRatio(ratioX: 400, ratioY: 510),
       compressQuality: 100,
       uiSettings: [
         AndroidUiSettings(
@@ -164,7 +165,7 @@ class SellerRegistController extends GetxController {
             toolbarColor: Colors.deepOrange,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
+            lockAspectRatio: true),
         IOSUiSettings(
           title: 'Cropper',
         ),

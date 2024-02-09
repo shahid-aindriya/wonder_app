@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -216,7 +217,7 @@ class ProductsView extends GetView<ProductsController> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 4.w, right: 4.w),
+                padding: EdgeInsets.only(left: 4.w, right: 4.w, bottom: 10),
                 child: Row(
                   children: [
                     Text("Category",
@@ -336,7 +337,7 @@ class ProductsView extends GetView<ProductsController> {
               Expanded(
                 child: Obx(() {
                   return productsController.productsLists.isEmpty
-                      ? Lottie.asset("assets/images/13659-no-data.json")
+                      ? SvgPicture.asset("assets/images/no data found.svg")
                       : RefreshIndicator(
                           onRefresh: () async {
                             await productsController.getListOfPrdoucts(
