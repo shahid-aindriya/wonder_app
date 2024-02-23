@@ -457,17 +457,17 @@ class InvoiceView extends GetView<InvoiceController> {
                                 SizedBox(
                                   width: 10,
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    Get.to(VerifiedInvoices(
-                                      invoiceController: invoiceController,
-                                    ));
-                                  },
-                                  child: Container(
-                                    child: SvgPicture.asset(
-                                        "assets/images/verified_image.svg"),
-                                  ),
-                                ),
+                                // InkWell(
+                                //   onTap: () {
+                                //     Get.to(VerifiedInvoices(
+                                //       invoiceController: invoiceController,
+                                //     ));
+                                //   },
+                                //   child: Container(
+                                //     child: SvgPicture.asset(
+                                //         "assets/images/verified_image.svg"),
+                                //   ),
+                                // ),
                                 SizedBox(
                                   width: 10,
                                 ),

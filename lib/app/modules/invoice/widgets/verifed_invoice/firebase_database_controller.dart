@@ -8,12 +8,12 @@ final FirebaseDatabaseController firebaseDatabaseController =
     Get.put(FirebaseDatabaseController());
 
 class FirebaseDatabaseController extends GetxController {
-  // String dataBaseUrl =
-  //     'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app';
+  String dataBaseUrl =
+      'https://wonderapp-73f65-default-rtdb.asia-southeast1.firebasedatabase.app';
 
   // *********Test
-  String dataBaseUrl =
-      'https://wonderapptest-c9a28-default-rtdb.asia-southeast1.firebasedatabase.app';
+  // String dataBaseUrl =
+  //     'https://wonderapptest-c9a28-default-rtdb.asia-southeast1.firebasedatabase.app';
 
 // *********************************************ExpireDays
   Future<int?> getExpireDays() async {
